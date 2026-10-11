@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+/*
+ * Somabay design tokens.
+ * Brand colours come from the Somabay Brand Identity Guidelines:
+ *   Sea Turquoise  PANTONE 326 C  rgb(0 178 186)
+ *   Cool Gray      Cool Gray 11 C rgb(83 86 90)
+ *   Warm Gray      Cool Gray 3 C  rgb(216 207 198)
+ *   Twilight Blue  PANTONE 308 C  rgb(0 104 146)
+ * Everything else (sand grounds, ink, abyss) is derived from those values.
+ */
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-sand-50: #fbfaf7;
+  --color-sand-100: #f5f2ec;
+  --color-sand-200: #ebe5dc;
+  --color-sand-300: #d8cfc6;
+  --color-sand-400: #b9ad9f;
+
+  --color-ink: #24272a;
+  --color-slate: #53565a;
+  --color-mist: #8a8d90;
+  --color-line: #ddd6cc;
+
+  --color-turquoise: #00b2ba;
+  --color-lagoon: #007a80;
+  --color-twilight: #006892;
+  --color-abyss: #0d2328;
+  --color-abyss-soft: #15333a;
+  /* Brand French Red, lightened for legible error text on dark grounds. */
+  --color-alert-soft: #ffb4a8;
+
+  --font-sans: var(--font-source-sans), "Verdana", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), "Georgia", ui-serif, serif;
+
+  /* Fluid type scale — display serif at light weights, quiet humanist sans for UI. */
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.2em;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --text-lead--line-height: 1.6;
+  --text-h4: clamp(1.375rem, 1.25rem + 0.45vw, 1.625rem);
+  --text-h4--line-height: 1.25;
+  --text-h3: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+  --text-h3--line-height: 1.15;
+  --text-h2: clamp(2.375rem, 1.75rem + 2.6vw, 4rem);
+  --text-h2--line-height: 1.06;
+  --text-h2--letter-spacing: -0.015em;
+  --text-h1: clamp(2.75rem, 1.9rem + 3.6vw, 5.25rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.02em;
+  --text-display: clamp(3rem, 1.6rem + 5.6vw, 7rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.025em;
+
+  --tracking-label: 0.16em;
+
+  --spacing-gutter: clamp(1.25rem, 0.6rem + 3.2vw, 5rem);
+  --spacing-section: clamp(5.5rem, 3rem + 8vw, 11rem);
+  --spacing-header: 5.5rem;
+
+  --container-site: 90rem;
+  --container-prose: 38rem;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  --shadow-soft: 0 30px 60px -30px rgb(13 35 40 / 0.35);
+
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --animate-marquee: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --header-height: var(--spacing-header);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-sand-50 font-sans text-body text-ink antialiased;
+    font-feature-settings: "kern", "liga";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif font-light text-balance;
+    font-optical-sizing: auto;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    @apply bg-turquoise text-white;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-turquoise);
+    outline-offset: 3px;
+  }
+
+  [data-theme-surface="dark"] :focus-visible {
+    outline-color: var(--color-white);
+  }
+
+  /* Split headings stay hidden until GSAP has measured their lines (JS-enabled visitors only). */
+  @media (scripting: enabled) {
+    [data-split] {
+      visibility: hidden;
+    }
+  }
+
+  img,
+  video {
+    @apply block max-w-full;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-sans text-eyebrow font-semibold uppercase;
+  }
+
+  /* Underline that draws in from the left on hover/focus. */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.6s var(--ease-out-expo);
+  }
+
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Inline-start padding that aligns full-bleed rows (carousels) with the site container. */
+@utility ps-site {
+  padding-inline-start: max(
+    var(--spacing-gutter),
+    calc((100vw - var(--container-site)) / 2 + var(--spacing-gutter))
+  );
+}
+
+@utility scroll-ps-site {
+  scroll-padding-inline-start: max(
+    var(--spacing-gutter),
+    calc((100vw - var(--container-site)) / 2 + var(--spacing-gutter))
+  );
+}
+
+@utility glass {
+  background-color: rgb(13 35 40 / 0.28);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  backdrop-filter: blur(24px) saturate(140%);
+}
+
+/* Lenis smooth scrolling. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
