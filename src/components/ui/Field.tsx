@@ -1,0 +1,190 @@
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import { SelectMenu } from "./SelectMenu";
+
+/**
+ * Boxed controls with the label inside: at rest it sits where the value goes; on focus, or once
+ * there is a value, it shrinks and floats to the top of the box.
+ */
+const control = cn(
+  "peer block w-full rounded-thumb border border-ink/15 bg-white px-4 pt-6 pb-2 text-body text-ink outline-none",
+  "transition-[border-color,box-shadow] duration-300 hover:border-ink/35",
+  "focus:border-turquoise focus:shadow-[0_0_0_3px_rgb(0_178_186/0.18)]",
+  "aria-invalid:border-alert",
+);
+
+/** The label floats when the control is focused or filled (`filled` is a CSS condition). */
+const label = (filled: string) =>
+  cn(
+    "pointer-events-none absolute top-4 left-4 origin-top-left text-body text-slate",
+    "transition-[translate,scale,color] duration-300 ease-out-expo",
+    "peer-focus:-translate-y-2.5 peer-focus:scale-75 peer-focus:text-turquoise-160",
+    filled,
+  );
+
+/** Inputs and textareas: filled once the (blank) placeholder is no longer shown. */
+const floatsWhenTyped = label(
+  "peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:scale-75",
+);
+/** Dropdowns: filled while open or once an option is chosen (the trigger's `data-filled`). */
+const floatsWhenChosen = label("peer-data-filled:-translate-y-2.5 peer-data-filled:scale-75");
+
+type FieldShellProps = {
+  id: string;
+  label: string;
+  required?: boolean;
+  error?: string;
+  hint?: string;
+  labelClassName: string;
+  children: ReactNode;
+  className?: string;
+};
+
+function FieldShell({
+  id,
+  label: text,
+  required,
+  error,
+  hint,
+  labelClassName,
+  children,
+  className,
+}: FieldShellProps) {
+  return (
+    <div className={cn("flex flex-col gap-1.5", className)}>
+      {/* The control comes first so the label can react to it (peer). */}
+      <div className="relative">
+        {children}
+        <label htmlFor={id} className={labelClassName}>
+          {text}
+          {required ? <span aria-hidden> *</span> : null}
+        </label>
+      </div>
+      {error ? (
+        <p id={`${id}-error`} className="text-caption text-alert">
+          {error}
+        </p>
+      ) : hint ? (
+        <p id={`${id}-hint`} className="text-caption text-slate">
+          {hint}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+type BaseProps = { id: string; label: string; error?: string; hint?: string; className?: string };
+
+function describedBy(id: string, error?: string, hint?: string) {
+  return error ? `${id}-error` : hint ? `${id}-hint` : undefined;
+}
+
+export function TextField({
+  id,
+  label,
+  error,
+  hint,
+  className,
+  required,
+  // The label is the prompt; a placeholder would sit under it.
+  placeholder: _placeholder,
+  ...props
+}: BaseProps & Omit<ComponentPropsWithoutRef<"input">, "id" | "className">) {
+  return (
+    <FieldShell
+      id={id}
+      label={label}
+      required={required}
+      error={error}
+      hint={hint}
+      labelClassName={floatsWhenTyped}
+      className={className}
+    >
+      <input
+        id={id}
+        name={id}
+        required={required}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy(id, error, hint)}
+        className={control}
+        {...props}
+        placeholder=" "
+      />
+    </FieldShell>
+  );
+}
+
+export function TextAreaField({
+  id,
+  label,
+  error,
+  hint,
+  className,
+  required,
+  placeholder: _placeholder,
+  ...props
+}: BaseProps & Omit<ComponentPropsWithoutRef<"textarea">, "id" | "className">) {
+  return (
+    <FieldShell
+      id={id}
+      label={label}
+      required={required}
+      error={error}
+      hint={hint}
+      labelClassName={floatsWhenTyped}
+      className={className}
+    >
+      <textarea
+        id={id}
+        name={id}
+        rows={4}
+        required={required}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy(id, error, hint)}
+        className={cn(control, "resize-y")}
+        {...props}
+        placeholder=" "
+      />
+    </FieldShell>
+  );
+}
+
+export function SelectField({
+  id,
+  name,
+  label,
+  error,
+  hint,
+  className,
+  required,
+  options,
+}: BaseProps & {
+  name?: string;
+  options: string[];
+  required?: boolean;
+  /** Kept for the form definitions; the label inside the box is the prompt. */
+  placeholder?: string;
+}) {
+  return (
+    <FieldShell
+      id={id}
+      label={label}
+      required={required}
+      error={error}
+      hint={hint}
+      labelClassName={floatsWhenChosen}
+      className={className}
+    >
+      <SelectMenu
+        id={id}
+        name={name ?? id}
+        title={label}
+        options={options}
+        required={required}
+        invalid={Boolean(error)}
+        describedBy={describedBy(id, error, hint)}
+        className={control}
+      />
+    </FieldShell>
+  );
+}

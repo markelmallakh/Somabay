@@ -38,9 +38,7 @@ export function SectionHeading({
         className,
       )}
     >
-      {eyebrow ? (
-        <Eyebrow className={tone === "light" ? "text-white/75" : "text-lagoon"}>{eyebrow}</Eyebrow>
-      ) : null}
+      {eyebrow ? <Eyebrow tone={tone === "light" ? "dark" : undefined}>{eyebrow}</Eyebrow> : null}
       <Heading id={id} className={size === "h1" ? "text-h1" : "text-h2"}>
         {title}
       </Heading>

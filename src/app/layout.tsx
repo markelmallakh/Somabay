@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Newsreader, Source_Sans_3 } from "next/font/google";
+import { DM_Sans, Open_Sans } from "next/font/google";
 import { MotionProvider } from "@/components/animations/MotionProvider";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -7,20 +7,21 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
-const newsreader = Newsreader({
+// Headings use Georgia (Figma "Desktop/Heading"), a system font, so only the sans families load.
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  axes: ["opsz"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
-  variable: "--font-newsreader",
-  fallback: ["Georgia", "serif"],
+  variable: "--font-dm-sans",
+  fallback: ["Helvetica Neue", "Arial", "sans-serif"],
 });
 
-const sourceSans = Source_Sans_3({
+const openSans = Open_Sans({
   subsets: ["latin"],
+  weight: ["600"],
   display: "swap",
-  variable: "--font-source-sans",
-  fallback: ["Verdana", "system-ui", "sans-serif"],
+  variable: "--font-open-sans",
+  fallback: ["Helvetica Neue", "Arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -49,14 +50,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0d2328",
+  themeColor: "#404346",
   width: "device-width",
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${newsreader.variable} ${sourceSans.variable}`}>
+    <html lang="en" className={`${dmSans.variable} ${openSans.variable}`}>
       <body>
         <a
           href="#main-content"

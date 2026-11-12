@@ -98,7 +98,7 @@ export function Video({
           type="button"
           onClick={() => setUserPaused(isPlaying || wantsPlayback)}
           className={cn(
-            "absolute z-10 grid size-10 place-items-center rounded-full glass text-white transition-colors duration-300 hover:bg-white hover:text-ink",
+            "wave absolute z-10 grid size-10 place-items-center rounded-md glass text-white transition-colors duration-300 [--wave:#fff] hover:text-ink",
             toggleClassName,
           )}
           aria-label={isPlaying ? "Pause background video" : "Play background video"}

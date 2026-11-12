@@ -22,34 +22,33 @@ the Somabay brand guidelines, and the supplied asset library.
 
 ## 2. Sitemap → routes
 
-Every URL is declared in `src/config/routes.ts`. ✅ = built.
+Every URL is declared in `src/config/routes.ts`; all pages below are built and listed in the sitemap.
 
-| Section         | Page (Figma frame)                    | Route                                                      | Template             |
-| --------------- | ------------------------------------- | ---------------------------------------------------------- | -------------------- |
-| Home            | Home – Desktop ✅                     | `/`                                                        | Home                 |
-| About           | About                                 | `/about`                                                   | Editorial story      |
-| Contact         | Contact Us – Desktop                  | `/contact`                                                 | Form + map           |
-| Facilities      | Facilities & Services – Desktop       | `/facilities-and-services`                                 | Listing + drawer     |
-| Reserve Hotel   | Somabay Holidays – Desktop            | `/holidays`                                                | Listing              |
-|                 | Single Hotel – Desktop                | `/holidays/[slug]`                                         | Detail               |
-| Experience      | Things To Do – List                   | `/things-to-do`                                            | Listing + filters    |
-|                 | Single Things To Do / Golf At Somabay | `/things-to-do/[slug]`                                     | Detail               |
-|                 | The Marina                            | `/the-marina`                                              | Venue hub            |
-|                 | Dining (+ Single Restaurant drawer)   | `/dining`                                                  | Listing + drawer     |
-| Live at Somabay | Neighborhood List                     | `/neighborhoods`                                           | Listing + masterplan |
-|                 | Single Neighborhood                   | `/neighborhoods/[slug]`                                    | Detail               |
-|                 | Resale (+ Single unit)                | `/resale`, `/resale/[unit]`                                | Listing + filters    |
-| What's Up Soma  | Events Calendar – Desktop             | `/events`                                                  | Calendar listing     |
-|                 | Single Event                          | `/events/[slug]`                                           | Detail               |
-|                 | Bay Journal – Desktop                 | `/bay-journal`                                             | Editorial listing    |
-|                 | Single Blog                           | `/bay-journal/[slug]`                                      | Article              |
-|                 | Sustainability                        | `/sustainability`                                          | Editorial story      |
-| Company         | Careers / Single Career               | `/careers`, `/careers/[slug]`                              | Listing + detail     |
-| Support         | FAQ – Desktop                         | `/faqs`                                                    | Accordion            |
-| Legal           | Footer links                          | `/privacy-policy`, `/terms-of-service`, `/cookie-settings` | Rich text            |
-
-Global UI from the wireframes: transparent header (search, weather, language, hotline, menu),
-full-screen menu with second-level panels, footer with app download + newsletter.
+| Section         | Page                                  | Route                                                      |
+| --------------- | ------------------------------------- | ---------------------------------------------------------- |
+| Home            | Home                                  | `/`                                                        |
+| About           | About                                 | `/about`                                                   |
+| Contact         | Contact Us                            | `/contact`                                                 |
+| Facilities      | Facilities & Services                 | `/facilities-and-services`                                 |
+| Book Hotel      | Somabay Holidays (list / map)         | `/holidays`                                                |
+|                 | Single Hotel (+ facility drawers)     | `/holidays/[slug]`                                         |
+| Experience      | Things To Do                          | `/things-to-do`                                            |
+|                 | Golf at Somabay                       | `/things-to-do/golf`                                       |
+|                 | Single Things To Do (Spa template)    | `/things-to-do/[slug]`                                     |
+|                 | The Marina (+ store drawers)          | `/the-marina`                                              |
+|                 | Dining (+ restaurant drawers)         | `/dining`                                                  |
+| Live at Somabay | Neighborhoods                         | `/neighborhoods`                                           |
+|                 | Single Neighborhood (map, masterplan) | `/neighborhoods/[slug]`                                    |
+|                 | Resale                                | `/resale`                                                  |
+|                 | Single Unit                           | `/resale/[slug]`                                           |
+| What's Up Soma  | Events (grid / calendar)              | `/events`                                                  |
+|                 | Single Event                          | `/events/[slug]`                                           |
+|                 | Bay Journal                           | `/bay-journal`                                             |
+|                 | Single Article                        | `/bay-journal/[slug]`                                      |
+|                 | Sustainability                        | `/sustainability`                                          |
+| Company         | Careers / Single Career               | `/careers`, `/careers/[slug]`                              |
+| Support         | FAQs                                  | `/faqs`                                                    |
+| Legal           | Footer links (no design/content yet)  | `/privacy-policy`, `/terms-of-service`, `/cookie-settings` |
 
 ## 3. Reusable building blocks
 
@@ -71,6 +70,20 @@ Built for the homepage and ready for the remaining templates:
 | `Media` + `playback` modes     | Every image or video slot                               |
 
 ## 4. Content to confirm with Somabay
+
+- **FAQs** are drafted from live-site facts (the wireframe entries are placeholders) — `src/content/faqs.ts`.
+- **Hotel themes, room views and rates**: themes are an initial mapping; nightly rates, review scores
+  and testimonials are not shown until real data is connected.
+- **Spa packages** show "Price on request"; **golf**: the Reef Course description is pending.
+- **Neighborhoods**: list/status follow the Neighborhood List wireframe; only Wadi Jebal has full
+  detail (stats, concept); others use shared sections.
+- **Resale units** are the wireframe's sample listings until live inventory is connected.
+- **Events and journal** dates are the wireframe dates; only one article has full body copy.
+- **Stores, restaurants, medical centre**: placeholder photography; opening hours and phone numbers
+  were placeholders in the wireframe and are omitted.
+- **Leadership and golf pros** show monograms until portraits are supplied.
+- **Contact**: the second office is labelled "Somabay Office" (the wireframe labels both "Giza Office").
+- **Careers**: "Apply now" emails info@somabay.com until a careers address or ATS link exists.
 
 - **Districts**: the wireframe says "5 Districts" — the live site doesn't state a number.
 - **Neighborhood status**: which communities are "Living Now" vs "Coming Next" (currently set in

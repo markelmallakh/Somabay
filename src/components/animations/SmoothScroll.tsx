@@ -23,7 +23,14 @@ export function SmoothScroll() {
     const coarse = window.matchMedia("(pointer: coarse)").matches;
     if (reduced || coarse) return;
 
-    const lenis = new Lenis({ duration: 1.15, easing: (t) => 1 - Math.pow(1 - t, 4) });
+    // In-page links (e.g. "Book treatment" → #booking) glide to their section and work again
+    // even when the address already has that hash. Sections clear the fixed header with their
+    // own scroll-margin (scroll-mt-(--header-height)), which Lenis honours.
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => 1 - Math.pow(1 - t, 4),
+      anchors: true,
+    });
     lenisInstance = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (time: number) => lenis.raf(time * 1000);

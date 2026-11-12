@@ -9,7 +9,7 @@ type LogoProps = {
 };
 
 const tones = {
-  brand: { mark: "fill-turquoise", word: "fill-slate" },
+  brand: { mark: "fill-turquoise", word: "fill-cool-grey" },
   light: { mark: "fill-white", word: "fill-white" },
 } as const;
 

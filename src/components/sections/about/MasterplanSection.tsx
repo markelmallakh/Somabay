@@ -1,0 +1,26 @@
+import { masterplanIntro } from "@/content/about";
+import { HeadingRow } from "@/components/layout/HeadingRow";
+import { masterplanHotspots } from "@/content/masterplan-hotspots";
+import { Container } from "@/components/layout/Container";
+import { MasterplanAerial } from "./MasterplanAerial";
+
+/**
+ * Figma About "Section / Masterplan" (491:10609) heading, over the interactive peninsula aerial, rounded and never taller than the screen:
+ * category tabs, clickable places that open a side drawer, and the 360 tour.
+ */
+export function MasterplanSection() {
+  return (
+    <section aria-labelledby="masterplan-title" className="bg-sand-100 py-30 text-ink">
+      <Container>
+        <HeadingRow
+          id="masterplan-title"
+          eyebrow={masterplanIntro.eyebrow}
+          title={masterplanIntro.title}
+          description={masterplanIntro.description}
+          className="mb-10"
+        />
+        <MasterplanAerial hotspots={masterplanHotspots} />
+      </Container>
+    </section>
+  );
+}

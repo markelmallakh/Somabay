@@ -1,58 +1,161 @@
 "use client";
 
+import { PhotoCard } from "@/components/ui/PhotoCard";
 import { AnimatePresence, m } from "framer-motion";
-import Link from "next/link";
-import { type ReactNode, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useDragScroll } from "@/hooks/useDragScroll";
+import { cn } from "@/lib/utils";
 import type { Neighborhood, NeighborhoodStatus } from "@/types/content";
 import { easeOutExpo } from "@/components/animations/easing";
-import { ResponsiveImage } from "@/components/media/ResponsiveImage";
-import { DragCursor } from "@/components/ui/DragCursor";
-import { Icon } from "@/components/ui/Icon";
-import { Tabs } from "@/components/ui/Tabs";
 import { Container } from "@/components/layout/Container";
+import { Icon } from "@/components/ui/Icon";
 
 type NeighborhoodsCarouselProps = {
   neighborhoods: Neighborhood[];
   hrefs: Record<string, string>;
   tabLabels: Record<NeighborhoodStatus, string>;
+  ctaLabel: string;
   heading: ReactNode;
 };
 
 const PANEL_ID = "neighborhoods-panel";
+const ORDER: NeighborhoodStatus[] = ["upcoming", "living"];
 
+/**
+ * Figma "Section / Neighborhoods — Option B": underline tabs with counts, a row of equal photo
+ * cards that bleeds off the right edge, and a progress rail with previous / next controls.
+ */
 export function NeighborhoodsCarousel({
   neighborhoods,
   hrefs,
   tabLabels,
+  ctaLabel,
   heading,
 }: NeighborhoodsCarouselProps) {
-  const [status, setStatus] = useState<NeighborhoodStatus>("living");
+  const [status, setStatus] = useState<NeighborhoodStatus>("upcoming");
+  const [progress, setProgress] = useState({ start: 0, size: 1 });
   const scroller = useRef<HTMLDivElement>(null);
   useDragScroll(scroller);
 
   const items = neighborhoods.filter((item) => item.status === status);
+  // Three copies make the row endless: scrolling past either copy edge jumps silently back
+  // into the middle copy, so the cards appear to loop.
+  const looped = [...items, ...items, ...items];
+
+  /** Width of one full set of cards (one copy, including gaps). */
+  const setWidth = () => {
+    const el = scroller.current;
+    const list = el?.querySelector("ul");
+    return list ? list.scrollWidth / 3 : 0;
+  };
+
+  /** Silently moves the row back into the middle copy (same cards, so nothing visibly shifts). */
+  const recentre = useCallback(() => {
+    const el = scroller.current;
+    const width = setWidth();
+    if (!el || !width) return;
+    if (el.scrollLeft < width * 0.5 || el.scrollLeft > width * 1.5) {
+      el.style.scrollSnapType = "none";
+      el.scrollLeft += el.scrollLeft < width * 0.5 ? width : -width;
+      requestAnimationFrame(() => (el.style.scrollSnapType = ""));
+    }
+  }, []);
+
+  const measure = useCallback(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const width = setWidth();
+    if (!width) return;
+    // The rail fills from the left up to the current card: 1/n … n/n, then restarts with the loop.
+    const card = el.querySelector("li");
+    const count = el.querySelectorAll("li").length / 3;
+    if (!card || !count) return;
+    const stride = card.clientWidth + 16;
+    const index = (((Math.round((el.scrollLeft - width) / stride) % count) + count) % count) + 1;
+    setProgress({ start: 0, size: index / count });
+  }, []);
+
+  // Start in the middle copy whenever the set changes.
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const frame = requestAnimationFrame(() => {
+      el.scrollLeft = setWidth();
+      measure();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [status, measure]);
+
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    measure();
+    el.addEventListener("scroll", measure, { passive: true });
+    // Wrap only once scrolling settles, so it never interrupts a glide or a drag.
+    el.addEventListener("scrollend", recentre);
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => {
+      el.removeEventListener("scroll", measure);
+      el.removeEventListener("scrollend", recentre);
+      observer.disconnect();
+    };
+  }, [measure, recentre, status]);
 
   const change = (next: NeighborhoodStatus) => {
     setStatus(next);
-    scroller.current?.scrollTo({ left: 0, behavior: "smooth" });
+  };
+
+  const step = (direction: 1 | -1) => {
+    const el = scroller.current;
+    const card = el?.querySelector("li");
+    if (!el || !card) return;
+    recentre();
+    // Step to an exact card so quick clicks never skip or land between cards.
+    const stride = card.clientWidth + 16;
+    const index = Math.round(el.scrollLeft / stride) + direction;
+    el.scrollTo({ left: index * stride, behavior: "smooth" });
   };
 
   return (
-    <>
-      <Container className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+    <div className="flex flex-col gap-8">
+      <Container className="flex flex-col gap-8">
         {heading}
-        <Tabs
-          className="shrink-0"
-          label="Neighborhood availability"
-          panelId={PANEL_ID}
-          value={status}
-          onChange={change}
-          options={[
-            { id: "living", label: tabLabels.living },
-            { id: "upcoming", label: tabLabels.upcoming },
-          ]}
-        />
+        <div
+          role="tablist"
+          aria-label="Neighborhood availability"
+          className="flex gap-8 border-b border-gray-200"
+        >
+          {ORDER.map((key) => {
+            const count = neighborhoods.filter((item) => item.status === key).length;
+            const selected = key === status;
+            return (
+              <button
+                key={key}
+                type="button"
+                role="tab"
+                id={`${PANEL_ID}-tab-${key}`}
+                aria-selected={selected}
+                aria-controls={PANEL_ID}
+                onClick={() => change(key)}
+                className={cn(
+                  "relative -mb-px pb-4 text-body-sm font-bold whitespace-nowrap uppercase transition-colors duration-500",
+                  selected ? "text-ink" : "text-slate hover:text-ink",
+                )}
+              >
+                {tabLabels[key]}
+                <span className="ml-2">({count})</span>
+                <span
+                  aria-hidden
+                  className={cn(
+                    "absolute inset-x-0 bottom-0 h-0.5 origin-left bg-turquoise transition-transform duration-700 ease-out-expo",
+                    selected ? "scale-x-100" : "scale-x-0",
+                  )}
+                />
+              </button>
+            );
+          })}
+        </div>
       </Container>
 
       <div
@@ -60,48 +163,68 @@ export function NeighborhoodsCarousel({
         id={PANEL_ID}
         role="tabpanel"
         aria-labelledby={`${PANEL_ID}-tab-${status}`}
-        className="mt-10 scrollbar-none cursor-grab snap-x snap-proximity scroll-ps-site overflow-x-auto data-[dragging=true]:cursor-grabbing data-[dragging=true]:snap-none md:mt-12"
+        className="scrollbar-none cursor-grab snap-x snap-proximity scroll-ps-site overflow-x-auto data-[dragging=true]:cursor-grabbing data-[dragging=true]:snap-none"
       >
         <AnimatePresence mode="wait" initial={false}>
           <m.ul
             key={status}
-            className="flex w-max gap-3 ps-site pe-gutter md:gap-4"
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -24 }}
-            transition={{ duration: 0.7, ease: easeOutExpo }}
+            transition={{ duration: 0.6, ease: easeOutExpo }}
+            className="flex w-max gap-4 ps-site pe-gutter"
           >
-            {items.map((item) => (
-              <li key={item.slug} className="w-[clamp(16rem,24vw,23rem)] snap-start">
-                <Link
+            {looped.map((item, index) => (
+              <li
+                key={`${item.slug}-${index}`}
+                aria-hidden={index < items.length || index >= items.length * 2 ? true : undefined}
+                className="w-[min(25rem,80vw)] snap-start"
+              >
+                <PhotoCard
                   href={hrefs[item.slug]}
                   draggable={false}
-                  className="group relative block aspect-[7/10] overflow-hidden bg-sand-200 text-white"
-                >
-                  <ResponsiveImage
-                    asset={item.image}
-                    sizes="(min-width: 768px) 24vw, 16rem"
-                    fill
-                    className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.06]"
-                  />
-                  <span
-                    aria-hidden
-                    className="absolute inset-0 bg-linear-to-t from-abyss/80 via-abyss/10 to-transparent"
-                  />
-                  <span className="absolute top-4 right-4 grid size-10 place-items-center bg-white/90 text-ink transition-colors duration-500 group-hover:bg-turquoise group-hover:text-white">
-                    <Icon name="arrow-up-right" className="size-4.5" />
-                  </span>
-                  <span className="absolute inset-x-5 bottom-5">
-                    <span className="block font-serif text-h4">{item.name}</span>
-                    <span className="mt-1 block text-caption text-white/75">{item.tagline}</span>
-                  </span>
-                </Link>
+                  tabIndex={index < items.length || index >= items.length * 2 ? -1 : undefined}
+                  image={item.image}
+                  sizes="(min-width: 768px) 400px, 80vw"
+                  tag={tabLabels[item.status]}
+                  kicker={item.tagline}
+                  title={item.name}
+                  summary={item.summary}
+                  action={ctaLabel}
+                  className="aspect-[400/520]"
+                />
               </li>
             ))}
           </m.ul>
         </AnimatePresence>
       </div>
-      <DragCursor targetRef={scroller} />
-    </>
+
+      <Container className="flex items-center gap-8">
+        <div className="relative h-0.5 flex-1 bg-gray-200" aria-hidden>
+          <span
+            className="absolute inset-y-0 bg-turquoise transition-[width] duration-700 ease-out-expo"
+            style={{ left: `${progress.start * 100}%`, width: `${progress.size * 100}%` }}
+          />
+        </div>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => step(-1)}
+            className="wave grid size-12 place-items-center rounded-md border border-gray-300 text-ink transition-colors duration-500 hover:border-turquoise hover:text-white"
+          >
+            <span className="sr-only">Previous neighborhoods</span>
+            <Icon name="arrow-right" className="size-5 rotate-180" />
+          </button>
+          <button
+            type="button"
+            onClick={() => step(1)}
+            className="wave grid size-12 place-items-center rounded-md bg-ink text-white transition-colors duration-500"
+          >
+            <span className="sr-only">Next neighborhoods</span>
+            <Icon name="arrow-right" className="size-5" />
+          </button>
+        </div>
+      </Container>
+    </div>
   );
 }

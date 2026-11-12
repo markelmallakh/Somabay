@@ -10,7 +10,7 @@ type ImageRevealProps = {
   className?: string;
   /** Direction the clip-path wipe travels. */
   from?: "bottom" | "top" | "left" | "right";
-  /** Adds a gentle scroll-linked drift to the inner media (percentage of its height). */
+  /** Scroll-linked drift of the inner media (percentage of its height); 0 turns it off. */
   parallax?: number;
   delay?: number;
 };
@@ -30,7 +30,7 @@ export function ImageReveal({
   children,
   className,
   from = "bottom",
-  parallax = 0,
+  parallax = 6,
   delay = 0,
 }: ImageRevealProps) {
   const ref = useGsap<HTMLDivElement>(
@@ -49,11 +49,13 @@ export function ImageReveal({
           scrollTrigger: { trigger: frame, start: "top 88%", once: true },
         },
       );
+      // With parallax the media stays slightly oversized so its drift never shows an edge.
+      const rest = parallax ? 1 + (parallax * 2.2) / 100 : 1;
       gsap.fromTo(
         inner,
-        { scale: 1.18 },
+        { scale: rest + 0.16 },
         {
-          scale: 1,
+          scale: rest,
           duration: 2,
           delay,
           ease: "expo.out",

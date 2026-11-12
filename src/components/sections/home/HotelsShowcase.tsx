@@ -1,132 +1,235 @@
 "use client";
 
-import { AnimatePresence, m } from "framer-motion";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useCallback, useRef, useState } from "react";
 import { useGsap } from "@/hooks/useGsap";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
-import type { Hotel } from "@/types/content";
-import { easeOutExpo } from "@/components/animations/easing";
+import type { ImageAsset } from "@/types/media";
+import { getLenis } from "@/components/animations/SmoothScroll";
+import { Container } from "@/components/layout/Container";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
-import { Stars } from "@/components/ui/Stars";
-import { TextLink } from "@/components/ui/TextLink";
+import { Button } from "@/components/ui/Button";
+import { PriceFrom } from "@/components/ui/PriceFrom";
+import { Icon } from "@/components/ui/Icon";
+import { Chip } from "@/components/ui/Chip";
+import { StarChip } from "@/components/sections/holidays/StarChip";
 
-type HotelsShowcaseProps = {
-  hotels: Hotel[];
-  hrefs: string[];
-  ctaLabel: string;
-  /** Section heading, kept in view at the top of the pinned stage on desktop. */
-  heading: ReactNode;
+export type ShowcaseHotel = {
+  slug: string;
+  name: string;
+  tagline: string;
+  stars?: number;
+  description: string;
+  image: ImageAsset;
+  /** Photos for the gallery arrows; the first is the cover. */
+  gallery: ImageAsset[];
+  href: string;
+  tags: string[];
+  /** "Starting from" nightly price. */
+  price: string;
 };
 
-/** Where each of a hotel's three images floats around the centred list (desktop). */
-const slots = [
-  { className: "left-[5%] top-[16%] w-[21vw] aspect-[4/3]", sizes: "22vw" },
-  { className: "left-[15%] bottom-[10%] w-[13vw] aspect-[4/3]", sizes: "14vw" },
-  { className: "right-[5%] top-[24%] w-[17vw] aspect-[3/4]", sizes: "18vw" },
-] as const;
+type HotelsShowcaseProps = {
+  hotels: ShowcaseHotel[];
+  ctaLabel: string;
+  intro: ReactNode;
+};
 
-export function HotelsShowcase({ hotels, hrefs, ctaLabel, heading }: HotelsShowcaseProps) {
+const pad = (value: number) => String(value).padStart(2, "0");
+
+/**
+ * Figma "Section / Hotels". On desktop the section pins and scrolling steps through the hotels:
+ * the photo cross-fades, the details rise in and the switcher marks the active hotel. The
+ * switcher jumps to a hotel (by scrolling to its step while pinned; without the pin it simply
+ * switches). The counter arrows on the photo page through the active hotel's own gallery.
+ */
+export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps) {
   const [active, setActive] = useState(0);
-  const current = hotels[active];
+  const trigger = useRef<ScrollTrigger | null>(null);
+  const count = hotels.length;
 
   const ref = useGsap<HTMLDivElement>(
     ({ scope, reducedMotion }) => {
-      const list = scope.querySelector<HTMLElement>("[data-hotel-list]");
-      const firstItem = list?.firstElementChild;
-      if (!list || !(firstItem instanceof HTMLElement)) return;
+      if (reducedMotion) return;
       const mm = gsap.matchMedia();
       mm.add("(min-width: 1024px)", () => {
-        const steps = hotels.length - 1;
-        gsap.to(list, {
-          y: () => -steps * firstItem.offsetHeight,
-          ease: "none",
-          scrollTrigger: {
-            trigger: scope,
-            start: "top top",
-            end: `+=${hotels.length * 65}%`,
-            pin: true,
-            scrub: reducedMotion ? true : 0.6,
-            snap: reducedMotion
-              ? undefined
-              : { snapTo: 1 / steps, duration: 0.5, ease: "power2.inOut" },
-            invalidateOnRefresh: true,
-            onUpdate: (self) => setActive(Math.round(self.progress * steps)),
+        trigger.current = ScrollTrigger.create({
+          trigger: scope,
+          start: "center center",
+          end: () => `+=${(count - 1) * window.innerHeight * 0.6}`,
+          pin: true,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const index = Math.min(count - 1, Math.floor(self.progress * count));
+            setActive((previous) => (previous === index ? previous : index));
           },
         });
+        return () => {
+          trigger.current = null;
+        };
       });
       return () => mm.revert();
     },
-    [hotels.length],
+    [count],
   );
 
+  const goTo = useCallback(
+    (index: number) => {
+      const next = (index + count) % count;
+      const st = trigger.current;
+      if (!st) {
+        setActive(next);
+        return;
+      }
+      const y = st.start + ((next + 0.5) / count) * (st.end - st.start);
+      const lenis = getLenis();
+      if (lenis) lenis.scrollTo(y, { duration: 1.2 });
+      else window.scrollTo({ top: y, behavior: "smooth" });
+    },
+    [count],
+  );
+
+  const hotel = hotels[active];
+
+  // Gallery position, remembered per hotel and reset when another hotel becomes active.
+  const [photo, setPhoto] = useState({ slug: hotel.slug, index: 0 });
+  const photoIndex = photo.slug === hotel.slug ? photo.index : 0;
+  const photos = hotel.gallery.length;
+  const step = (by: number) =>
+    setPhoto({ slug: hotel.slug, index: (photoIndex + by + photos) % photos });
+
   return (
-    <div ref={ref} className="relative lg:h-svh lg:overflow-hidden">
-      <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
-        {slots.map((slot, index) => (
-          <div key={index} className={cn("absolute overflow-hidden", slot.className)}>
-            <AnimatePresence initial={false}>
-              <m.div
-                key={current.slug}
-                className="absolute inset-0"
-                initial={{ clipPath: "inset(100% 0% 0% 0%)", scale: 1.15 }}
-                animate={{ clipPath: "inset(0% 0% 0% 0%)", scale: 1 }}
-                exit={{ opacity: 0, transition: { duration: 0.6, delay: 0.3 } }}
-                transition={{ duration: 1.2, ease: easeOutExpo, delay: index * 0.08 }}
-              >
-                <ResponsiveImage asset={current.images[index]} alt="" sizes={slot.sizes} fill />
-              </m.div>
-            </AnimatePresence>
-          </div>
-        ))}
-      </div>
-
-      <div className="relative z-10 pb-16 text-center lg:absolute lg:inset-x-0 lg:top-0 lg:pt-[calc(var(--header-height)+2rem)] lg:pb-0">
-        {heading}
-      </div>
-
-      <div className="relative lg:absolute lg:inset-0 lg:mask-[linear-gradient(to_bottom,transparent_27%,black_42%,black_72%,transparent_90%)]">
-        <ol
-          data-hotel-list
-          className="flex flex-col gap-16 [--item-h:15rem] lg:absolute lg:inset-x-0 lg:top-[calc(50%-var(--item-h)/2+2.5rem)] lg:gap-0"
-        >
-          {hotels.map((hotel, index) => {
-            const isActive = index === active;
-            return (
-              <li
-                key={hotel.slug}
+    <div ref={ref} className="flex flex-col gap-8 py-section">
+      {intro}
+      <Container>
+        <div className="grid gap-8 lg:grid-cols-[560fr_445fr_323fr]">
+          {/* Photo */}
+          <div className="relative aspect-[560/460] overflow-hidden rounded-[2rem] bg-gray-100">
+            {hotels.map((item, index) => (
+              <div
+                key={item.slug}
+                aria-hidden={index !== active}
                 className={cn(
-                  "flex flex-col items-center text-center lg:h-(--item-h) lg:justify-center",
-                  "transition-[opacity,transform] duration-700 ease-out-expo",
-                  isActive ? "lg:opacity-100" : "lg:scale-[0.92] lg:opacity-20",
+                  "absolute inset-0 transition-[opacity,scale] duration-[1200ms] ease-out-expo",
+                  index === active ? "scale-100 opacity-100" : "scale-[1.06] opacity-0",
                 )}
               >
-                <div className="relative mb-8 aspect-[4/3] w-full max-w-md overflow-hidden lg:hidden">
-                  <ResponsiveImage
-                    asset={hotel.images[0]}
-                    sizes="(min-width: 640px) 28rem, 100vw"
-                    fill
-                  />
-                </div>
-                <p className="eyebrow bg-white/10 px-2.5 py-1 text-[0.6875rem] text-white/85">
-                  {hotel.tagline}
-                </p>
-                <h3 className="mt-4 max-w-md font-serif text-[clamp(2.25rem,1.8rem+2vw,3.75rem)] leading-[1.02]">
-                  {hotel.name}
-                </h3>
-                {hotel.stars ? <Stars count={hotel.stars} className="mt-4 text-white/80" /> : null}
-                <TextLink
-                  href={hrefs[index]}
-                  srContext={hotel.name}
-                  className={cn("mt-5 text-white/90", !isActive && "lg:pointer-events-none")}
+                {(index === active ? item.gallery : [item.gallery[0]]).map((asset, slide) => {
+                  const shown = index !== active || slide === photoIndex;
+                  return (
+                    <div
+                      key={asset.src}
+                      className={cn(
+                        "absolute inset-0 transition-[opacity,scale] duration-[900ms] ease-out-expo",
+                        shown ? "scale-100 opacity-100" : "scale-[1.04] opacity-0",
+                      )}
+                    >
+                      <ResponsiveImage asset={asset} sizes="(min-width: 1024px) 37vw, 100vw" fill />
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+            <div className="absolute bottom-4 left-4 flex items-center gap-3 rounded-md bg-black/20 px-2.5 py-2 text-body-sm text-white backdrop-blur-lg">
+              <p aria-live="polite">
+                <span className="font-semibold">{pad(photoIndex + 1)}</span>
+                <span className="ml-1.5">/ {pad(photos)}</span>
+              </p>
+              <span className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => step(-1)}
+                  className="transition-opacity hover:opacity-70"
                 >
-                  {ctaLabel}
-                </TextLink>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
+                  <span className="sr-only">Previous photo of {hotel.name}</span>
+                  <Icon name="chevron-left" className="size-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => step(1)}
+                  className="transition-opacity hover:opacity-70"
+                >
+                  <span className="sr-only">Next photo of {hotel.name}</span>
+                  <Icon name="chevron-right" className="size-4" />
+                </button>
+              </span>
+            </div>
+          </div>
+
+          {/* Details */}
+          <div key={hotel.slug} className="flex flex-col justify-between gap-6 pb-2">
+            <div className="flex flex-col gap-3">
+              <ul className="flex animate-rise flex-wrap gap-2">
+                {hotel.stars ? (
+                  <li>
+                    <StarChip count={hotel.stars} />
+                  </li>
+                ) : null}
+                {hotel.tags.map((tag) => (
+                  <li key={tag}>
+                    <Chip>{tag}</Chip>
+                  </li>
+                ))}
+              </ul>
+              <h3 className="animate-rise text-heading-3 [animation-delay:60ms]">{hotel.name}</h3>
+              <p className="animate-rise text-body-md text-slate [animation-delay:120ms]">
+                {hotel.description}
+              </p>
+            </div>
+            <div className="flex animate-rise flex-wrap items-center gap-x-8 gap-y-4 [animation-delay:240ms]">
+              <PriceFrom amount={hotel.price} />
+              <Button href={hotel.href} variant="primary" icon="arrow-up-right">
+                {ctaLabel}
+                <span className="sr-only">: {hotel.name}</span>
+              </Button>
+            </div>
+          </div>
+
+          {/* Switcher */}
+          <ul aria-label="Hotels" className="flex flex-col">
+            {hotels.map((item, index) => {
+              const current = index === active;
+              return (
+                <li key={item.slug} className="flex-1">
+                  <button
+                    type="button"
+                    aria-current={current ? "true" : undefined}
+                    onClick={() => goTo(index)}
+                    className="group relative flex h-full w-full items-center gap-3.5 border-l border-gray-300 py-2 pl-4.5 text-left"
+                  >
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "absolute top-0 -left-px h-full w-0.5 origin-top bg-turquoise transition-transform duration-700 ease-out-expo",
+                        current ? "scale-y-100" : "scale-y-0",
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "relative size-13 shrink-0 overflow-hidden rounded-full transition-opacity duration-500",
+                        current ? "opacity-100" : "opacity-55 group-hover:opacity-80",
+                      )}
+                    >
+                      <ResponsiveImage asset={item.image} sizes="52px" fill />
+                    </span>
+                    <span className="flex min-w-0 flex-col gap-0.5">
+                      <span
+                        className={cn(
+                          "truncate text-body-md font-semibold transition-colors duration-500",
+                          current ? "text-ink" : "text-slate group-hover:text-ink",
+                        )}
+                      >
+                        {item.name}
+                      </span>
+                      <span className="truncate text-body-xs text-slate">{item.tagline}</span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </Container>
     </div>
   );
 }

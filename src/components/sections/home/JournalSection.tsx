@@ -1,74 +1,75 @@
-import Link from "next/link";
 import { routes } from "@/config/routes";
 import { journalIntro } from "@/content/home";
 import { articles } from "@/content/journal";
 import { Container } from "@/components/layout/Container";
-import { Section } from "@/components/layout/Section";
-import { SectionHeading } from "@/components/layout/SectionHeading";
-import { Reveal } from "@/components/animations/Reveal";
+import { Reveal, RevealGroup, RevealItem } from "@/components/animations/Reveal";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
-import { JournalCarousel } from "./JournalCarousel";
+import { SmartLink } from "@/components/ui/SmartLink";
 
+const date = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+/** Figma "Section / Journal" (447:11669): three latest stories in a row. */
 export function JournalSection() {
   return (
-    <Section tone="white" aria-labelledby="journal-title" className="overflow-hidden">
-      <Container>
-        <SectionHeading
-          id="journal-title"
-          align="center"
-          eyebrow={journalIntro.eyebrow}
-          title={journalIntro.title}
-        />
-      </Container>
-      <div className="mt-14 md:mt-20">
-        <JournalCarousel label={journalIntro.title}>
-          {articles.map((article) => (
-            <li key={article.slug} className="w-[min(82vw,26rem)] shrink-0 snap-start">
-              <article className="group relative">
-                <div className="relative aspect-[4/3] overflow-hidden bg-sand-200">
+    <section
+      aria-labelledby="journal-title"
+      data-theme-surface="light"
+      className="bg-gray-50 py-section text-ink"
+    >
+      <Container className="flex flex-col gap-12">
+        <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-col gap-2">
+            <Eyebrow>{journalIntro.eyebrow}</Eyebrow>
+            <h2 id="journal-title" className="text-heading-2">
+              {journalIntro.title}
+            </h2>
+          </div>
+          <Button href={journalIntro.cta.href} variant="outline" icon="chevron-right">
+            {journalIntro.cta.label}
+          </Button>
+        </Reveal>
+
+        <RevealGroup as="ul" className="grid gap-6 md:grid-cols-3">
+          {articles.slice(0, 3).map((article) => (
+            <RevealItem as="li" key={article.slug}>
+              <SmartLink href={routes.article(article.slug)} className="group flex flex-col gap-6">
+                <span className="relative block aspect-[448/300] overflow-hidden rounded-[2rem]">
                   <ResponsiveImage
                     asset={article.image}
-                    sizes="(min-width: 768px) 26rem, 82vw"
+                    sizes="(min-width: 768px) 30vw, 100vw"
                     fill
                     className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                   />
-                </div>
-                <p className="mt-6 flex items-center gap-3 text-caption">
-                  <span className="bg-sand-100 px-2.5 py-1 font-semibold">{article.category}</span>
-                  <span className="text-slate">{article.readingMinutes} min read</span>
-                </p>
-                <h3 className="mt-4 font-serif text-h4">
-                  <Link
-                    href={routes.article(article.slug)}
-                    className="after:absolute after:inset-0"
-                  >
-                    {article.title}
-                  </Link>
-                </h3>
-                <p
-                  aria-hidden
-                  className="mt-5 inline-flex items-center gap-2 text-[0.75rem] font-semibold tracking-label uppercase"
-                >
-                  <span className="link-underline pb-0.5 group-hover:[background-size:100%_1px]">
-                    {journalIntro.itemCtaLabel}
+                </span>
+                <span className="flex flex-col gap-4">
+                  <span className="flex items-center gap-3 text-body-sm text-slate">
+                    <span className="eyebrow text-turquoise">{article.category}</span>
+                    <span>{date.format(new Date(article.date))}</span>
+                    <span aria-hidden>·</span>
+                    <span>{article.readingMinutes} min read</span>
                   </span>
-                  <Icon
-                    name="chevron-right"
-                    className="size-3.5 transition-transform duration-500 group-hover:translate-x-1"
-                  />
-                </p>
-              </article>
-            </li>
+                  <span className="font-serif text-heading-5">{article.title}</span>
+                  <span className="inline-flex items-center gap-2 text-body-xs font-semibold">
+                    {journalIntro.itemCtaLabel}
+                    <Icon
+                      name="arrow-right"
+                      className="size-4 transition-transform duration-700 ease-out-expo group-hover:translate-x-1"
+                    />
+                  </span>
+                </span>
+              </SmartLink>
+            </RevealItem>
           ))}
-        </JournalCarousel>
-      </div>
-      <Reveal className="mt-14 flex justify-center px-gutter">
-        <Button href={journalIntro.cta.href} variant="outline">
-          {journalIntro.cta.label}
-        </Button>
-      </Reveal>
-    </Section>
+        </RevealGroup>
+      </Container>
+    </section>
   );
 }

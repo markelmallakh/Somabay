@@ -1,90 +1,89 @@
-import { facilities } from "@/content/facilities";
 import { facilitiesIntro } from "@/content/home";
-import type { Facility } from "@/types/content";
+import { HeadingRow } from "@/components/layout/HeadingRow";
+import { FacilitiesCollage, type Facility } from "./FacilitiesCollage";
+import { image } from "@/lib/media";
 import { Container } from "@/components/layout/Container";
-import { Section } from "@/components/layout/Section";
-import { SectionHeading } from "@/components/layout/SectionHeading";
-import { Reveal, RevealGroup, RevealItem } from "@/components/animations/Reveal";
-import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
 
-function FacilityCard({
-  facility,
-  imagePosition,
-}: {
-  facility: Facility;
-  imagePosition: "top" | "bottom";
-}) {
-  const text = (
-    <div className="p-7 md:p-8">
-      <h3 className="font-serif text-h3">{facility.title}</h3>
-      <p className="mt-3 max-w-sm text-slate">{facility.description}</p>
-    </div>
-  );
-  if (facility.image) {
-    return (
-      <article className="group flex h-full flex-col overflow-hidden bg-sand-50">
-        {imagePosition === "bottom" ? text : null}
-        <div className="relative min-h-64 flex-1 overflow-hidden">
-          <ResponsiveImage
-            asset={facility.image}
-            sizes="(min-width: 1024px) 30vw, 100vw"
-            fill
-            className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
-          />
-        </div>
-        {imagePosition === "top" ? text : null}
-      </article>
-    );
-  }
-  return (
-    <article className="flex h-full flex-col justify-between gap-12 bg-sand-50 p-7 md:p-8">
-      {facility.icon ? (
-        <span className="grid size-12 place-items-center rounded-full border border-line text-lagoon">
-          <Icon name={facility.icon} className="size-6" />
-        </span>
-      ) : null}
-      <div>
-        <h3 className="font-serif text-h3">{facility.title}</h3>
-        <p className="mt-3 max-w-sm text-slate">{facility.description}</p>
-      </div>
-    </article>
-  );
-}
+const school = image(
+  "/images/facilities/facility-school.webp",
+  "A modern school building framed by cacti",
+);
+const lounge = image(
+  "/images/facilities/facility-lounge.webp",
+  "A guest relaxing on a shaded terrace",
+);
+
+/** Figma "Section / Facilities & Services — Collage" (416:17854). */
+const lead: Facility = {
+  title: "Education & Schools",
+  description:
+    "International curricula and early years learning within a close-knit coastal community.",
+  image: school,
+  href: `${facilitiesIntro.cta.href}#education`,
+};
+const rows: [Facility, Facility][] = [
+  [
+    {
+      title: "Mobility & Transfers",
+      description: "Shuttles, G-Ride and airport transfers across the bay.",
+      image: school,
+      href: `${facilitiesIntro.cta.href}#mobility`,
+    },
+    {
+      title: "Medical Centers",
+      description: "Expert care and emergency support, 24/7.",
+      image: image(
+        "/images/facilities/facility-kiter.webp",
+        "A kitesurfer carrying his board at sunset",
+      ),
+      href: `${facilitiesIntro.cta.href}#medical`,
+    },
+  ],
+  [
+    {
+      title: "Maintenance",
+      description: "Complete home support, from repairs to housekeeping.",
+      image: lounge,
+      href: `${facilitiesIntro.cta.href}#maintenance`,
+    },
+    {
+      title: "Pharmacies",
+      description: "Everyday medicines and essentials, open daily.",
+      image: lounge,
+      href: `${facilitiesIntro.cta.href}#pharmacy`,
+    },
+  ],
+];
 
 export function FacilitiesSection() {
-  const [education, medical, maintenance, mobility] = facilities;
   return (
-    <Section tone="stone" aria-labelledby="facilities-title">
-      <Container>
-        <SectionHeading
+    <section
+      aria-labelledby="facilities-title"
+      data-theme-surface="light"
+      className="bg-turquoise-5 py-section text-ink"
+    >
+      <Container className="flex flex-col gap-[3.75rem]">
+        <HeadingRow
           id="facilities-title"
-          align="center"
           eyebrow={facilitiesIntro.eyebrow}
           title={facilitiesIntro.title}
           description={facilitiesIntro.description}
+          aside={
+            <div>
+              <Button href={facilitiesIntro.cta.href} variant="primary" icon="arrow-up-right">
+                {facilitiesIntro.cta.label}
+              </Button>
+            </div>
+          }
         />
-        <RevealGroup className="mt-14 grid gap-3 md:mt-20 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-[auto_auto]">
-          <RevealItem className="lg:row-span-2">
-            <FacilityCard facility={education} imagePosition="bottom" />
-          </RevealItem>
-          <RevealItem>
-            <FacilityCard facility={medical} imagePosition="top" />
-          </RevealItem>
-          <RevealItem className="lg:col-start-2">
-            <FacilityCard facility={maintenance} imagePosition="top" />
-          </RevealItem>
-          <RevealItem className="md:col-span-2 lg:col-span-1 lg:col-start-3 lg:row-span-2 lg:row-start-1">
-            <FacilityCard facility={mobility} imagePosition="top" />
-          </RevealItem>
-        </RevealGroup>
-        <Reveal className="mt-14 flex justify-center">
-          <Button href={facilitiesIntro.cta.href} variant="outline">
-            {facilitiesIntro.cta.label}
-          </Button>
-        </Reveal>
+
+        <FacilitiesCollage
+          lead={lead}
+          left={[rows[0][0], rows[1][0]]}
+          right={[rows[0][1], rows[1][1]]}
+        />
       </Container>
-    </Section>
+    </section>
   );
 }

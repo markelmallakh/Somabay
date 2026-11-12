@@ -111,9 +111,13 @@ list of `HeroScene` objects, each with its own video and poster.
 
 ## Environment variables
 
-| Variable                 | Scope  | Purpose                                                                        |
-| ------------------------ | ------ | ------------------------------------------------------------------------------ |
-| `NEXT_PUBLIC_SITE_URL`   | Public | Canonical origin for metadata, sitemap and robots                              |
-| `NEWSLETTER_WEBHOOK_URL` | Server | Receives footer newsletter signups; the form reports unavailability when unset |
+| Variable                 | Scope  | Purpose                                                                                                                |
+| ------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`   | Public | Canonical origin for metadata, sitemap and robots                                                                      |
+| `NEWSLETTER_WEBHOOK_URL` | Server | Receives footer newsletter signups; the form reports unavailability when unset                                         |
+| `ENQUIRY_WEBHOOK_URL`    | Server | Receives contact, spa booking, tee booking and resale call requests (validated server-side against `src/lib/forms.ts`) |
 
 The header temperature comes from Open-Meteo (no key), cached for an hour with `"use cache"`.
+
+Maps use Leaflet with the CARTO Positron basemap (OpenStreetMap data, attribution shown on the map).
+Coordinates live in `src/content/places.ts`.

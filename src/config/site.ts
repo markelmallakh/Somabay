@@ -38,7 +38,13 @@ export const siteConfig = {
     android: "https://play.google.com/store/apps/details?id=com.moonshot.somaBayApp",
   },
   virtualTour: "https://idvdigital.com/360-vr/somabay/",
-  languages: [{ code: "en", label: "English" }],
+  /** Each language in its own name. Only English content exists so far. */
+  languages: [
+    { code: "en", label: "English", dir: "ltr" },
+    { code: "ar", label: "العربية", dir: "rtl" },
+    { code: "de", label: "Deutsch", dir: "ltr" },
+    { code: "es", label: "Español", dir: "ltr" },
+  ],
   credit: "Mitchdesigns",
 } as const;
 

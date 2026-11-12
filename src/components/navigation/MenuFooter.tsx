@@ -1,62 +1,46 @@
 import Link from "next/link";
-import { menuActions, menuUtilityLinks } from "@/config/navigation";
-import { siteConfig } from "@/config/site";
+import type { HeaderData, NavLink } from "@/types/navigation";
 import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
 
 type MenuFooterProps = {
   temperature: number | null;
   onNavigate: () => void;
+  utilityLinks: NavLink[];
+  actions: HeaderData["actions"];
 };
 
-export function MenuFooter({ temperature, onNavigate }: MenuFooterProps) {
+export function MenuFooter({ onNavigate, utilityLinks, actions }: MenuFooterProps) {
   return (
-    <div className="mt-10 flex flex-col gap-6">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <Button
-          href={menuActions.contact.href}
-          variant="solid"
-          icon="chevron-right"
-          iconPosition="start"
-          onClick={onNavigate}
-        >
-          {menuActions.contact.label}
-        </Button>
-        <Button
-          href={menuActions.virtualTour.href}
-          external
-          variant="outline"
-          icon="cube"
-          iconPosition="start"
-        >
-          {menuActions.virtualTour.label}
-        </Button>
-      </div>
-      <ul className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-line pt-6 font-serif text-[1.0625rem]">
-        {menuUtilityLinks.map((link) => (
+    <div className="mt-8 flex flex-col gap-6">
+      <ul className="flex flex-wrap items-center gap-x-5 gap-y-3 border-b border-white/15 pb-6 font-sans text-body-sm font-medium tracking-[0.08em] text-white/85 uppercase">
+        {utilityLinks.map((link) => (
           <li key={link.href}>
             <Link href={link.href} onClick={onNavigate} className="link-underline">
               {link.label}
             </Link>
           </li>
         ))}
-        <li>
-          <a
-            href={siteConfig.contact.hotlineHref}
-            className="flex items-center gap-1.5 hover:text-lagoon"
-          >
-            <Icon name="phone" className="size-4" />
-            {siteConfig.contact.hotline}
-          </a>
-        </li>
-        {temperature !== null ? (
-          <li className="flex items-center gap-1.5">
-            <Icon name="cloud-sun" className="size-4.5" />
-            <span className="sr-only">Current temperature: </span>
-            {temperature}°C
-          </li>
-        ) : null}
       </ul>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <Button
+          href={actions.contact.href}
+          variant="light"
+          icon="chevron-right"
+          iconPosition="start"
+          onClick={onNavigate}
+        >
+          {actions.contact.label}
+        </Button>
+        <Button
+          href={actions.virtualTour.href}
+          external
+          variant="outline-light"
+          icon="cube"
+          iconPosition="start"
+        >
+          {actions.virtualTour.label}
+        </Button>
+      </div>
     </div>
   );
 }

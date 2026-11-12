@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { AboutSection } from "@/components/sections/home/AboutSection";
-import { ContactCta } from "@/components/sections/home/ContactCta";
-import { EventsSection } from "@/components/sections/home/EventsSection";
-import { ExperienceSection } from "@/components/sections/home/ExperienceSection";
+import { ContactCta } from "@/components/sections/shared/ContactCta";
+import { HomeEventsSection } from "@/components/sections/home/HomeEventsSection";
+import { DiningSection } from "@/components/sections/home/DiningSection";
 import { FacilitiesSection } from "@/components/sections/home/FacilitiesSection";
 import { HolidaysSection } from "@/components/sections/home/HolidaysSection";
 import { HomeHero } from "@/components/sections/home/HomeHero";
 import { JournalSection } from "@/components/sections/home/JournalSection";
+import { JourneyMap } from "@/components/sections/home/JourneyMap";
 import { NeighborhoodsSection } from "@/components/sections/home/NeighborhoodsSection";
 import { ResaleSection } from "@/components/sections/home/ResaleSection";
 import { ThingsToDoSection } from "@/components/sections/home/ThingsToDoSection";
@@ -45,15 +46,19 @@ export default function HomePage() {
   return (
     <>
       <JsonLd data={structuredData} />
-      <HomeHero />
-      <AboutSection />
+      {/* The hero stays pinned while the About story slides up over it. */}
+      <div className="relative">
+        <HomeHero />
+        <AboutSection />
+      </div>
       <HolidaysSection />
+      <JourneyMap />
       <NeighborhoodsSection />
       <ResaleSection />
-      <ExperienceSection />
       <ThingsToDoSection />
+      <DiningSection />
       <FacilitiesSection />
-      <EventsSection />
+      <HomeEventsSection />
       <JournalSection />
       <ContactCta />
     </>

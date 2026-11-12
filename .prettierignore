@@ -4,3 +4,4 @@ public
 package-lock.json
 next-env.d.ts
 AGENTS.md
+src/content/media-manifest.ts

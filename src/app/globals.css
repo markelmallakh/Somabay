@@ -1,13 +1,10 @@
 @import "tailwindcss";
 
 /*
- * Somabay design tokens.
- * Brand colours come from the Somabay Brand Identity Guidelines:
- *   Sea Turquoise  PANTONE 326 C  rgb(0 178 186)
- *   Cool Gray      Cool Gray 11 C rgb(83 86 90)
- *   Warm Gray      Cool Gray 3 C  rgb(216 207 198)
- *   Twilight Blue  PANTONE 308 C  rgb(0 104 146)
- * Everything else (sand grounds, ink, abyss) is derived from those values.
+ * Somabay design tokens — mirrors the Figma design system (file XtTcWyYysRgXYKaKqcsTGO,
+ * local paint + text styles). Desktop values are the Figma sizes at the 1512px frame; type
+ * scales down fluidly to ~375px. Legacy names (ink, slate, sand, lagoon, abyss…) are kept
+ * and remapped to their nearest Figma style so every page follows the new system.
  */
 @theme {
   --color-*: initial;
@@ -16,72 +13,211 @@
   --color-transparent: transparent;
   --color-current: currentColor;
 
-  --color-sand-50: #fbfaf7;
-  --color-sand-100: #f5f2ec;
-  --color-sand-200: #ebe5dc;
-  --color-sand-300: #d8cfc6;
-  --color-sand-400: #b9ad9f;
-
-  --color-ink: #24272a;
-  --color-slate: #53565a;
-  --color-mist: #8a8d90;
-  --color-line: #ddd6cc;
-
+  /* Primary */
   --color-turquoise: #00b2ba;
-  --color-lagoon: #007a80;
+  --color-navy: #404346;
+  --color-cool-grey: #53565a;
+
+  /* Turquoise tints (Figma "Turquoise/Turquoise N") */
+  --color-turquoise-160: #006b70;
+  --color-turquoise-90: #1abac1;
+  --color-turquoise-80: #33c1c8;
+  --color-turquoise-70: #4dc9cf;
+  --color-turquoise-60: #66d1d6;
+  --color-turquoise-50: #80d9dd;
+  --color-turquoise-40: #99e0e3;
+  --color-turquoise-30: #b2e8ea;
+  --color-turquoise-20: #ccf0f1;
+  --color-turquoise-10: #e5f7f8;
+  --color-turquoise-5: #f2fbfc;
+
+  /* Greys (Figma "Gray/…") */
+  --color-gray-50: #f6f6f6;
+  --color-gray-100: #eeeeee;
+  --color-gray-200: #ddddde;
+  --color-gray-300: #cbcccd;
+  --color-gray-400: #babbbd;
+  --color-gray-500: #a9aaac;
+  --color-gray-600: #989a9c;
+  --color-gray-700: #87898b;
+  --color-gray-800: #75787b;
+  --color-gray-900: #64676b;
+
+  /* Section grounds used by the homepage story (Figma About Intro / Stats). */
+  --color-charcoal: #3a4346;
+  --color-dune: #d89e70;
+
+  /* Secondary */
+  --color-sun: #ffc222;
+  --color-warm-grey: #d8cfc6;
+  --color-french-red: #ed1849;
+  --color-deep-orange: #f58025;
+  --color-dusk-purple: #9c0056;
   --color-twilight: #006892;
-  --color-abyss: #0d2328;
-  --color-abyss-soft: #15333a;
-  /* Brand French Red, lightened for legible error text on dark grounds. */
+
+  /* Text (Figma "Text/…") and legacy aliases */
+  --color-ink: #2c2c2c;
+  --color-slate: #75787b;
+  --color-snow: #eeeeee;
+  --color-mist: #989a9c;
+  --color-line: #ddddde;
+  --color-sand-50: #ffffff;
+  --color-sand-100: #f6f6f6;
+  --color-sand-200: #eeeeee;
+  --color-sand-300: #d8cfc6;
+  --color-sand-400: #babbbd;
+  --color-lagoon: #006b70;
+  --color-abyss: #404346;
+  --color-abyss-soft: #53565a;
+  /* French red, deepened for AA contrast on light grounds / lightened for dark grounds. */
+  --color-alert: #c4163f;
   --color-alert-soft: #ffb4a8;
 
-  --font-sans: var(--font-source-sans), "Verdana", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-newsreader), "Georgia", ui-serif, serif;
+  --font-sans: var(--font-dm-sans), "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: Georgia, "Times New Roman", ui-serif, serif;
+  --font-eyebrow: var(--font-open-sans), "Helvetica Neue", Arial, sans-serif;
 
-  /* Fluid type scale — display serif at light weights, quiet humanist sans for UI. */
-  --text-eyebrow: 0.75rem;
-  --text-eyebrow--line-height: 1.4;
-  --text-eyebrow--letter-spacing: 0.2em;
-  --text-caption: 0.8125rem;
-  --text-caption--line-height: 1.5;
-  --text-body: 1.0625rem;
-  --text-body--line-height: 1.65;
-  --text-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
-  --text-lead--line-height: 1.6;
-  --text-h4: clamp(1.375rem, 1.25rem + 0.45vw, 1.625rem);
-  --text-h4--line-height: 1.25;
-  --text-h3: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
-  --text-h3--line-height: 1.15;
-  --text-h2: clamp(2.375rem, 1.75rem + 2.6vw, 4rem);
-  --text-h2--line-height: 1.06;
-  --text-h2--letter-spacing: -0.015em;
-  --text-h1: clamp(2.75rem, 1.9rem + 3.6vw, 5.25rem);
-  --text-h1--line-height: 1.02;
-  --text-h1--letter-spacing: -0.02em;
-  --text-display: clamp(3rem, 1.6rem + 5.6vw, 7rem);
-  --text-display--line-height: 0.98;
-  --text-display--letter-spacing: -0.025em;
+  /* Figma text styles: Desktop/Heading/Heading 1–6 (Georgia Regular). */
+  --text-heading-1: clamp(2.25rem, 1.6417rem + 2.4955vw, 4rem);
+  --text-heading-1--line-height: 1.06;
+  --text-heading-2: clamp(1.875rem, 1.4405rem + 1.7825vw, 3.125rem);
+  --text-heading-2--line-height: 1.2;
+  --text-heading-3: clamp(1.75rem, 1.4459rem + 1.2478vw, 2.625rem);
+  --text-heading-3--line-height: 1.3;
+  --text-heading-4: clamp(1.5rem, 1.2828rem + 0.8913vw, 2.125rem);
+  --text-heading-4--line-height: 1.3;
+  --text-heading-5: clamp(1.3125rem, 1.2039rem + 0.4456vw, 1.625rem);
+  --text-heading-5--line-height: 1.3;
+  --text-heading-6: clamp(1.125rem, 1.0598rem + 0.2674vw, 1.3125rem);
+  --text-heading-6--line-height: 1.3;
+  /* Desktop/Heading/Eyebrow (Open Sans SemiBold, uppercase). */
+  --text-eyebrow: 1rem;
+  --text-eyebrow--line-height: 1.3;
+  /* Desktop/Body … (DM Sans). */
+  --text-body-xl: clamp(1.375rem, 1.169rem + 0.8795vw, 2rem);
+  --text-body-xl--line-height: 1.3;
+  --text-body-lg: clamp(1.125rem, 1.084rem + 0.1759vw, 1.25rem);
+  --text-body-lg--line-height: 1.3;
+  --text-body-md: 1rem;
+  --text-body-md--line-height: 1.3;
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.3;
+  --text-body-xs: 0.75rem;
+  --text-body-xs--line-height: 1.3;
+  --text-body-2xs: 0.625rem;
+  --text-body-2xs--line-height: 1.3;
+  /* Homepage About statement + story lines (Figma: DM Sans Regular 48 / 130%). */
+  --text-statement: clamp(1.5rem, 1.1524rem + 1.426vw, 2.5rem);
+  --text-statement--line-height: 1.3;
+  /* Desktop/CTA (DM Sans Medium, uppercase). */
+  --text-cta-lg: 1rem;
+  --text-cta-lg--line-height: 1.2;
+  --text-cta-md: 0.875rem;
+  --text-cta-md--line-height: 1.2;
 
-  --tracking-label: 0.16em;
+  /* Legacy scale names, mapped onto the Figma styles. */
+  --text-display: var(--text-heading-1);
+  --text-display--line-height: 1.06;
+  --text-h1: var(--text-heading-1);
+  --text-h1--line-height: 1.06;
+  --text-h2: var(--text-heading-2);
+  --text-h2--line-height: 1.2;
+  --text-h3: var(--text-heading-5);
+  --text-h3--line-height: 1.3;
+  --text-h4: var(--text-heading-6);
+  --text-h4--line-height: 1.3;
+  --text-lead: var(--text-body-lg);
+  --text-lead--line-height: 1.4;
+  --text-body: 1rem;
+  --text-body--line-height: 1.55;
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.4;
 
-  --spacing-gutter: clamp(1.25rem, 0.6rem + 3.2vw, 5rem);
-  --spacing-section: clamp(5.5rem, 3rem + 8vw, 11rem);
-  --spacing-header: 5.5rem;
+  --tracking-label: 0.04em;
 
-  --container-site: 90rem;
+  /* Figma grid: 1512px frame, 60px side padding, 80px section padding. */
+  --spacing-gutter: clamp(1.25rem, 0.75rem + 3.2vw, 3.75rem);
+  --spacing-section: clamp(3.5rem, 2.4rem + 3.5vw, 5rem);
+  --spacing-header: 4.5rem;
+
+  --container-site: 94.5rem;
   --container-prose: 38rem;
 
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 8px;
+  --radius-xl: 12px;
+  /* Site shapes: small thumbnails, cards and panels, large media frames. */
+  --radius-thumb: 0.75rem;
+  --radius-card: 1.5rem;
+  --radius-media: 2rem;
 
-  --shadow-soft: 0 30px 60px -30px rgb(13 35 40 / 0.35);
+  --shadow-soft: 0 30px 60px -30px rgb(44 44 44 / 0.3);
 
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-in-out-quart: cubic-bezier(0.65, 0, 0.35, 1);
 
   --animate-marquee: marquee 40s linear infinite;
+  --animate-rise: rise 0.9s var(--ease-out-expo) both;
+}
+
+@keyframes sun-burst {
+  from {
+    scale: 0.4;
+    rotate: -90deg;
+    opacity: 0;
+  }
+}
+
+@keyframes sun-core {
+  40% {
+    scale: 1.25;
+  }
+}
+
+@keyframes moon-in {
+  from {
+    rotate: -60deg;
+    scale: 0.6;
+    opacity: 0;
+  }
+}
+
+@keyframes moon-sway {
+  0%,
+  100% {
+    rotate: -6deg;
+  }
+  50% {
+    rotate: 6deg;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+  50% {
+    opacity: 0.25;
+    scale: 0.6;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+
+/* Page-hero photo easing in from a gentle zoom. */
+@keyframes hero-settle {
+  from {
+    transform: scale(1.08);
+  }
 }
 
 @keyframes marquee {
@@ -94,6 +230,13 @@
   :root {
     color-scheme: light;
     --header-height: var(--spacing-header);
+  }
+
+  /* Header resting height on desktop; it condenses to 4rem once the page scrolls. */
+  @media (min-width: 1024px) {
+    :root {
+      --header-height: 5.25rem;
+    }
   }
 
   html {
@@ -110,8 +253,7 @@
   h2,
   h3,
   h4 {
-    @apply font-serif font-light text-balance;
-    font-optical-sizing: auto;
+    @apply font-serif font-normal text-balance;
   }
 
   p {
@@ -146,7 +288,96 @@
 
 @layer components {
   .eyebrow {
-    @apply font-sans text-eyebrow font-semibold uppercase;
+    @apply font-eyebrow text-eyebrow font-semibold uppercase;
+  }
+
+  /* Section eyebrow: small caps with no background. Turquoise on white and light surfaces;
+     sun yellow over photos and dark sections (below). */
+  .eyebrow-tag {
+    --eyebrow-ink: var(--color-turquoise);
+    display: block;
+    width: fit-content;
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    letter-spacing: 0.14em;
+  }
+  .eyebrow-tag[data-tone="dark"],
+  [data-theme-surface="dark"] .eyebrow-tag:not([data-tone="light"]) {
+    --eyebrow-ink: var(--color-sun);
+  }
+
+  /* Menu link hover: the words glide right as a turquoise dot settles where they began. No underline. */
+  .menu-link {
+    position: relative;
+    display: inline-block;
+    transition:
+      color 0.5s ease,
+      transform 0.7s var(--ease-out-expo);
+  }
+  .menu-link::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -0.875rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background-color: var(--color-turquoise);
+    transform: translateY(-50%) scale(0);
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  :is(a, button):is(:hover, :focus-visible) > .menu-link,
+  .menu-link:is(a):is(:hover, :focus-visible),
+  .menu-link[data-active="true"] {
+    transform: translateX(0.875rem);
+  }
+  :is(a, button):is(:hover, :focus-visible) > .menu-link::before,
+  .menu-link:is(a):is(:hover, :focus-visible)::before,
+  .menu-link[data-active="true"]::before {
+    transform: translateY(-50%) scale(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu-link,
+    .menu-link::before {
+      transition: color 0.3s ease;
+    }
+  }
+
+  /* Long-form text (articles, legal pages). */
+  .prose-somabay {
+    @apply max-w-prose text-body text-slate;
+  }
+
+  .prose-somabay > * + * {
+    margin-top: 1.25em;
+  }
+
+  .prose-somabay h2 {
+    @apply mt-[2em] text-h3 text-ink;
+  }
+
+  .prose-somabay h3 {
+    @apply mt-[1.75em] text-h4 text-ink;
+  }
+
+  .prose-somabay a {
+    @apply text-lagoon underline underline-offset-4 hover:text-ink;
+  }
+
+  .prose-somabay ul {
+    @apply list-disc pl-5;
+  }
+
+  .prose-somabay ol {
+    @apply list-decimal pl-5;
+  }
+
+  .prose-somabay li + li {
+    margin-top: 0.5em;
+  }
+
+  .prose-somabay blockquote {
+    @apply border-l border-turquoise pl-6 font-serif text-h4 text-ink;
   }
 
   /* Underline that draws in from the left on hover/focus. */
@@ -171,6 +402,15 @@
   }
 }
 
+/* Left offset that pins an absolutely placed element to the site container's content edge,
+   so it lines up with the page on wide screens too. */
+@utility left-site {
+  left: max(
+    var(--spacing-gutter),
+    calc((100vw - var(--container-site)) / 2 + var(--spacing-gutter))
+  );
+}
+
 /* Inline-start padding that aligns full-bleed rows (carousels) with the site container. */
 @utility ps-site {
   padding-inline-start: max(
@@ -187,9 +427,170 @@
 }
 
 @utility glass {
-  background-color: rgb(13 35 40 / 0.28);
+  background-color: rgb(64 67 70 / 0.28);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
   backdrop-filter: blur(24px) saturate(140%);
+}
+
+/* Journey map (homepage "Find your way to Somabay"). */
+.journey-pin {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+}
+
+.journey-pin--origin {
+  background: var(--color-sun);
+  border: 6px solid var(--color-turquoise-160);
+}
+
+.journey-pin--destination {
+  width: 28px;
+  height: 28px;
+  background: var(--color-turquoise);
+  border: 8px solid var(--color-white);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.25);
+}
+
+/* Somabay pulses so the destination is always easy to spot. */
+.journey-pin--destination {
+  animation: journey-pulse 2.4s var(--ease-out-quart) infinite;
+}
+
+@keyframes journey-pulse {
+  0% {
+    box-shadow:
+      0 4px 16px rgb(0 0 0 / 0.25),
+      0 0 0 0 rgb(0 178 186 / 0.55);
+  }
+  100% {
+    box-shadow:
+      0 4px 16px rgb(0 0 0 / 0.25),
+      0 0 0 26px rgb(0 178 186 / 0);
+  }
+}
+
+.journey-mode {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.95);
+  color: var(--color-turquoise-160);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.15);
+}
+
+/* Leaflet map styling (PlacesMap). */
+.somabay-map .leaflet-control-attribution {
+  background: rgb(251 250 247 / 0.85);
+  font-size: 10px;
+}
+
+.somabay-pin {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  border: 2px solid var(--color-turquoise);
+  background: rgb(255 255 255 / 0.92);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-turquoise) 14%, transparent);
+  transition:
+    transform 0.4s var(--ease-out-expo),
+    background-color 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.somabay-pin::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 9999px;
+  background: var(--color-turquoise);
+  transition: background-color 0.3s;
+}
+
+/* A soft ring that keeps pulsing outward, so the pins read as clickable. */
+.somabay-pin--place::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  border: 2px solid var(--color-turquoise);
+  animation: somabay-pin-pulse 2.2s var(--ease-out-expo) infinite;
+  pointer-events: none;
+}
+
+@keyframes somabay-pin-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+/* The starting point (e.g. a neighbourhood) stays dark, apart from the turquoise places. */
+.somabay-pin--origin {
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 6px rgb(44 44 44 / 0.08);
+}
+
+.somabay-pin--origin::after {
+  background: var(--color-ink);
+}
+
+/* On hover, focus and selection the pin grows and fills turquoise with a sun-yellow border and
+   dot; the pulse rests. */
+.leaflet-marker-icon:hover .somabay-pin,
+.leaflet-marker-icon:focus-visible .somabay-pin,
+.leaflet-marker-icon.is-selected .somabay-pin {
+  transform: scale(1.25);
+  background: var(--color-turquoise);
+  border-color: var(--color-sun);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-sun) 22%, transparent);
+}
+
+.leaflet-marker-icon:hover .somabay-pin::after,
+.leaflet-marker-icon:focus-visible .somabay-pin::after,
+.leaflet-marker-icon.is-selected .somabay-pin::after {
+  background: var(--color-sun);
+}
+
+.leaflet-marker-icon:hover .somabay-pin::before,
+.leaflet-marker-icon:focus-visible .somabay-pin::before,
+.leaflet-marker-icon.is-selected .somabay-pin::before {
+  animation: none;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .somabay-pin--place::before {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.somabay-tooltip {
+  border: 0;
+  border-radius: 2px;
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-soft);
+}
+
+.somabay-tooltip strong {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 15px;
 }
 
 /* Lenis smooth scrolling. */
@@ -214,5 +615,206 @@ html.lenis body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Side drawer: colour layers and the panel sweep in from the right (see Dialog). The fill only
+   applies before and during the run, so Framer's exit transform takes over cleanly on close. */
+@keyframes drawer-sweep {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drawer-sweep {
+  animation-name: drawer-sweep;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  animation-fill-mode: backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer-sweep {
+    animation: none;
+  }
+}
+
+/* Side drawer content: rises and settles in order once the panel has slid in (see Dialog). */
+@keyframes drawer-item {
+  from {
+    opacity: 0;
+    transform: translateY(60%) rotate(4deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-drawer-item] {
+  transform-origin: 0 100%;
+  animation: drawer-item 1s cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: calc(0.5s + var(--i, 0) * 0.08s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-drawer-item] {
+    animation: none;
+  }
+}
+
+/* Inline-end padding matching `ps-site`, for full-bleed rows that end on the container edge. */
+@utility pe-site {
+  padding-inline-end: max(
+    var(--spacing-gutter),
+    calc((100vw - var(--container-site)) / 2 + var(--spacing-gutter))
+  );
+}
+
+/*
+ * Wave hover — the site's signature: on hover/focus, water rises through a button from the
+ * bottom, its crest drifting like a swell, then drains on leave. Two layers: a paler back swell
+ * that leads, and the full-colour front. `--wave` sets the colour (turquoise by default); add
+ * `wave-group` to let an ancestor `.group` trigger it (cards with an arrow inside).
+ */
+@layer components {
+  .wave {
+    --wave: var(--color-turquoise);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .wave::before,
+  .wave::after {
+    content: "";
+    position: absolute;
+    inset-inline: -2px;
+    top: -1px;
+    height: calc(100% + 14px);
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--wave);
+    transform: translateY(102%);
+    transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+    -webkit-mask-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 10'%3E%3Cpath d='M0 5 C10 0.5 30 0.5 40 5 S70 9.5 80 5 V10 H0 Z'/%3E%3C/svg%3E"),
+      linear-gradient(#000, #000);
+    mask-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 10'%3E%3Cpath d='M0 5 C10 0.5 30 0.5 40 5 S70 9.5 80 5 V10 H0 Z'/%3E%3C/svg%3E"),
+      linear-gradient(#000, #000);
+    -webkit-mask-size:
+      80px 10px,
+      100% calc(100% - 9px);
+    mask-size:
+      80px 10px,
+      100% calc(100% - 9px);
+    -webkit-mask-repeat: repeat-x, no-repeat;
+    mask-repeat: repeat-x, no-repeat;
+    -webkit-mask-position:
+      0 0,
+      0 100%;
+    mask-position:
+      0 0,
+      0 100%;
+  }
+  /* The back swell: paler, a touch ahead, drifting the other way. */
+  .wave::after {
+    opacity: 0.4;
+    transition-duration: 0.45s;
+    -webkit-mask-position:
+      40px 0,
+      0 100%;
+    mask-position:
+      40px 0,
+      0 100%;
+  }
+  .wave:is(:hover, :focus-visible)::before,
+  .wave:is(:hover, :focus-visible)::after,
+  .group:is(:hover, :focus-visible) .wave-group::before,
+  .group:is(:hover, :focus-visible) .wave-group::after {
+    transform: translateY(-12px);
+    animation: wave-swell 1.3s linear infinite;
+  }
+  .wave:is(:hover, :focus-visible)::after,
+  .group:is(:hover, :focus-visible) .wave-group::after {
+    animation-direction: reverse;
+    animation-duration: 1.9s;
+  }
+  .wave:disabled::before,
+  .wave:disabled::after {
+    display: none;
+  }
+}
+
+@keyframes wave-swell {
+  to {
+    -webkit-mask-position:
+      80px 0,
+      0 100%;
+    mask-position:
+      80px 0,
+      0 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave::before,
+  .wave::after {
+    animation: none !important;
+    transition-duration: 0.01s;
+  }
+}
+
+/*
+ * Wave line — the hairline version of the wave motif: a fine swell drawn in `currentColor`.
+ * Used as dividers (`wave-line`), under the active tab, and as the underline of text actions
+ * (`wave-underline`, which drifts on hover).
+ */
+@layer components {
+  .wave-line {
+    display: block;
+    height: 6px;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.6 12 3 T24 3' fill='none' stroke='%23000' stroke-width='1.1'/%3E%3C/svg%3E")
+      0 0 / 24px 6px repeat-x;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.6 12 3 T24 3' fill='none' stroke='%23000' stroke-width='1.1'/%3E%3C/svg%3E")
+      0 0 / 24px 6px repeat-x;
+  }
+  .wave-underline {
+    position: relative;
+    padding-bottom: 6px;
+  }
+  .wave-underline::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 6px;
+    background-color: currentColor;
+    opacity: 0.5;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.6 12 3 T24 3' fill='none' stroke='%23000' stroke-width='1.3'/%3E%3C/svg%3E")
+      0 0 / 24px 6px repeat-x;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.6 12 3 T24 3' fill='none' stroke='%23000' stroke-width='1.3'/%3E%3C/svg%3E")
+      0 0 / 24px 6px repeat-x;
+    transition: opacity 0.4s ease;
+  }
+  .wave-underline:is(:hover, :focus-visible)::after {
+    opacity: 1;
+    animation: wave-line-drift 1.2s linear infinite;
+  }
+}
+
+@keyframes wave-line-drift {
+  to {
+    -webkit-mask-position: 24px 0;
+    mask-position: 24px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-underline::after {
+    animation: none !important;
   }
 }

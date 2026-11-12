@@ -31,4 +31,47 @@ export const routes = {
   cookies: "/cookie-settings",
 } as const;
 
-export const publishedRoutes: readonly string[] = [routes.home];
+/** Static pages that are live (detail pages are added in sitemap.ts from content). */
+export const publishedRoutes: readonly string[] = [
+  routes.home,
+  routes.about,
+  routes.contact,
+  routes.facilities,
+  routes.holidays,
+  routes.thingsToDo,
+  routes.marina,
+  routes.dining,
+  routes.neighborhoods,
+  routes.resale,
+  routes.events,
+  routes.journal,
+  routes.sustainability,
+  routes.careers,
+  routes.faqs,
+];
+
+/**
+ * Pages that open with a full-bleed dark hero, so the header starts transparent over it.
+ * Exact paths, or prefixes ending in "/" for every detail page under a section.
+ */
+const darkHeroPaths: readonly string[] = [
+  routes.home,
+  routes.about,
+  routes.contact,
+  routes.facilities,
+  routes.holidays,
+  routes.marina,
+  routes.dining,
+  routes.neighborhoods,
+  "/neighborhoods/",
+  routes.resale,
+  "/things-to-do/",
+  routes.sustainability,
+  routes.careers,
+];
+
+export function hasDarkHero(pathname: string): boolean {
+  return darkHeroPaths.some((path) =>
+    path.endsWith("/") && path !== "/" ? pathname.startsWith(path) : pathname === path,
+  );
+}
