@@ -18,7 +18,7 @@ export function ArticleCard({
 }) {
   return (
     <article className="group relative flex h-full flex-col">
-      <div className="relative aspect-[426/326] overflow-hidden rounded-card bg-sand-200">
+      <div className="relative aspect-[426/326] overflow-hidden rounded-md bg-sand-200">
         <ResponsiveImage
           asset={article.image}
           sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 85vw"
@@ -26,7 +26,7 @@ export function ArticleCard({
           className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
         />
       </div>
-      <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-caption">
+      <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-body-sm">
         <Chip tone={tinted ? "plain" : "soft"}>{article.category}</Chip>
         <span className="text-slate">{article.readingMinutes} min read</span>
         {showDate ? (
@@ -36,21 +36,21 @@ export function ArticleCard({
           </span>
         ) : null}
       </p>
-      <h3 className="mt-3 font-serif text-h4">
+      <h3 className="mt-3 font-serif text-heading-6">
         <Link href={routes.article(article.slug)} className="after:absolute after:inset-0">
           {article.title}
         </Link>
       </h3>
       <p
         aria-hidden
-        className="mt-auto inline-flex items-center gap-2 pt-4 text-[0.75rem] font-semibold tracking-label uppercase"
+        className="mt-auto inline-flex items-center gap-2 pt-4 text-body-xs font-semibold tracking-label uppercase"
       >
         <span className="link-underline pb-0.5 group-hover:[background-size:100%_1px]">
           Read more
         </span>
         <Icon
-          name="chevron-right"
-          className="size-3.5 transition-transform duration-500 group-hover:translate-x-1"
+          name="arrow-right"
+          className="size-4 transition-transform duration-700 ease-out-expo group-hover:translate-x-1"
         />
       </p>
     </article>

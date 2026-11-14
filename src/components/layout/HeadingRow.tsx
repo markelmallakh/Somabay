@@ -44,7 +44,7 @@ export function HeadingRow({
     >
       <Reveal className="flex flex-col gap-4 lg:col-span-7">
         {eyebrow ? <Eyebrow tone={tone === "light" ? "dark" : undefined}>{eyebrow}</Eyebrow> : null}
-        <Heading id={id} className="text-heading-2 leading-[1.2] text-balance">
+        <Heading id={id} className="text-heading-2 text-balance">
           {title}
         </Heading>
       </Reveal>

@@ -54,7 +54,7 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
 
   return (
     <>
-      <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-3xl sm:aspect-[6008/3368] sm:max-w-[calc((100svh-var(--header-height)-3rem)*6008/3368)] lg:rounded-[2rem]">
+      <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-md sm:aspect-[6008/3368] sm:max-w-[calc((100svh-var(--header-height)-3rem)*6008/3368)]">
         <ResponsiveImage
           asset={aerialMasterplan.image}
           sizes="(min-width: 1512px) 1392px, 100vw"
@@ -71,7 +71,7 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
           }}
           options={categories}
           size="sm"
-          className="absolute top-4 left-4 z-20 max-w-[calc(100%-2rem)] shadow-[0_8px_24px_rgb(18_58_70/0.18)] lg:top-6 lg:left-6"
+          className="absolute top-4 left-4 z-20 max-w-[calc(100%-2rem)] shadow-float lg:top-6 lg:left-6"
         />
 
         <ul aria-label="Places on the masterplan">
@@ -94,8 +94,8 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
                     "group/pin flex items-center rounded-full p-2 transition-[background-color,box-shadow,opacity,scale] duration-500 ease-out-expo",
                     on ? "opacity-100" : "pointer-events-none scale-75 opacity-0",
                     selected
-                      ? "bg-turquoise shadow-[0_8px_24px_rgb(18_58_70/0.18)]"
-                      : "bg-turquoise/25 backdrop-blur-sm hover:bg-white hover:shadow-[0_8px_24px_rgb(18_58_70/0.18)] focus-visible:bg-white",
+                      ? "bg-turquoise shadow-float"
+                      : "bg-turquoise/25 backdrop-blur-sm hover:bg-white hover:shadow-float focus-visible:bg-white",
                   )}
                 >
                   <span
@@ -170,7 +170,7 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
               <button
                 type="button"
                 onClick={() => setOpenId(null)}
-                className="wave absolute top-5 left-5 z-20 grid size-12 place-items-center rounded-md bg-white text-ink shadow-[0_8px_24px_rgb(18_58_70/0.18)] transition-colors hover:text-white"
+                className="wave absolute top-5 left-5 z-20 grid size-12 place-items-center rounded-md bg-white text-ink shadow-float transition-colors hover:text-white"
                 aria-label="Close"
                 data-autofocus
               >

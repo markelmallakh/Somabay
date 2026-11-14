@@ -17,6 +17,10 @@ export type JourneyOrigin = {
 
 export const journeyIntro = {
   title: "Find your way to Somabay",
+  // DRAFT COPY: the description and "Choose city" link were written for the card redesign.
+  description:
+    "Pick where you're travelling from to see the route and how long it takes to reach the bay.",
+  chooseLabel: "Choose city",
   fromLabel: "From",
   searchLabel: "Search",
   tabs: { global: "Global", egypt: "Egypt" },

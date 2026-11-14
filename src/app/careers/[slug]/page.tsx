@@ -43,10 +43,10 @@ async function CareerContent({ params }: { params: PageProps<"/careers/[slug]">[
           <Icon name="chevron-left" className="size-4" />
           Back to careers
         </Link>
-        <Reveal className="mt-8 flex flex-col gap-8 rounded-card bg-turquoise-5 p-6 sm:p-10 md:flex-row md:items-end md:justify-between lg:rounded-media lg:p-14">
+        <Reveal className="mt-8 flex flex-col gap-8 rounded-md bg-turquoise-5 p-6 sm:p-10 md:flex-row md:items-end md:justify-between lg:p-14">
           <div>
             <JobMeta job={job} tone="plain" />
-            <h1 className="mt-5 max-w-2xl text-h1">{job.title}</h1>
+            <h1 className="mt-5 max-w-2xl text-heading-1">{job.title}</h1>
             {job.body ? <p className="mt-5 max-w-2xl text-lead text-slate">{job.summary}</p> : null}
           </div>
           <Button
@@ -58,7 +58,7 @@ async function CareerContent({ params }: { params: PageProps<"/careers/[slug]">[
             Apply now
           </Button>
         </Reveal>
-        <div className="mt-12 md:mt-16 [&_.prose-somabay]:mx-0">
+        <div className="mt-10 lg:mt-12 [&_.prose-somabay]:mx-0">
           {job.body ? (
             <ArticleBody blocks={job.body} />
           ) : (

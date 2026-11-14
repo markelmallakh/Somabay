@@ -39,7 +39,7 @@ export function Reveal({
       initial={{ opacity: 0, y: distance }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount }}
-      transition={{ duration: 1.1, ease: easeOutExpo, delay }}
+      transition={{ duration: 1, ease: easeOutExpo, delay }}
     >
       {children}
     </Component>
@@ -52,7 +52,7 @@ const groupVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 32 },
   visible: { opacity: 1, y: 0, transition: { duration: 1, ease: easeOutExpo } },
 };
 

@@ -22,7 +22,7 @@ export function PhotoGrid({ images, label }: PhotoGridProps) {
   const hidden = images.length - 5;
   if (!lead) return null;
 
-  const tile = "group relative overflow-hidden rounded-card bg-sand-200 text-left";
+  const tile = "group relative overflow-hidden rounded-md bg-sand-200 text-left";
 
   return (
     <>
@@ -38,7 +38,7 @@ export function PhotoGrid({ images, label }: PhotoGridProps) {
             sizes="(min-width: 768px) 50vw, 100vw"
             fill
             priority
-            className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.04]"
+            className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
           />
         </button>
         <div className="grid grid-cols-2 gap-3 md:gap-4">
@@ -58,7 +58,7 @@ export function PhotoGrid({ images, label }: PhotoGridProps) {
               />
               {index === tiles.length - 1 && hidden > 0 ? (
                 <span className="absolute inset-0 grid place-items-center bg-black/50 transition-colors duration-500 group-hover:bg-black/40">
-                  <span className="rounded-full border border-white/70 px-5 py-2.5 text-[0.75rem] font-semibold tracking-label text-white uppercase">
+                  <span className="rounded-full border border-white/70 px-5 py-2.5 text-body-xs font-semibold tracking-label text-white uppercase">
                     +{hidden} Photos
                   </span>
                 </span>

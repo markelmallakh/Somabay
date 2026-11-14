@@ -46,7 +46,7 @@ export function ScrollExpandVideo({
     timeline
       .fromTo(
         frame,
-        { clipPath: "inset(22% 24% 22% 24% round 2rem)" },
+        { clipPath: "inset(22% 24% 22% 24% round 0.25rem)" },
         { clipPath: "inset(0% 0% 0% 0% round 0rem)", duration: 1 },
         0,
       )
@@ -81,10 +81,10 @@ export function ScrollExpandVideo({
         <Container className="relative flex h-full items-end pb-16 md:pb-24">
           <div data-copy className="max-w-2xl text-white">
             {eyebrow ? <Eyebrow tone="dark">{eyebrow}</Eyebrow> : null}
-            <h2 id={id} className="mt-4 text-heading-2 leading-[1.15]">
+            <h2 id={id} className="mt-4 text-heading-2">
               {title}
             </h2>
-            {description ? <p className="mt-5 text-body-lg text-white/85">{description}</p> : null}
+            {description ? <p className="mt-5 text-body-lg text-white/80">{description}</p> : null}
             {action ? <div className="mt-8">{action}</div> : null}
           </div>
         </Container>

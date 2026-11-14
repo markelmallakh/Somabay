@@ -105,7 +105,7 @@ export function LanguageMenu({ variant = "header", placement = "below" }: Langua
         aria-controls={menuId}
         className={
           variant === "pill"
-            ? "inline-flex items-center gap-2 rounded-md border border-gray-200 px-3 py-1.5 text-body-xs text-ink transition-colors hover:border-turquoise/60"
+            ? "inline-flex items-center gap-2 rounded-md border border-line px-3 py-1.5 text-body-xs text-ink transition-colors hover:border-turquoise/60"
             : "flex items-center gap-1 uppercase transition-opacity hover:opacity-70"
         }
       >
@@ -142,7 +142,7 @@ export function LanguageMenu({ variant = "header", placement = "below" }: Langua
             transition={{ duration: 0.45, ease: easeOutExpo }}
             style={{ transformOrigin: above ? "100% 100%" : "100% 0%" }}
             className={cn(
-              "absolute right-0 z-50 w-52 overflow-hidden rounded-2xl border border-ink/8 bg-white text-ink normal-case shadow-[0_18px_50px_rgb(18_58_70/0.18)]",
+              "absolute right-0 z-50 w-52 overflow-hidden rounded-md border border-line bg-white text-ink normal-case shadow-[0_18px_50px_rgb(18_58_70/0.18)]",
               above ? "bottom-[calc(100%+0.625rem)]" : "top-[calc(100%+0.875rem)]",
             )}
           >
@@ -165,7 +165,7 @@ export function LanguageMenu({ variant = "header", placement = "below" }: Langua
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, ease: easeOutExpo, delay: 0.04 + position * 0.04 }}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left text-body-sm transition-colors duration-200 outline-none hover:bg-turquoise-5 focus-visible:bg-turquoise-5",
+                      "flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-left text-body-sm transition-colors duration-200 outline-none hover:bg-turquoise-5 focus-visible:bg-turquoise-5",
                       selected && "font-medium",
                     )}
                   >

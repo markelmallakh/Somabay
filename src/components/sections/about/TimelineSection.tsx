@@ -231,7 +231,7 @@ export function TimelineSection({ intro, milestones, image }: TimelineSectionPro
                         <span
                           aria-hidden
                           className={cn(
-                            "size-3.5 rounded-full border transition-all duration-700 ease-out-expo",
+                            "size-3.5 rounded-full border transition-[background-color,border-color,scale,box-shadow] duration-700 ease-out-expo",
                             selected
                               ? "scale-125 border-turquoise bg-turquoise shadow-[0_0_0_6px_rgb(0_178_186/0.3)]"
                               : passed
@@ -242,7 +242,7 @@ export function TimelineSection({ intro, milestones, image }: TimelineSectionPro
                         <span
                           className={cn(
                             "text-body-sm font-medium whitespace-nowrap transition-colors duration-500",
-                            selected ? "text-white" : "text-white/55 group-hover:text-white/85",
+                            selected ? "text-white" : "text-white/55 group-hover:text-white/80",
                           )}
                         >
                           {milestone.year}

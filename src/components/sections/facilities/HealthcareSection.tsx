@@ -28,7 +28,7 @@ export function HealthcareSection() {
             <RevealItem
               as="li"
               key={service.title}
-              className="group flex flex-col overflow-hidden rounded-card bg-white transition-shadow duration-700 ease-out-expo hover:shadow-[0_12px_40px_rgb(18_58_70/0.12)]"
+              className="group flex flex-col overflow-hidden rounded-md bg-white transition-shadow duration-700 ease-out-expo hover:shadow-card"
             >
               <ImageReveal
                 from={index % 2 ? "top" : "bottom"}
@@ -43,7 +43,7 @@ export function HealthcareSection() {
                 </div>
               </ImageReveal>
               <div className="flex flex-1 flex-col gap-3 p-6 md:p-7">
-                <h3 className="font-serif text-h3">{service.title}</h3>
+                <h3 className="font-serif text-heading-5">{service.title}</h3>
                 <p className="text-slate">{service.description}</p>
                 <p className="mt-auto pt-3">
                   <Chip accent="warm-grey">{service.hours}</Chip>

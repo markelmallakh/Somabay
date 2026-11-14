@@ -39,7 +39,7 @@ export function SectionHeading({
       )}
     >
       {eyebrow ? <Eyebrow tone={tone === "light" ? "dark" : undefined}>{eyebrow}</Eyebrow> : null}
-      <Heading id={id} className={size === "h1" ? "text-h1" : "text-h2"}>
+      <Heading id={id} className={size === "h1" ? "text-heading-1" : "text-heading-2"}>
         {title}
       </Heading>
       {description ? (

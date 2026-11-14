@@ -35,7 +35,7 @@ export function GolfOverview() {
         >
           {golfOverview.highlights.map((item) => (
             <RevealItem as="li" key={item.label}>
-              <div className="group relative aspect-[316/265] overflow-hidden rounded-card bg-sand-200">
+              <div className="group relative aspect-[316/265] overflow-hidden rounded-md bg-sand-200">
                 <ResponsiveImage
                   asset={item.image}
                   sizes="(min-width: 1024px) 23vw, 50vw"
@@ -65,14 +65,14 @@ type CourseFeatureProps = {
 function CourseFeature({ image, title, description, features, info, side }: CourseFeatureProps) {
   return (
     <article className="relative lg:min-h-[36rem]">
-      <ImageReveal className="relative aspect-[16/10] rounded-card lg:absolute lg:inset-0 lg:aspect-auto lg:rounded-media">
+      <ImageReveal className="relative aspect-[16/10] rounded-md lg:absolute lg:inset-0 lg:aspect-auto">
         <div className="absolute inset-0">
           <ResponsiveImage asset={image} sizes="(min-width: 1440px) 1312px, 100vw" fill />
         </div>
       </ImageReveal>
       <Reveal
         className={cn(
-          "relative z-10 mx-4 -mt-16 rounded-card bg-white p-6 shadow-[0_12px_40px_rgb(18_58_70/0.12)] sm:mx-8 md:p-8 lg:absolute lg:bottom-8 lg:mx-0 lg:mt-0 lg:w-[32rem]",
+          "relative z-10 mx-4 -mt-16 rounded-md bg-white p-6 shadow-card sm:mx-8 md:p-8 lg:absolute lg:bottom-8 lg:mx-0 lg:mt-0 lg:w-[32rem]",
           side === "left" ? "lg:left-8" : "lg:right-8",
         )}
       >
@@ -87,7 +87,7 @@ function CourseFeature({ image, title, description, features, info, side }: Cour
             ))}
           </ul>
         ) : null}
-        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-5 text-caption text-slate">
+        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-5 text-body-sm text-slate">
           {info.map((entry) => (
             <li key={entry.text} className="flex items-center gap-2">
               <Icon name={entry.icon} className="size-4.5 text-turquoise" />
@@ -153,10 +153,7 @@ export function AcademySection() {
           description={academy.intro.description}
         />
         <div className="mt-12 grid items-center gap-10 lg:mt-16 lg:grid-cols-12 lg:gap-6">
-          <ImageReveal
-            from="left"
-            className="relative aspect-[4/3] rounded-card lg:col-span-6 lg:rounded-media"
-          >
+          <ImageReveal from="left" className="relative aspect-[4/3] rounded-md lg:col-span-6">
             <div className="absolute inset-0">
               <ResponsiveImage asset={academy.image} sizes="(min-width: 1024px) 46vw, 100vw" fill />
             </div>
@@ -182,7 +179,7 @@ export function AcademySection() {
               <RevealItem
                 as="li"
                 key={pro.name}
-                className="flex h-full items-center gap-5 rounded-card bg-sand-100 p-5 md:p-6"
+                className="flex h-full items-center gap-5 rounded-md bg-sand-100 p-5 md:p-6"
               >
                 <span
                   aria-hidden
@@ -225,7 +222,7 @@ export function TeeBookingSection() {
             ))}
           </ul>
         </div>
-        <div className="rounded-card bg-white p-6 md:p-10 lg:col-span-6 lg:col-start-7">
+        <div className="rounded-md bg-white p-6 md:p-10 lg:col-span-6 lg:col-start-7">
           <EnquiryForm definition={formDefinitions.tee} />
         </div>
       </Container>

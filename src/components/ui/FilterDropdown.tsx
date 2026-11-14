@@ -58,7 +58,7 @@ export function FilterDropdown({
         <span>
           {label}
           {value.length > 0 ? (
-            <span className="ml-2 inline-grid size-5 place-items-center rounded-sm bg-turquoise-10 text-[0.6875rem] font-semibold text-turquoise-160">
+            <span className="ml-2 inline-grid size-5 place-items-center rounded-md bg-turquoise-10 text-label font-semibold text-turquoise-160">
               {value.length}
             </span>
           ) : null}
@@ -76,7 +76,7 @@ export function FilterDropdown({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.25 }}
-            className="absolute top-full left-0 z-20 mt-2 w-72 rounded-xl bg-white p-5 shadow-[0_16px_48px_rgb(18_58_70/0.16)]"
+            className="absolute top-full left-0 z-20 mt-2 w-72 rounded-md bg-white p-5 shadow-[0_16px_48px_rgb(18_58_70/0.16)]"
           >
             <fieldset>
               <legend className="sr-only">{label}</legend>
@@ -93,7 +93,7 @@ export function FilterDropdown({
                 ))}
               </div>
             </fieldset>
-            <div className="mt-4 flex items-center justify-end gap-4 border-t border-ink/8 pt-3">
+            <div className="mt-4 flex items-center justify-end gap-4 border-t border-line pt-3">
               <TextAction onClick={() => onChange([])} disabled={value.length === 0}>
                 Clear filter
               </TextAction>

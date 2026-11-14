@@ -52,8 +52,8 @@ export function SectionNav({ items, label }: SectionNavProps) {
               }}
               aria-current={active === item.id ? "true" : undefined}
               className={cn(
-                "flex min-h-9 items-center rounded-full px-4 text-[0.6875rem] font-semibold tracking-label whitespace-nowrap uppercase transition-colors duration-500",
-                active === item.id ? "bg-white text-ink" : "text-white/85 hover:text-white",
+                "flex min-h-9 items-center rounded-full px-4 text-label font-semibold tracking-label whitespace-nowrap uppercase transition-colors duration-500",
+                active === item.id ? "bg-white text-ink" : "text-white/80 hover:text-white",
               )}
             >
               {item.label}

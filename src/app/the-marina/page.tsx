@@ -52,7 +52,7 @@ export default function MarinaPage() {
       <Section tone="white" aria-labelledby="gallery-title" className="bg-sand-100">
         <Container>
           <HeadingRow id="gallery-title" eyebrow="Gallery" title="Scenes From The Bay" />
-          <div className="mt-12 lg:mt-16">
+          <div className="mt-10 lg:mt-12">
             <MasonryGallery images={marinaGallery} />
           </div>
         </Container>

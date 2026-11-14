@@ -20,7 +20,7 @@ export type Venue = DirectoryItem & {
 };
 
 const directions = (name: string) => ({
-  label: "Get direction",
+  label: "Get directions",
   href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name} Somabay`)}`,
   external: true,
 });

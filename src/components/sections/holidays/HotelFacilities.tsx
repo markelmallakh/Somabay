@@ -81,7 +81,7 @@ export function HotelFacilities({ items, label }: { items: DirectoryItem[]; labe
     >
       <Container>
         <Reveal>
-          <h2 id="facilities-title" className="text-heading-2 leading-[1.2]">
+          <h2 id="facilities-title" className="text-heading-2">
             Hotel Facilities
           </h2>
         </Reveal>
@@ -96,17 +96,17 @@ export function HotelFacilities({ items, label }: { items: DirectoryItem[]; labe
             <button
               type="button"
               onClick={() => setOpen(index)}
-              className="group block w-full rounded-lg text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turquoise"
+              className="group block w-full rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turquoise"
             >
-              <span className="relative block aspect-[205/265] overflow-hidden rounded-lg bg-sand-200">
+              <span className="relative block aspect-[205/265] overflow-hidden rounded-md bg-sand-200">
                 <ResponsiveImage
                   asset={item.images[0]}
                   sizes="15rem"
                   fill
-                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.06]"
+                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                 />
               </span>
-              <span className="mt-4 block font-serif text-h4 transition-colors duration-500 group-hover:text-lagoon">
+              <span className="mt-4 block font-serif text-heading-6 transition-colors duration-500 group-hover:text-lagoon">
                 {item.title}
               </span>
             </button>

@@ -31,16 +31,16 @@ export function DetailHeader({ back, title, meta, image, path }: DetailHeaderPro
         </Link>
         <Reveal className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <h1 id="page-title" className="text-h1">
+            <h1 id="page-title" className="text-heading-1">
               {title}
             </h1>
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-caption text-slate">
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-body-sm text-slate">
               {meta}
             </div>
           </div>
           <ShareButtons path={path} title={title} className="shrink-0" />
         </Reveal>
-        <ImageReveal className="relative mt-12 aspect-[1184/555] rounded-card lg:rounded-media">
+        <ImageReveal className="relative mt-12 aspect-[1184/555] rounded-md">
           <div className="absolute inset-0">
             <ResponsiveImage
               asset={image}

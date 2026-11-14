@@ -65,7 +65,7 @@ export function VenueSlider({ id, eyebrow, title, description, items }: VenueSli
 
       {/* The whole row triggers the entrance (off-screen cards are never "in view" alone). */}
       <m.div initial="hidden" whileInView="shown" viewport={{ once: true, amount: 0.25 }}>
-        <DragRow label={title} tone="dark" className="mt-12 lg:mt-14">
+        <DragRow label={title} tone="dark" className="mt-10 lg:mt-12">
           {items.map((item, index) => (
             <m.li
               key={item.id}
@@ -77,11 +77,11 @@ export function VenueSlider({ id, eyebrow, title, description, items }: VenueSli
                 type="button"
                 onClick={() => setOpen(index)}
                 aria-label={`${item.title}: details`}
-                className="group relative block aspect-[4/5] w-full overflow-hidden rounded-lg bg-white text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="group relative block aspect-[4/5] w-full overflow-hidden rounded-md bg-white text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 {/* The photo: the whole card at rest, a frame above the panel when open. */}
                 <span
-                  className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.5rem)] ${ease} group-hover:[clip-path:inset(0_0_40%_0_round_0.5rem_0.5rem_0_0)] group-focus-visible:[clip-path:inset(0_0_40%_0_round_0.5rem_0.5rem_0_0)] [@media(hover:none)]:[clip-path:inset(0_0_40%_0_round_0.5rem_0.5rem_0_0)]`}
+                  className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.25rem)] ${ease} group-hover:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] group-focus-visible:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] [@media(hover:none)]:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)]`}
                 >
                   <span
                     className={`absolute inset-0 transition-transform ${ease} group-hover:-translate-y-[16%] group-focus-visible:-translate-y-[16%] [@media(hover:none)]:-translate-y-[16%]`}
@@ -109,7 +109,7 @@ export function VenueSlider({ id, eyebrow, title, description, items }: VenueSli
                   className={`absolute inset-x-0 bottom-0 flex h-[40%] translate-y-4 flex-col justify-center gap-1.5 px-5 pb-1 opacity-0 transition-[opacity,translate] ${ease} group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100`}
                 >
                   {item.chip ? (
-                    <span className="text-[0.6875rem] font-semibold tracking-label text-turquoise-160 uppercase">
+                    <span className="text-label font-semibold tracking-label text-turquoise-160 uppercase">
                       {item.chip}
                     </span>
                   ) : null}
@@ -125,7 +125,7 @@ export function VenueSlider({ id, eyebrow, title, description, items }: VenueSli
                     </span>
                   </span>
                   {item.description ? (
-                    <span className="line-clamp-2 text-body-sm text-navy">{item.description}</span>
+                    <span className="line-clamp-2 text-body-sm text-slate">{item.description}</span>
                   ) : null}
                 </span>
               </button>

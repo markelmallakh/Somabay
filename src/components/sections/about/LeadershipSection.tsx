@@ -6,7 +6,7 @@ import { LeadershipGrid } from "./LeadershipGrid";
 
 export function LeadershipSection() {
   return (
-    <Section tone="white" aria-labelledby="leadership-title" spacing="none" className="py-30">
+    <Section tone="white" aria-labelledby="leadership-title">
       <Container>
         <SectionHeading
           id="leadership-title"
@@ -18,7 +18,7 @@ export function LeadershipSection() {
         />
       </Container>
       {/* Full width so the carousel runs off the edge; it aligns itself to the site grid. */}
-      <div className="mt-14 md:mt-16">
+      <div className="mt-10 lg:mt-12">
         <LeadershipGrid leaders={leaders} />
       </div>
     </Section>

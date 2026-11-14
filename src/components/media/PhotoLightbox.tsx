@@ -101,7 +101,7 @@ export function PhotoLightbox({ images, label, open, onChange, onClose }: PhotoL
             >
               <Icon name="chevron-left" className="size-4.5" />
             </button>
-            <p className="text-caption tabular-nums" aria-live="polite">
+            <p className="text-body-sm tabular-nums" aria-live="polite">
               {(open ?? 0) + 1} / {images.length}
             </p>
             <button

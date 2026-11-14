@@ -46,14 +46,14 @@ export function BookingPanel({
         </div>
       </Parallax>
       <Container>
-        <Reveal className="mx-auto grid max-w-5xl gap-10 rounded-xl bg-white p-6 shadow-soft md:p-10 lg:grid-cols-12 lg:gap-12 lg:p-12">
+        <Reveal className="mx-auto grid max-w-5xl gap-10 rounded-md bg-white p-6 shadow-soft md:p-10 lg:grid-cols-12 lg:gap-12 lg:p-12">
           <div className="flex flex-col lg:col-span-5">
             <Eyebrow>{eyebrow}</Eyebrow>
             <h2 id="booking-title" className="mt-4 text-heading-3 leading-[1.15] text-balance">
               {title}
             </h2>
             <p className="mt-4 text-body-md text-slate">{description}</p>
-            <ul className="mt-8 flex flex-col gap-3.5 border-t border-ink/8 pt-6 text-body-sm">
+            <ul className="mt-8 flex flex-col gap-3.5 border-t border-line pt-6 text-body-sm">
               {contacts.map((contact) => (
                 <li key={contact.label} className="flex items-center gap-3 text-slate">
                   <Icon name={contact.icon} className="size-4.5 shrink-0 text-turquoise" />

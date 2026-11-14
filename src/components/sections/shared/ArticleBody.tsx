@@ -19,10 +19,7 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
             return <p key={index}>{block.text}</p>;
           case "image":
             return (
-              <ImageReveal
-                key={index}
-                className="relative aspect-[768/420] rounded-card lg:rounded-media"
-              >
+              <ImageReveal key={index} className="relative aspect-[768/420] rounded-md">
                 <div className="absolute inset-0">
                   <ResponsiveImage
                     asset={block.image}
@@ -36,7 +33,7 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
             return (
               <div key={index} className="grid grid-cols-2 gap-4 md:gap-6">
                 {block.images.map((image) => (
-                  <ImageReveal key={image.src} className="relative aspect-[372/254] rounded-card">
+                  <ImageReveal key={image.src} className="relative aspect-[372/254] rounded-md">
                     <div className="absolute inset-0">
                       <ResponsiveImage asset={image} sizes="(min-width: 768px) 24rem, 50vw" fill />
                     </div>

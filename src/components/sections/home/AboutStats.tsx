@@ -21,7 +21,7 @@ export function AboutStats({ stats, cta, className }: AboutStatsProps) {
             as="div"
             className="flex flex-col-reverse gap-2 border-t border-white/40 pt-6"
           >
-            <dt className="text-body-md text-white/85">{stat.label}</dt>
+            <dt className="text-body-md text-white/80">{stat.label}</dt>
             <dd className="font-serif text-heading-2 leading-none">
               <CountUp value={stat.value} />
             </dd>

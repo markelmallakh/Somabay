@@ -39,7 +39,7 @@ function FacilityCard({
 }) {
   return (
     <div data-from={from} style={style} className={cn("relative", className)}>
-      <ImageReveal parallax={0} className="absolute inset-0 overflow-hidden rounded-[2rem]">
+      <ImageReveal parallax={0} className="absolute inset-0 overflow-hidden rounded-md">
         <SmartLink href={item.href} className="group absolute inset-0 block text-white">
           {/* Taller than the card so it can drift (parallax) without exposing an edge. */}
           <span data-parallax className="absolute inset-x-0 -top-[12%] block h-[124%]">
@@ -57,7 +57,7 @@ function FacilityCard({
           <span className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-6">
             <span className="flex flex-col gap-1">
               <span className="font-serif text-heading-5">{item.title}</span>
-              <span className="text-body-sm text-white/85">{item.description}</span>
+              <span className="text-body-sm text-white/80">{item.description}</span>
             </span>
             <span className="wave wave-group grid size-11 shrink-0 place-items-center rounded-md bg-turquoise transition-colors duration-500 [--wave:#fff] group-hover:text-turquoise">
               <Icon

@@ -15,7 +15,7 @@ export default function NotFound() {
     <Container className="flex min-h-[80svh] flex-col justify-center pt-(--header-height) pb-24">
       <Stack gap="md" align="start">
         <Eyebrow>Error 404</Eyebrow>
-        <h1 className="max-w-3xl text-h1">This part of the bay is still being charted.</h1>
+        <h1 className="max-w-3xl text-heading-1">This part of the bay is still being charted.</h1>
         <p className="max-w-xl text-lead text-slate">
           The page you are looking for doesn’t exist yet or has moved. Let’s get you back to the
           shoreline.

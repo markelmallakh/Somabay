@@ -34,6 +34,7 @@ export default async function EventsPage() {
         description="From world-class sporting events to unforgettable celebrations, discover what’s happening across the bay."
       />
       <Section spacing="none" className="pb-section" aria-label="Events">
+        <h2 className="sr-only">Events</h2>
         <Container>
           <EventsExplorer
             events={ordered}

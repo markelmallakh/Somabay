@@ -14,7 +14,7 @@ export function TextAction({
     <button
       type={type}
       className={cn(
-        "eyebrow text-[0.6875rem] text-lagoon transition-[color,opacity] duration-500 hover:text-ink disabled:pointer-events-none disabled:opacity-0",
+        "eyebrow text-label text-lagoon transition-[color,opacity] duration-500 hover:text-ink disabled:pointer-events-none disabled:opacity-0",
         className,
       )}
       {...props}

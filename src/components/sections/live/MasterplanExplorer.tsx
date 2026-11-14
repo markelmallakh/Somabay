@@ -32,7 +32,7 @@ export function MasterplanExplorer({ places, details, view }: MasterplanExplorer
           const index = details.findIndex((item) => item.id === id);
           if (index >= 0) setOpen(index);
         }}
-        className="aspect-[4/5] rounded-card sm:aspect-[1312/700] lg:rounded-media"
+        className="aspect-[4/5] rounded-md sm:aspect-[1312/700]"
       />
       <div className="absolute top-4 left-4 z-[500] max-w-[calc(100%-2rem)] rounded-full bg-white/95 shadow-soft">
         <SegmentedControl

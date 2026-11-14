@@ -31,7 +31,7 @@ export function FooterWeather({ forecast }: { forecast: WeatherForecast }) {
           setLoaded(true);
           setOpen(true);
         }}
-        className="inline-flex items-center gap-2 rounded-md border border-gray-200 px-3 py-1.5 text-body-xs text-ink transition-colors hover:border-turquoise/60"
+        className="inline-flex items-center gap-2 rounded-md border border-line px-3 py-1.5 text-body-xs text-ink transition-colors hover:border-turquoise/60"
       >
         <Icon
           name={forecast.current.isDay ? "cloud-sun" : "moon"}

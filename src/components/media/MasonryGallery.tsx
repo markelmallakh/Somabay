@@ -34,7 +34,7 @@ export function MasonryGallery({ images }: MasonryGalleryProps) {
               <ImageReveal
                 key={`${columnIndex}-${cursor}`}
                 delay={columnIndex * 0.1}
-                className={cn("relative rounded-card", aspect)}
+                className={cn("relative rounded-md", aspect)}
               >
                 <div className="absolute inset-0">
                   <ResponsiveImage asset={image} sizes="(min-width: 768px) 30vw, 50vw" fill />

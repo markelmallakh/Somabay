@@ -47,7 +47,7 @@ export function DetailDrawer({ items, index, onClose, onNavigate }: DetailDrawer
             <button
               type="button"
               onClick={onClose}
-              className="wave absolute top-5 left-5 z-20 grid size-12 place-items-center rounded-md bg-white text-ink shadow-[0_8px_24px_rgb(18_58_70/0.18)] transition-colors duration-500 hover:text-white"
+              className="wave absolute top-5 left-5 z-20 grid size-12 place-items-center rounded-md bg-white text-ink shadow-float transition-colors duration-500 hover:text-white"
               aria-label="Close"
               data-autofocus
             >
@@ -75,14 +75,14 @@ export function DetailDrawer({ items, index, onClose, onNavigate }: DetailDrawer
               </p>
             ) : null}
             <div data-drawer-item style={stagger(1)} className="flex flex-col gap-2">
-              <h2 className="text-h2">{item.title}</h2>
+              <h2 className="text-heading-2">{item.title}</h2>
               {item.kicker ? <p className="text-body-md text-slate">{item.kicker}</p> : null}
             </div>
             {item.location ? (
               <p
                 data-drawer-item
                 style={stagger(2)}
-                className="flex items-center gap-2 text-caption text-slate"
+                className="flex items-center gap-2 text-body-sm text-slate"
               >
                 <Icon name="pin" className="size-4" />
                 {item.location}
@@ -133,7 +133,7 @@ export function DetailDrawer({ items, index, onClose, onNavigate }: DetailDrawer
               style={stagger(5)}
               className="mt-auto flex flex-col gap-6 border-t border-line pt-6 md:flex-row md:items-center md:justify-between"
             >
-              <ul className="flex flex-wrap items-center gap-x-8 gap-y-3 text-caption text-slate">
+              <ul className="flex flex-wrap items-center gap-x-8 gap-y-3 text-body-sm text-slate">
                 {item.hours ? (
                   <li className="flex items-center gap-2">
                     <Icon name="clock" className="size-4.5" />
@@ -166,7 +166,7 @@ export function DetailDrawer({ items, index, onClose, onNavigate }: DetailDrawer
               </ul>
               {count > 1 ? (
                 <div className="flex items-center gap-4">
-                  <span className="text-caption text-slate" aria-live="polite">
+                  <span className="text-body-sm text-slate" aria-live="polite">
                     {position + 1} / {count}
                   </span>
                   <div className="flex gap-2">

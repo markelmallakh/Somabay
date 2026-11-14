@@ -7,7 +7,7 @@ import { SelectMenu } from "./SelectMenu";
  * there is a value, it shrinks and floats to the top of the box.
  */
 const control = cn(
-  "peer block w-full rounded-thumb border border-ink/15 bg-white px-4 pt-6 pb-2 text-body text-ink outline-none",
+  "peer block w-full rounded-md border border-ink/15 bg-white px-4 pt-6 pb-2 text-body text-ink outline-none",
   "transition-[border-color,box-shadow] duration-300 hover:border-ink/35",
   "focus:border-turquoise focus:shadow-[0_0_0_3px_rgb(0_178_186/0.18)]",
   "aria-invalid:border-alert",
@@ -61,11 +61,11 @@ function FieldShell({
         </label>
       </div>
       {error ? (
-        <p id={`${id}-error`} className="text-caption text-alert">
+        <p id={`${id}-error`} className="text-body-sm text-alert">
           {error}
         </p>
       ) : hint ? (
-        <p id={`${id}-hint`} className="text-caption text-slate">
+        <p id={`${id}-hint`} className="text-body-sm text-slate">
           {hint}
         </p>
       ) : null}

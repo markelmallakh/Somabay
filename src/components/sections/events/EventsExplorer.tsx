@@ -71,7 +71,7 @@ export function EventsExplorer({
                 ))}
               </ul>
               {visible.length === 0 ? (
-                <p className="rounded-card bg-sand-100 p-10 text-center text-slate">
+                <p className="rounded-md bg-sand-100 p-10 text-center text-slate">
                   No events in these categories yet.
                 </p>
               ) : null}

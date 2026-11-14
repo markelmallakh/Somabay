@@ -10,7 +10,7 @@ import { PlacesMap } from "@/components/map/PlacesMap";
 import { FilterPanel, type FilterState, matchesFilters } from "@/components/ui/FilterPanel";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { hotelPrice } from "@/lib/price";
-import { HotelCard } from "./HotelCard";
+import { HotelRow } from "./HotelRow";
 
 type HotelFinderProps = {
   heading: ReactNode;
@@ -113,13 +113,14 @@ export function HotelFinder({
               transition={{ duration: 0.6, ease: easeOutExpo }}
             >
               {mode === "list" ? (
-                <ul className="grid gap-4 md:grid-cols-2 md:gap-5">
-                  {visible.map((hotel) => (
+                <ul className="flex flex-col gap-5">
+                  {visible.map((hotel, index) => (
                     <li key={hotel.slug}>
-                      <HotelCard
+                      <HotelRow
                         hotel={hotel}
                         href={hrefs[hotel.slug]}
                         themeLabels={hotel.themes.map(label)}
+                        index={index}
                       />
                     </li>
                   ))}
@@ -130,11 +131,11 @@ export function HotelFinder({
                   view={view}
                   label="Map of Somabay hotels"
                   onSelect={(id) => setDrawer(drawerItems.findIndex((item) => item.id === id))}
-                  className="aspect-[4/5] rounded-card md:aspect-[16/11] lg:rounded-media"
+                  className="aspect-[4/5] rounded-md md:aspect-[16/11]"
                 />
               )}
               {visible.length === 0 ? (
-                <p className="rounded-card bg-white p-10 text-center text-slate">
+                <p className="rounded-md bg-white p-10 text-center text-slate">
                   No stays match these filters. Try clearing a few.
                 </p>
               ) : null}

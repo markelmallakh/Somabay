@@ -69,7 +69,7 @@ export function DiningSection() {
         <div className="grid gap-8 lg:grid-cols-[800fr_560fr]">
           <div className="flex flex-col gap-8">
             <Reveal className="flex max-w-[31.25rem] flex-col gap-8">
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 <Eyebrow>{dining.eyebrow}</Eyebrow>
                 <h2 id="dining-title" className="text-heading-2">
                   {dining.title}
@@ -82,7 +82,7 @@ export function DiningSection() {
               <DiningList places={dining.places} thumb={dining.thumb} />
               <SmartLink
                 href={dining.cta.href}
-                className="w-fit rounded-sm bg-dusk-purple/10 px-3 py-1.5 text-body-sm font-semibold text-dusk-purple transition-colors duration-500 ease-out-expo hover:bg-dusk-purple hover:text-white"
+                className="link-underline w-fit pb-0.5 text-body-sm text-slate transition-colors duration-500 ease-out-expo hover:text-ink"
               >
                 {dining.more}
               </SmartLink>
@@ -95,12 +95,12 @@ export function DiningSection() {
             </Reveal>
           </div>
 
-          <Reveal className="relative min-h-[28rem] overflow-hidden rounded-[2rem] lg:min-h-0">
+          <Reveal className="relative min-h-[28rem] overflow-hidden rounded-md lg:min-h-0">
             <ResponsiveImage asset={dining.image} sizes="(min-width: 1024px) 37vw, 100vw" fill />
           </Reveal>
         </div>
 
-        {/* The Marina: photo panel with a rounded, slanted notch holding the categories. */}
+        {/* The Marina: film panel with a quiet line of amenities along its foot. */}
         <MarinaPanel {...marina} />
       </Container>
     </section>

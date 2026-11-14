@@ -91,7 +91,7 @@ export function HomeEventsSection() {
       <Container className="flex flex-col gap-12">
         <Reveal className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-4">
               <Eyebrow>Somabay Events</Eyebrow>
               <h2 id="events-title" className="text-heading-2">
                 Events at Somabay
@@ -101,7 +101,7 @@ export function HomeEventsSection() {
               Races, tournaments and seasonal celebrations by the Red Sea, all year round.
             </p>
           </div>
-          <div role="tablist" aria-label="Events" className="flex border-b border-gray-200">
+          <div role="tablist" aria-label="Events" className="flex border-b border-line">
             {TABS.map((item) => {
               const selected = item.id === tab;
               return (
@@ -146,7 +146,7 @@ export function HomeEventsSection() {
               return (
                 <li key={card.key}>
                   <SmartLink href={card.href} className="group flex flex-col gap-6">
-                    <span className="relative block aspect-[446/480] overflow-hidden rounded-[2rem]">
+                    <span className="relative block aspect-[446/480] overflow-hidden rounded-md">
                       <ResponsiveImage
                         asset={card.image}
                         sizes="(min-width: 768px) 30vw, 100vw"
@@ -156,7 +156,7 @@ export function HomeEventsSection() {
                           isPast && "saturate-[0.4]",
                         )}
                       />
-                      <span className="absolute top-4 left-4 flex flex-col items-center rounded-lg bg-white px-4 py-2.5 text-ink">
+                      <span className="absolute top-4 left-4 flex flex-col items-center rounded-md bg-white px-4 py-2.5 text-ink">
                         <span className="font-serif text-heading-4 leading-none">
                           {day.format(date)}
                         </span>
@@ -169,7 +169,7 @@ export function HomeEventsSection() {
                           {month.format(date)}
                         </span>
                       </span>
-                      <span className="eyebrow absolute top-4 right-4 rounded-sm bg-black/30 px-2 py-0.5 text-white backdrop-blur-lg">
+                      <span className="eyebrow absolute top-4 right-4 rounded-md bg-black/30 px-2 py-0.5 text-white backdrop-blur-lg">
                         {card.category}
                       </span>
                     </span>
@@ -179,7 +179,7 @@ export function HomeEventsSection() {
                         <Icon name="pin" className="size-4" />
                         {card.location}
                       </span>
-                      <span className="inline-flex items-center gap-2 text-body-xs font-semibold uppercase">
+                      <span className="inline-flex items-center gap-2 text-body-xs font-semibold tracking-label uppercase">
                         {isPast ? "View highlights" : "Explore event"}
                         <Icon
                           name="arrow-right"

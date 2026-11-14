@@ -105,7 +105,7 @@ export async function SiteFooter() {
           </div>
         </div>
 
-        <div className="relative aspect-[1392/260] min-h-40 overflow-hidden rounded-[2rem]">
+        <div className="relative aspect-[1392/260] min-h-40 overflow-hidden rounded-md">
           <ResponsiveImage asset={banner} sizes="(min-width: 1512px) 1392px, 100vw" fill />
         </div>
 
@@ -128,7 +128,7 @@ export async function SiteFooter() {
             ))}
           </nav>
 
-          <div className="flex flex-col gap-8 sm:flex-row lg:flex-col lg:border-l lg:border-gray-200 lg:pl-12">
+          <div className="flex flex-col gap-8 sm:flex-row lg:flex-col lg:border-l lg:border-line lg:pl-12">
             <div className="flex flex-col gap-4">
               <h2 className={columnTitle}>Get in touch</h2>
               <a
@@ -149,7 +149,7 @@ export async function SiteFooter() {
                   <li key={item.href}>
                     <SmartLink
                       href={item.href}
-                      className="wave grid size-9 place-items-center rounded-md border border-gray-200 text-ink transition-colors duration-500 hover:border-turquoise hover:text-white"
+                      className="wave grid size-9 place-items-center rounded-md border border-line text-ink transition-colors duration-500 hover:border-turquoise hover:text-white"
                       aria-label={item.label}
                     >
                       <Icon name={item.icon} className="size-4" />
@@ -160,13 +160,13 @@ export async function SiteFooter() {
             </div>
 
             {/* Figma "App card" (485:10427). */}
-            <div className="flex w-fit items-center gap-4 rounded-lg border border-gray-200 py-3 pr-2 pl-2.5">
+            <div className="flex w-fit items-center gap-4 rounded-md border border-line py-3 pr-2 pl-2.5">
               <Image
                 src="/images/footer/app-qr.png"
                 alt="QR code to download the Somabay app"
                 width={144}
                 height={145}
-                className="size-22 shrink-0 rounded-lg"
+                className="size-22 shrink-0 rounded-md"
               />
               <div className="flex w-[7.9375rem] flex-col gap-2">
                 <p className="text-body-xs font-semibold">Get the Somabay app</p>
@@ -188,7 +188,7 @@ export async function SiteFooter() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col gap-5 border-t border-gray-200 pt-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-5 border-t border-line pt-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-col gap-3 text-body-xs text-slate md:flex-row md:items-center md:gap-6">
             <p>
               © <CurrentYear /> {siteConfig.name}. All rights reserved.

@@ -38,19 +38,19 @@ export function LeadershipGrid({ leaders }: { leaders: Leader[] }) {
               type="button"
               onClick={() => setOpen(index)}
               aria-label={`${leader.name}, ${leader.role}: read biography`}
-              className="group relative isolate flex aspect-[4/5] w-full flex-col justify-end overflow-hidden rounded-lg text-left text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turquoise"
+              className="group relative isolate flex aspect-[4/5] w-full flex-col justify-end overflow-hidden rounded-md text-left text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turquoise"
             >
               {leader.portrait ? (
                 <ResponsiveImage
                   asset={leader.portrait}
                   sizes="(min-width: 768px) 22rem, 78vw"
                   fill
-                  className="-z-10 transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.06]"
+                  className="-z-10 transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                 />
               ) : (
                 <span
                   aria-hidden
-                  className="absolute inset-0 -z-10 grid place-items-center bg-[linear-gradient(160deg,var(--color-turquoise)_0%,var(--color-turquoise-160)_100%)] font-serif text-[clamp(4rem,3rem+4vw,7rem)] text-white/15 transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.06]"
+                  className="absolute inset-0 -z-10 grid place-items-center bg-[linear-gradient(160deg,var(--color-turquoise)_0%,var(--color-turquoise-160)_100%)] font-serif text-[clamp(4rem,3rem+4vw,7rem)] text-white/15 transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                 >
                   {initials(leader.name)}
                 </span>
@@ -178,15 +178,11 @@ function LeaderDrawer({
             <p
               data-drawer-item
               style={stagger(1)}
-              className="w-fit rounded-md border border-ink/15 px-3 py-1.5 text-[0.6875rem] font-semibold tracking-[0.14em] text-ink uppercase"
+              className="w-fit rounded-md border border-ink/15 px-3 py-1.5 text-label font-semibold tracking-[0.14em] text-ink uppercase"
             >
               {leader.role}
             </p>
-            <h2
-              data-drawer-item
-              style={stagger(2)}
-              className="font-serif text-heading-2 leading-[1.05]"
-            >
+            <h2 data-drawer-item style={stagger(2)} className="font-serif text-heading-2">
               {leader.name}
             </h2>
             {lead ? (

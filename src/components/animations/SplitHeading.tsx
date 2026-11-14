@@ -35,9 +35,13 @@ export function SplitHeading({
         linesClass: "split-line",
         autoSplit: true,
         onSplit(self) {
+          // Each line's mask is only as tall as its line box, which clips descenders (g, y, p)
+          // under tight leading. Extend it below the line and pull the spacing back, so the
+          // letters show whole and the lines keep their rhythm.
+          gsap.set(self.masks, { paddingBottom: "0.2em", marginBottom: "-0.2em" });
           gsap.set(scope, { autoAlpha: 1 });
           return gsap.from(self.lines, {
-            yPercent: 110,
+            yPercent: 130,
             duration: 1.4,
             stagger: 0.09,
             delay,

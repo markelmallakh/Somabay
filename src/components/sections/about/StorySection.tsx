@@ -24,7 +24,7 @@ export function StorySection() {
           >
             {about.stats.map((stat) => (
               <RevealItem as="li" key={stat.value} className="flex flex-col gap-3">
-                <p className="font-serif text-heading-2 leading-[1.2] whitespace-nowrap text-turquoise">
+                <p className="font-serif text-heading-2 whitespace-nowrap text-turquoise">
                   <CountUp value={stat.value} />
                 </p>
                 <p className="text-body-md text-slate">{stat.label}</p>

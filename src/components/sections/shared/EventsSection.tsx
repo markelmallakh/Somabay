@@ -24,7 +24,7 @@ function EventDate({ event }: { event: EventItem }) {
   const end = event.end ? new Date(event.end) : null;
   return (
     <p className="flex w-26 shrink-0 flex-col items-center text-center md:w-36">
-      <span className="font-serif text-h4 leading-none whitespace-nowrap md:text-h3">
+      <span className="font-serif text-heading-6 leading-none whitespace-nowrap md:text-heading-5">
         <time dateTime={event.start}>{day.format(start)}</time>
         {end ? (
           <>
@@ -33,7 +33,7 @@ function EventDate({ event }: { event: EventItem }) {
           </>
         ) : null}
       </span>
-      <span className="mt-2 text-caption text-slate">{monthYear.format(start)}</span>
+      <span className="mt-2 text-body-sm text-slate">{monthYear.format(start)}</span>
     </p>
   );
 }
@@ -57,7 +57,7 @@ export function EventsSection({
       className={id ? "scroll-mt-(--header-height)" : undefined}
     >
       <Container className="grid gap-4 lg:grid-cols-12">
-        <ImageReveal className="relative min-h-[28rem] rounded-card text-white lg:col-span-5">
+        <ImageReveal className="relative min-h-[28rem] rounded-md text-white lg:col-span-5">
           <div className="absolute inset-0">
             <ResponsiveImage
               asset={eventsIntro.image}
@@ -72,7 +72,7 @@ export function EventsSection({
           <div className="absolute inset-0 flex flex-col justify-between p-8 md:p-10">
             <div>
               <Eyebrow tone="dark">{eventsIntro.eyebrow}</Eyebrow>
-              <h2 id="events-title" className="mt-4 max-w-sm text-h2">
+              <h2 id="events-title" className="mt-4 max-w-sm text-heading-2">
                 {eventsIntro.title}
               </h2>
             </div>
@@ -87,11 +87,11 @@ export function EventsSection({
         <RevealGroup as="ul" className="flex flex-col gap-3 lg:col-span-7">
           {items.map((event) => (
             <RevealItem as="li" key={event.slug}>
-              <article className="group flex items-center gap-5 rounded-card border border-line bg-white px-4 py-6 transition-[border-color,box-shadow] duration-500 hover:border-transparent hover:shadow-[0_12px_40px_rgb(18_58_70/0.12)] md:gap-8 md:px-6 md:py-8">
+              <article className="group flex items-center gap-5 rounded-md border border-line bg-white px-4 py-6 transition-[border-color,box-shadow] duration-500 hover:border-transparent hover:shadow-card md:gap-8 md:px-6 md:py-8">
                 <EventDate event={event} />
                 <span aria-hidden className="h-16 w-px bg-line" />
                 <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-                  <h3 className="font-serif text-h4 md:text-h3">{event.title}</h3>
+                  <h3 className="font-serif text-heading-6 md:text-heading-5">{event.title}</h3>
                   <TextLink
                     href={routes.event(event.slug)}
                     srContext={event.title}

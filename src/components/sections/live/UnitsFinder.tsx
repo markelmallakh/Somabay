@@ -64,7 +64,7 @@ export function UnitsFinder({ units, hrefs, neighborhoods }: UnitsFinderProps) {
           ))}
         </RevealGroup>
         {visible.length === 0 ? (
-          <p className="rounded-card bg-white p-10 text-center text-slate">
+          <p className="rounded-md bg-white p-10 text-center text-slate">
             No units match these filters.
           </p>
         ) : null}

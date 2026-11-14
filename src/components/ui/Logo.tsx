@@ -23,12 +23,12 @@ export function Logo({ tone = "brand", className, title = "Somabay" }: LogoProps
       className={cn("h-auto", className)}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g className={cn(colors.mark, "transition-[fill] duration-500")}>
+      <g className={cn(colors.mark, "transition-[fill] duration-700 ease-in-out")}>
         {markPaths.map((path, index) => (
           <path key={index} transform={`translate(${path.x} ${path.y})`} d={path.d} />
         ))}
       </g>
-      <g className={cn(colors.word, "transition-[fill] duration-500")}>
+      <g className={cn(colors.word, "transition-[fill] duration-700 ease-in-out")}>
         {wordmarkPaths.map((path, index) => (
           <path key={index} transform={`translate(${path.x} ${path.y})`} d={path.d} />
         ))}

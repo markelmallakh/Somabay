@@ -65,7 +65,7 @@ export function HeroScenes({ scenes }: HeroScenesProps) {
       <div
         role="radiogroup"
         aria-label="Scene"
-        className="absolute bottom-8 left-site z-20 grid grid-cols-2 rounded-full bg-white/15 p-1 text-body-md font-medium text-white shadow-[0_8px_32px_rgb(0_0_0/0.2)] backdrop-blur-xl backdrop-saturate-150"
+        className="absolute bottom-8 left-site z-20 grid w-48 grid-cols-2 rounded-full bg-white/15 p-1 text-body-md font-medium text-white shadow-[0_8px_32px_rgb(0_0_0/0.2)] backdrop-blur-xl backdrop-saturate-150"
       >
         <span
           aria-hidden

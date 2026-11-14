@@ -15,17 +15,50 @@ type PlacesMapProps = {
   /** Draws a line from this point to the selected place (neighborhood → destination). */
   origin?: MapPlace;
   label: string;
+  /** `drawn` is the brand-tinted map; `satellite` shows aerial imagery. */
+  basemap?: "drawn" | "satellite";
   className?: string;
 };
 
 /**
- * Esri's topographic map: keyless and softly coloured (blue sea, pale land), close to the site's
- * palette. CARTO's free tiles now need an API key.
+ * Esri's light grey canvas (keyless; CARTO's free tiles now need an API key), recoloured in the
+ * browser into the site's palette by the `somabay-duotone` filter below: sand land, turquoise sea,
+ * cream roads. Place names come from a separate label layer drawn on top, untinted.
  */
 const TILE_URL =
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}";
+  "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}";
+const LABELS_URL =
+  "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}";
 const ATTRIBUTION =
   'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, FAO, NOAA, USGS, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+/** Esri's aerial imagery (also keyless): the real peninsula, sea and greens in full colour. */
+const SATELLITE_URL =
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const SATELLITE_ATTRIBUTION =
+  'Imagery &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, Maxar, Earthstar Geographics, and the GIS User Community';
+
+/**
+ * Tone curve for the grey canvas, sampled at 101 steps: its sea (grey ~0.82) turns turquoise, land
+ * (~0.94) warm sand and roads (~0.98) white, with short blends between them.
+ */
+const DUOTONE = (() => {
+  const sea = [0.6, 0.83, 0.85];
+  const land = [0.953, 0.933, 0.886];
+  const road = [1, 1, 1];
+  const mix = (a: number[], b: number[], t: number) =>
+    a.map((value, i) => value + (b[i] - value) * t);
+  const at = (v: number) => {
+    if (v <= 0.86) return sea;
+    if (v <= 0.92) return mix(sea, land, (v - 0.86) / 0.06);
+    if (v <= 0.955) return land;
+    if (v <= 0.97) return mix(land, road, (v - 0.955) / 0.015);
+    return road;
+  };
+  const steps = Array.from({ length: 101 }, (_, i) => at(i / 100));
+  const channel = (index: number) => steps.map((rgb) => rgb[index].toFixed(3)).join(" ");
+  return { r: channel(0), g: channel(1), b: channel(2) };
+})();
 
 function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
@@ -42,6 +75,7 @@ export function PlacesMap({
   onSelect,
   origin,
   label,
+  basemap = "drawn",
   className,
 }: PlacesMapProps) {
   const container = useRef<HTMLDivElement>(null);
@@ -70,9 +104,20 @@ export function PlacesMap({
         attributionControl: true,
       });
       map.current = instance;
-      L.tileLayer(TILE_URL, { attribution: ATTRIBUTION, maxZoom: 19, maxNativeZoom: 16 }).addTo(
-        instance,
-      );
+      const satellite = basemap === "satellite";
+      L.tileLayer(satellite ? SATELLITE_URL : TILE_URL, {
+        attribution: satellite ? SATELLITE_ATTRIBUTION : ATTRIBUTION,
+        maxZoom: 19,
+        maxNativeZoom: satellite ? 18 : 16,
+        className: satellite ? "" : "somabay-duotone",
+      }).addTo(instance);
+      if (!satellite) {
+        L.tileLayer(LABELS_URL, {
+          maxZoom: 19,
+          maxNativeZoom: 16,
+          className: "somabay-labels",
+        }).addTo(instance);
+      }
       layer.current = L.layerGroup().addTo(instance);
 
       const icon = (kind: "place" | "origin") =>
@@ -131,7 +176,7 @@ export function PlacesMap({
       map.current = null;
       currentMarkers.clear();
     };
-  }, [places, origin, view]);
+  }, [places, origin, view, basemap]);
 
   useEffect(() => {
     let cancelled = false;
@@ -162,11 +207,28 @@ export function PlacesMap({
   }, [selectedId, origin, places]);
 
   return (
-    <div
-      ref={container}
-      role="region"
-      aria-label={label}
-      className={cn("somabay-map relative z-0 overflow-hidden bg-sand-200", className)}
-    />
+    <>
+      {/* Maps the grey canvas's tones onto the palette: darker greys (the sea) to turquoise, light
+          grey (land) to sand, white (roads) to cream. */}
+      <svg aria-hidden width="0" height="0" className="absolute">
+        <filter id="somabay-duotone" colorInterpolationFilters="sRGB">
+          <feColorMatrix
+            type="matrix"
+            values="0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 1 0"
+          />
+          <feComponentTransfer>
+            <feFuncR type="table" tableValues={DUOTONE.r} />
+            <feFuncG type="table" tableValues={DUOTONE.g} />
+            <feFuncB type="table" tableValues={DUOTONE.b} />
+          </feComponentTransfer>
+        </filter>
+      </svg>
+      <div
+        ref={container}
+        role="region"
+        aria-label={label}
+        className={cn("somabay-map relative z-0 overflow-hidden bg-sand-200", className)}
+      />
+    </>
   );
 }

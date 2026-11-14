@@ -27,7 +27,7 @@ export function EducationSection() {
             <article key={school.name} className="flex flex-col">
               <ImageReveal
                 from={index % 2 ? "right" : "left"}
-                className="relative aspect-[4/3] rounded-card lg:aspect-[16/11] lg:rounded-media"
+                className="relative aspect-[4/3] rounded-md lg:aspect-[16/11]"
               >
                 <div className="absolute inset-0">
                   <ResponsiveImage

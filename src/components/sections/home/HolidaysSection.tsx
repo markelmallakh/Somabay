@@ -45,7 +45,7 @@ export function HolidaysSection() {
                   {holidaysIntro.title}
                 </h2>
               </div>
-              <p className="text-body-lg text-slate">{holidaysIntro.description}</p>
+              <p className="text-body-md text-slate">{holidaysIntro.description}</p>
               <SmartLink
                 href={holidaysIntro.cta.href}
                 className="group inline-flex w-fit items-center gap-2.5 text-body-md font-semibold"

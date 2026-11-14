@@ -111,7 +111,7 @@ export function WeatherDialog({ open, onClose, forecast, anchor }: WeatherDialog
             if (panel.current) panel.current.style.clipPath = "none";
           }}
           style={{ ...position, left, width: WIDTH }}
-          className="absolute flex max-h-[min(36rem,calc(100svh-7rem))] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_24px_70px_rgb(18_58_70/0.25)]"
+          className="absolute flex max-h-[min(36rem,calc(100svh-7rem))] flex-col overflow-hidden rounded-md bg-white shadow-[0_24px_70px_rgb(18_58_70/0.25)]"
         >
           {/* Now, on a turquoise band. */}
           <header
@@ -119,7 +119,7 @@ export function WeatherDialog({ open, onClose, forecast, anchor }: WeatherDialog
             className="relative shrink-0 bg-[linear-gradient(135deg,var(--color-turquoise)_0%,var(--color-turquoise-160)_100%)] px-5 pt-3 pb-3 text-white"
           >
             <div className="flex items-start justify-between gap-4">
-              <p className="text-[0.6875rem] font-semibold tracking-[0.14em] text-white uppercase">
+              <p className="text-label font-semibold tracking-[0.14em] text-white uppercase">
                 Somabay now
               </p>
               <button
@@ -143,7 +143,7 @@ export function WeatherDialog({ open, onClose, forecast, anchor }: WeatherDialog
               <m.span className="font-serif text-[2.25rem] leading-none tabular-nums">
                 {shownTemperature}
               </m.span>
-              <span className="flex flex-col text-body-xs leading-tight text-white/85">
+              <span className="flex flex-col text-body-xs leading-tight text-white/80">
                 <span className="font-medium text-white">{now.label}</span>
                 {current.feelsLike !== null ? <span>Feels like {current.feelsLike}°</span> : null}
               </span>
@@ -156,9 +156,9 @@ export function WeatherDialog({ open, onClose, forecast, anchor }: WeatherDialog
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: easeOutExpo, delay: 0.35 + position * 0.05 }}
-                    className="flex flex-col items-center rounded-lg bg-white/12 py-1"
+                    className="flex flex-col items-center rounded-md bg-white/12 py-1"
                   >
-                    <dt className="flex items-center gap-1 text-[0.625rem] tracking-label text-white/70 uppercase">
+                    <dt className="flex items-center gap-1 text-body-2xs tracking-label text-white/70 uppercase">
                       <Icon name={stat.icon} className="size-3" />
                       {stat.label}
                     </dt>
@@ -174,7 +174,7 @@ export function WeatherDialog({ open, onClose, forecast, anchor }: WeatherDialog
             data-lenis-prevent
             className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pt-3 pb-2"
           >
-            <p className="text-[0.6875rem] font-medium tracking-label text-slate uppercase">
+            <p className="text-label font-medium tracking-label text-slate uppercase">
               {days.length}-day forecast
             </p>
             <ol className="mt-1">
@@ -191,7 +191,7 @@ export function WeatherDialog({ open, onClose, forecast, anchor }: WeatherDialog
             </ol>
           </div>
 
-          <footer className="shrink-0 border-t border-line/60 px-5 py-1.5 text-[0.625rem] text-mist">
+          <footer className="shrink-0 border-t border-line/60 px-5 py-1.5 text-body-2xs text-mist">
             Forecast by{" "}
             <a
               href="https://open-meteo.com/"
@@ -238,13 +238,13 @@ function ForecastRow({
     >
       <span className="flex flex-col leading-tight">
         <span className="text-body-sm font-medium text-ink">{dayLabel(day.date, position)}</span>
-        <span className="text-[0.6875rem] text-slate">{dateLabel(day.date)}</span>
+        <span className="text-label text-slate">{dateLabel(day.date)}</span>
       </span>
       <span title={weather.label}>
         <Icon name={weather.icon} className="size-5 text-turquoise" />
         <span className="sr-only">{weather.label}</span>
       </span>
-      <span className="text-[0.6875rem] text-turquoise-160 tabular-nums">
+      <span className="text-label text-turquoise-160 tabular-nums">
         {day.rain !== null && day.rain >= 10 ? (
           <span className="flex items-center gap-0.5" title="Chance of rain">
             <Icon name="droplet" className="size-3" />

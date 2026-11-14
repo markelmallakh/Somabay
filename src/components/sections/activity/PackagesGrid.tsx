@@ -49,7 +49,7 @@ export function PackagesGrid({ packages }: { packages: Package[] }) {
     // The whole row triggers the entrance (cards past the right edge are never "in view" alone,
     // so watching each card would leave them hidden).
     <m.div initial="hidden" whileInView="shown" viewport={{ once: true, amount: 0.25 }}>
-      <DragRow label="Wellness packages" tone="dark" className="mt-12 lg:mt-14">
+      <DragRow label="Wellness packages" tone="dark" className="mt-10 lg:mt-12">
         {packages.map((pack, index) => (
           <m.li
             key={pack.id}
@@ -62,13 +62,13 @@ export function PackagesGrid({ packages }: { packages: Package[] }) {
               target="_blank"
               rel="noopener noreferrer"
               draggable={false}
-              className="group relative block aspect-[4/5] overflow-hidden rounded-lg bg-white text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="group relative block aspect-[4/5] overflow-hidden rounded-md bg-white text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <span className="sr-only"> (opens The Cascades site)</span>
 
               {/* The photo: the whole card at rest, a rounded frame above the panel when open. */}
               <span
-                className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.5rem)] ${ease} group-hover:[clip-path:inset(0_0_40%_0_round_0.5rem_0.5rem_0_0)] group-focus-visible:[clip-path:inset(0_0_40%_0_round_0.5rem_0.5rem_0_0)] [@media(hover:none)]:[clip-path:inset(0_0_40%_0_round_0.5rem_0.5rem_0_0)]`}
+                className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.25rem)] ${ease} group-hover:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] group-focus-visible:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] [@media(hover:none)]:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)]`}
               >
                 <span
                   className={`absolute inset-0 transition-transform ${ease} group-hover:-translate-y-[16%] group-focus-visible:-translate-y-[16%] [@media(hover:none)]:-translate-y-[16%]`}
@@ -106,7 +106,7 @@ export function PackagesGrid({ packages }: { packages: Package[] }) {
                     <Icon name="arrow-up-right" className="size-4" />
                   </span>
                 </span>
-                <span className="line-clamp-3 text-body-sm text-navy">{pack.description}</span>
+                <span className="line-clamp-3 text-body-sm text-slate">{pack.description}</span>
               </span>
             </a>
           </m.li>

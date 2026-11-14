@@ -27,10 +27,16 @@ export function ContactHero() {
       <Container>
         <Reveal
           distance={40}
-          className="max-w-[44rem] rounded-card bg-white p-6 shadow-[0_24px_60px_rgb(18_58_70/0.18)] sm:p-10 lg:rounded-media lg:p-12"
+          className="max-w-[44rem] rounded-md bg-white p-6 shadow-[0_24px_60px_rgb(18_58_70/0.18)] sm:p-10 lg:p-12"
         >
           <Eyebrow>{contactHero.eyebrow}</Eyebrow>
-          <SplitHeading as="h1" id="page-title" trigger="load" delay={0.3} className="mt-4 text-h1">
+          <SplitHeading
+            as="h1"
+            id="page-title"
+            trigger="load"
+            delay={0.3}
+            className="mt-4 text-heading-1"
+          >
             {contactHero.title}
           </SplitHeading>
           <EnquiryForm definition={formDefinitions.contact} className="mt-8 md:mt-10" />

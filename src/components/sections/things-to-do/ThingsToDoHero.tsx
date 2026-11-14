@@ -86,7 +86,7 @@ export function ThingsToDoHero({ eyebrow, lines, image, scatter, overview }: Thi
     const setTop = gsap.quickSetter(lineTop, "y", "px");
     const setBottom = gsap.quickSetter(lineBottom, "y", "px");
     const setFade = gsap.quickSetter([lineTop, lineBottom], "opacity");
-    const radius = wide ? 16 : 12;
+    const radius = 4;
     // Fully open at 75% of the hero's scroll; the overview rises over the last quarter.
     const OPEN = 0.75;
     const progress = { value: 0 };
@@ -185,7 +185,7 @@ export function ThingsToDoHero({ eyebrow, lines, image, scatter, overview }: Thi
                 <div data-spot-move data-depth={spot.depth} className="size-full">
                   <div
                     data-spot-reveal
-                    className="relative size-full overflow-hidden rounded-lg bg-sand-200 [clip-path:inset(100%_0%_0%_0%)]"
+                    className="relative size-full overflow-hidden rounded-md bg-sand-200 [clip-path:inset(100%_0%_0%_0%)]"
                   >
                     <ResponsiveImage asset={photo} sizes="(min-width: 768px) 16vw, 36vw" fill />
                   </div>
@@ -241,12 +241,12 @@ export function ThingsToDoHero({ eyebrow, lines, image, scatter, overview }: Thi
           <Container className="grid gap-6 lg:grid-cols-12 lg:items-end">
             <div className="flex flex-col gap-4 lg:col-span-7">
               {overview.eyebrow ? <Eyebrow tone="dark">{overview.eyebrow}</Eyebrow> : null}
-              <h2 className="max-w-[11em] font-serif text-heading-2 leading-[1.15] text-balance">
+              <h2 className="max-w-[11em] font-serif text-heading-2 text-balance">
                 {overview.title}
               </h2>
             </div>
             {overview.description ? (
-              <p className="text-body-md text-white/85 lg:col-span-4 lg:col-start-9">
+              <p className="text-body-md text-white/80 lg:col-span-4 lg:col-start-9">
                 {overview.description}
               </p>
             ) : null}

@@ -21,7 +21,7 @@ export function DiningList({ places, thumb }: { places: Place[]; thumb: ImageAss
 
   return (
     <>
-      <RevealGroup as="ul" className="border-t border-gray-200">
+      <RevealGroup as="ul" className="border-t border-line">
         {places.map((place) => {
           const venue = items.find((item) => item.id === place.id);
           if (!venue) return null;
@@ -31,15 +31,15 @@ export function DiningList({ places, thumb }: { places: Place[]; thumb: ImageAss
                 type="button"
                 aria-haspopup="dialog"
                 onClick={() => setOpen(items.indexOf(venue))}
-                className="group flex w-full items-center gap-4 border-b border-gray-200 py-2 pr-2 text-left transition-colors duration-500 hover:bg-gray-50 focus-visible:bg-gray-50"
+                className="group flex w-full items-center gap-4 border-b border-line py-2 pr-2 text-left transition-colors duration-500 hover:bg-sand-100 focus-visible:bg-sand-100"
               >
-                <span className="relative size-16 shrink-0 overflow-hidden rounded-lg">
+                <span className="relative size-16 shrink-0 overflow-hidden rounded-md">
                   {/* The venue's own photo (the first in its drawer); the shared one as fallback. */}
                   <ResponsiveImage
                     asset={venue.images[0] ?? thumb}
                     sizes="64px"
                     fill
-                    className="transition-transform duration-1000 ease-out-expo group-hover:scale-110"
+                    className="transition-transform duration-1000 ease-out-expo group-hover:scale-[1.05]"
                   />
                 </span>
                 <span className="font-sans text-heading-6 whitespace-nowrap transition-transform duration-700 ease-out-expo group-hover:translate-x-1">

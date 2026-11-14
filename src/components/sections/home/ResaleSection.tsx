@@ -58,9 +58,9 @@ export function ResaleSection() {
       const order = [hero, tileEls[0], tileEls[3], tileEls[1], tileEls[2]];
       gsap.fromTo(
         order,
-        { clipPath: "inset(100% 0% 0% 0% round 24px)", y: 80 },
+        { clipPath: "inset(100% 0% 0% 0% round 4px)", y: 80 },
         {
-          clipPath: "inset(0% 0% 0% 0% round 24px)",
+          clipPath: "inset(0% 0% 0% 0% round 4px)",
           y: 0,
           duration: 1.4,
           ease: "expo.out",
@@ -134,7 +134,7 @@ export function ResaleSection() {
           <div
             key={tile.key}
             data-tile
-            className="absolute overflow-hidden rounded-3xl"
+            className="absolute overflow-hidden rounded-md"
             style={tile.rect}
           >
             <ResponsiveImage
@@ -155,7 +155,7 @@ export function ResaleSection() {
 
       <div
         data-centre
-        className="relative aspect-[4/5] overflow-hidden md:absolute md:top-(--top) md:left-(--left) md:aspect-auto md:h-(--height) md:w-(--width) md:rounded-3xl"
+        className="relative aspect-[4/5] overflow-hidden md:absolute md:top-(--top) md:left-(--left) md:aspect-auto md:h-(--height) md:w-(--width) md:rounded-md"
         style={
           {
             "--left": centre.left,
@@ -194,7 +194,7 @@ export function ResaleSection() {
           </div>
 
           {/* Compact white widget: a peek at three available units; a row floods turquoise on hover. */}
-          <div className="hidden w-[26rem] shrink-0 flex-col overflow-hidden rounded-2xl bg-white text-ink shadow-[0_24px_60px_-20px_rgb(0_0_0/0.45)] lg:flex">
+          <div className="hidden w-[26rem] shrink-0 flex-col overflow-hidden rounded-md bg-white text-ink shadow-[0_24px_60px_-20px_rgb(0_0_0/0.45)] lg:flex">
             <div className="px-5 pt-4 pb-2">
               <span className="eyebrow text-body-2xs text-slate">Recently added</span>
             </div>
@@ -209,12 +209,12 @@ export function ResaleSection() {
                       aria-hidden
                       className="absolute inset-0 -z-10 origin-bottom scale-y-0 bg-turquoise transition-transform duration-700 ease-out-expo group-hover:scale-y-100 group-focus-visible:scale-y-100"
                     />
-                    <span className="relative block size-16 shrink-0 overflow-hidden rounded-lg">
+                    <span className="relative block size-16 shrink-0 overflow-hidden rounded-md">
                       <ResponsiveImage
                         asset={unit.images[0]}
                         sizes="64px"
                         fill
-                        className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-110"
+                        className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                       />
                     </span>
                     <span className="flex min-w-0 flex-1 flex-col gap-1">

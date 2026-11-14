@@ -80,14 +80,14 @@ export function HeroSequence({ media, steps }: HeroSequenceProps) {
               <div className={cn(step.placement === "center" ? "mx-auto max-w-3xl" : "max-w-xl")}>
                 {step.eyebrow ? <Eyebrow>{step.eyebrow}</Eyebrow> : null}
                 {index === 0 ? (
-                  <h1 id="page-title" className="mt-5 text-display">
+                  <h1 id="page-title" className="mt-5 text-heading-1">
                     {step.title}
                   </h1>
                 ) : (
-                  <h2 className="mt-5 text-h1">{step.title}</h2>
+                  <h2 className="mt-5 text-heading-1">{step.title}</h2>
                 )}
                 {step.description ? (
-                  <p className="mt-6 text-lead text-white/85">{step.description}</p>
+                  <p className="mt-6 text-lead text-white/80">{step.description}</p>
                 ) : null}
               </div>
             </div>

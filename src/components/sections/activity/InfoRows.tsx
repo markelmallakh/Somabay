@@ -24,22 +24,22 @@ export function InfoRows({ id, eyebrow, title, items, aside }: InfoRowsProps) {
   return (
     <Section tone="white" aria-labelledby={id} className="bg-sand-100">
       <Container>
-        <div className="rounded-xl bg-white px-6 py-10 md:px-10 lg:px-12 lg:py-14">
+        <div className="rounded-md bg-white px-6 py-10 md:px-10 lg:px-12 lg:py-14">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <Reveal className="flex flex-col gap-4">
               <Eyebrow>{eyebrow}</Eyebrow>
-              <h2 id={id} className="text-heading-2 leading-[1.15]">
+              <h2 id={id} className="text-heading-2">
                 {title}
               </h2>
             </Reveal>
             {aside ? <Reveal delay={0.1}>{aside}</Reveal> : null}
           </div>
 
-          <RevealGroup as="ul" className="mt-10 border-t border-ink/10 lg:mt-14">
+          <RevealGroup as="ul" className="mt-10 border-t border-line lg:mt-14">
             {items.map((item, index) => (
-              <RevealItem as="li" key={item.title} className="border-b border-ink/10">
+              <RevealItem as="li" key={item.title} className="border-b border-line">
                 <div className="grid items-start gap-5 py-6 sm:grid-cols-[9rem_1fr] md:py-8 lg:grid-cols-12 lg:gap-6">
-                  <span className="relative block aspect-[3/2] w-36 overflow-hidden rounded-lg bg-sand-200 lg:col-span-3">
+                  <span className="relative block aspect-[3/2] w-36 overflow-hidden rounded-md bg-sand-200 lg:col-span-3">
                     <ResponsiveImage asset={item.image} sizes="9rem" fill />
                   </span>
                   <span className="flex gap-6 sm:col-start-2 lg:col-span-7 lg:col-start-6 lg:gap-10">

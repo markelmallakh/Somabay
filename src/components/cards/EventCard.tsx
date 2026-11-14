@@ -13,14 +13,14 @@ export function DateBadge({ event, className }: { event: EventItem; className?: 
   return (
     <span
       className={cn(
-        "flex min-w-22 flex-col items-center rounded-thumb bg-white/95 px-4 py-3 text-ink shadow-[0_8px_24px_rgb(18_58_70/0.14)] backdrop-blur-sm",
+        "flex min-w-22 flex-col items-center rounded-md bg-white/95 px-4 py-3 text-ink shadow-[0_8px_24px_rgb(18_58_70/0.14)] backdrop-blur-sm",
         className,
       )}
     >
-      <span className="font-serif text-h4 leading-none whitespace-nowrap">
+      <span className="font-serif text-heading-6 leading-none whitespace-nowrap">
         {formatDayRange(event.start, event.end)}
       </span>
-      <span className="mt-1.5 text-caption text-slate">{formatMonthYear(event.start)}</span>
+      <span className="mt-1.5 text-body-sm text-slate">{formatMonthYear(event.start)}</span>
     </span>
   );
 }
@@ -29,14 +29,14 @@ function ViewEvent() {
   return (
     <p
       aria-hidden
-      className="mt-auto inline-flex items-center gap-2 pt-2 text-[0.75rem] font-semibold tracking-label uppercase"
+      className="mt-auto inline-flex items-center gap-2 pt-2 text-body-xs font-semibold tracking-label uppercase"
     >
       <span className="link-underline pb-0.5 group-hover:[background-size:100%_1px]">
-        View event
+        Explore event
       </span>
       <Icon
-        name="chevron-right"
-        className="size-3.5 transition-transform duration-500 group-hover:translate-x-1"
+        name="arrow-right"
+        className="size-4 transition-transform duration-700 ease-out-expo group-hover:translate-x-1"
       />
     </p>
   );
@@ -45,7 +45,7 @@ function ViewEvent() {
 /** Featured event: a turquoise-5 panel with the photo on one side and the details on the other. */
 function FeaturedEventCard({ event }: { event: EventItem }) {
   return (
-    <article className="group relative grid overflow-hidden rounded-card bg-turquoise-5 md:grid-cols-2 lg:rounded-media">
+    <article className="group relative grid overflow-hidden rounded-md bg-turquoise-5 md:grid-cols-2">
       <ImageReveal className="relative aspect-[3/2] md:aspect-auto md:min-h-[26rem]">
         <div className="absolute inset-0">
           <ResponsiveImage asset={event.image} sizes="(min-width: 768px) 50vw, 100vw" fill />
@@ -54,7 +54,7 @@ function FeaturedEventCard({ event }: { event: EventItem }) {
       <DateBadge event={event} className="absolute top-4 left-4" />
       <div className="flex flex-col gap-4 p-6 sm:p-8 lg:p-14">
         <Chip tone="plain">{categoryLabel(event.category)}</Chip>
-        <h3 className="font-serif text-h2">
+        <h3 className="font-serif text-heading-2">
           <Link
             href={routes.event(event.slug)}
             className="after:absolute after:inset-0 hover:text-lagoon"
@@ -62,7 +62,7 @@ function FeaturedEventCard({ event }: { event: EventItem }) {
             {event.title}
           </Link>
         </h3>
-        <p className="flex items-center gap-2 text-caption text-slate">
+        <p className="flex items-center gap-2 text-body-sm text-slate">
           <Icon name="pin" className="size-4" />
           {event.location}
         </p>
@@ -86,7 +86,7 @@ export function EventCard({ event, featured = false, tinted = false }: EventCard
   if (featured) return <FeaturedEventCard event={event} />;
   return (
     <article className="group relative flex h-full flex-col">
-      <div className="relative aspect-[416/277] overflow-hidden rounded-card bg-sand-200">
+      <div className="relative aspect-[416/277] overflow-hidden rounded-md bg-sand-200">
         <ResponsiveImage
           asset={event.image}
           sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
@@ -97,7 +97,7 @@ export function EventCard({ event, featured = false, tinted = false }: EventCard
       </div>
       <div className="flex flex-1 flex-col gap-3 pt-5">
         <Chip tone={tinted ? "plain" : "soft"}>{categoryLabel(event.category)}</Chip>
-        <h3 className="font-serif text-h4">
+        <h3 className="font-serif text-heading-6">
           <Link
             href={routes.event(event.slug)}
             className="after:absolute after:inset-0 hover:text-lagoon"
@@ -105,7 +105,7 @@ export function EventCard({ event, featured = false, tinted = false }: EventCard
             {event.title}
           </Link>
         </h3>
-        <p className="flex items-center gap-2 text-caption text-slate">
+        <p className="flex items-center gap-2 text-body-sm text-slate">
           <Icon name="pin" className="size-4" />
           {event.location}
         </p>

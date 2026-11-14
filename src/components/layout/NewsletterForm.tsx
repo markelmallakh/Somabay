@@ -13,7 +13,7 @@ export function NewsletterForm() {
 
   return (
     <form action={formAction} className="mt-6" noValidate>
-      <div className="flex items-center gap-2 rounded-lg bg-gray-50 px-4 transition-shadow duration-500 focus-within:shadow-[inset_0_0_0_1px_var(--color-turquoise)]">
+      <div className="flex items-center gap-2 rounded-md bg-sand-100 px-4 transition-shadow duration-500 focus-within:shadow-[inset_0_0_0_1px_var(--color-turquoise)]">
         {/* The label sits inside the box and floats up, shrinking, on focus or once typed in. */}
         <div className="relative min-w-0 flex-1">
           <input

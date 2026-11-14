@@ -28,7 +28,7 @@ export function OptionTag({ id, checked, onChange, children }: OptionTagProps) {
           "inline-flex items-center rounded-md border px-3 py-2 text-[0.8125rem] leading-none transition-colors duration-500 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-turquoise",
           checked
             ? "border-turquoise/40 bg-turquoise-10 text-turquoise-160"
-            : "border-ink/12 text-ink hover:border-turquoise/60",
+            : "border-line text-ink hover:border-turquoise/60",
         )}
       >
         <span

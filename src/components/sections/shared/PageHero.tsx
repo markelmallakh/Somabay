@@ -12,7 +12,8 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 
 type BaseProps = {
   eyebrow?: string;
-  title: string;
+  /** One string, or several lines that each start on a new line. */
+  title: string | readonly string[];
   description?: ReactNode;
   /** Extra content under the description (usually a button). */
   actions?: ReactNode;
@@ -39,10 +40,25 @@ type TitleHeroProps = BaseProps & {
 
 export type PageHeroProps = MediaHeroProps | TitleHeroProps;
 
-function Heading({ title, id, className }: { title: string; id: string; className?: string }) {
+function Heading({
+  title,
+  id,
+  className,
+}: {
+  title: string | readonly string[];
+  id: string;
+  className?: string;
+}) {
   return (
     <SplitHeading as="h1" id={id} trigger="load" delay={0.3} className={className}>
-      {title}
+      {typeof title === "string"
+        ? title
+        : title.map((line, index) => (
+            <span key={line} className="block lg:whitespace-nowrap">
+              {index > 0 ? " " : null}
+              {line}
+            </span>
+          ))}
     </SplitHeading>
   );
 }
@@ -64,7 +80,7 @@ export function PageHero(props: PageHeroProps) {
                 <Eyebrow>{eyebrow}</Eyebrow>
               </Reveal>
             ) : null}
-            <Heading title={title} id={id} className="mt-5 text-h1" />
+            <Heading title={title} id={id} className="mt-5 text-heading-1" />
           </div>
           {description || actions ? (
             <Reveal delay={0.25} className="max-w-md lg:pb-2">
@@ -103,18 +119,18 @@ export function PageHero(props: PageHeroProps) {
       />
 
       <Container className="flex flex-col justify-end gap-8 pt-(--header-height) pb-14 md:pb-20 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-3xl">
+        <div className={typeof title === "string" ? "max-w-3xl" : "max-w-5xl"}>
           {breadcrumbs ? <Breadcrumbs items={breadcrumbs} tone="light" className="mb-8" /> : null}
           {eyebrow ? (
             <Reveal distance={12} delay={0.15}>
               <Eyebrow>{eyebrow}</Eyebrow>
             </Reveal>
           ) : null}
-          <Heading title={title} id={id} className="mt-5 text-display" />
+          <Heading title={title} id={id} className="mt-5 text-heading-1" />
         </div>
         {description || actions ? (
           <Reveal delay={0.45} className="max-w-md lg:pb-3">
-            {description ? <p className="text-lead text-white/85">{description}</p> : null}
+            {description ? <p className="text-lead text-white/80">{description}</p> : null}
             {actions ? <div className="mt-7">{actions}</div> : null}
           </Reveal>
         ) : null}

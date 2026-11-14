@@ -54,7 +54,7 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
               pill,
               selected.length === 0
                 ? "border-turquoise/40 bg-turquoise-10 text-turquoise-160"
-                : "border-ink/12 bg-white text-ink hover:border-turquoise/60",
+                : "border-line bg-white text-ink hover:border-turquoise/60",
             )}
           >
             All
@@ -71,7 +71,7 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
                   pill,
                   active
                     ? "border-turquoise/40 bg-turquoise-10 text-turquoise-160"
-                    : "border-ink/12 bg-white text-ink hover:border-turquoise/60",
+                    : "border-line bg-white text-ink hover:border-turquoise/60",
                 )}
               >
                 <span
@@ -88,7 +88,7 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
             );
           })}
         </div>
-        <label className="flex min-h-11 items-center gap-3 rounded-md border border-ink/12 bg-white px-4 ring-1 ring-transparent transition-shadow focus-within:ring-ink lg:w-80">
+        <label className="flex min-h-11 items-center gap-3 rounded-md border border-line bg-white px-4 ring-1 ring-transparent transition-shadow focus-within:ring-ink lg:w-80">
           <Icon name="search" className="size-4.5 text-slate" />
           <span className="sr-only">Search restaurants</span>
           <input
@@ -108,7 +108,7 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
       <RevealGroup as="ul" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
         {visible.map((venue) => (
           <RevealItem as="li" key={venue.id}>
-            <article className="group flex h-full flex-col overflow-hidden rounded-card bg-white transition-shadow duration-500 hover:shadow-[0_12px_40px_rgb(18_58_70/0.12)]">
+            <article className="group flex h-full flex-col overflow-hidden rounded-md bg-white transition-shadow duration-500 hover:shadow-card">
               <MediaSlider
                 images={venue.images}
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
@@ -121,7 +121,7 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
                   {venue.chip ? <Chip>{venue.chip}</Chip> : null}
                   <h3 className="font-serif text-heading-5">{venue.title}</h3>
                   {venue.location ? (
-                    <p className="flex items-center gap-2 text-caption text-slate">
+                    <p className="flex items-center gap-2 text-body-sm text-slate">
                       <Icon name="pin" className="size-4" />
                       {venue.location}
                     </p>
@@ -141,7 +141,7 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
         ))}
       </RevealGroup>
       {visible.length === 0 ? (
-        <p className="mt-10 rounded-card bg-white p-10 text-center text-slate">
+        <p className="mt-10 rounded-md bg-white p-10 text-center text-slate">
           No venues match your search.
         </p>
       ) : null}

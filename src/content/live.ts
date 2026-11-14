@@ -2,8 +2,10 @@ import { image } from "@/lib/media";
 import type { DirectoryItem, SectionIntro } from "@/types/content";
 
 export const neighborhoodsHero = {
-  eyebrow: "Live at Somabay",
-  title: "Somabay Neighborhoods",
+  eyebrow: "Somabay Neighborhoods",
+  // DRAFT COPY: two-line headline written for the hero redesign, not from Figma; confirm with
+  // the client.
+  title: ["Live at Somabay,", "on the shores of the Red Sea"] as const,
   image: image(
     "/images/library/beaches/december-back.webp",
     "Aerial view of the Somabay peninsula",

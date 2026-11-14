@@ -56,7 +56,7 @@ export function GuestReviews({ reviews }: { reviews: HotelReview[] }) {
     <Section tone="white" aria-labelledby="reviews-title">
       <Container>
         <Reveal>
-          <h2 id="reviews-title" className="text-center text-heading-2 leading-[1.2]">
+          <h2 id="reviews-title" className="text-center text-heading-2">
             Guest Reviews
           </h2>
         </Reveal>
@@ -68,7 +68,7 @@ export function GuestReviews({ reviews }: { reviews: HotelReview[] }) {
         aria-label="Guest reviews"
         tabIndex={0}
         onKeyDown={onKey}
-        className="relative mt-12 h-[15.5rem] overflow-hidden outline-none lg:mt-14"
+        className="relative mt-12 h-[15.5rem] overflow-hidden rounded-md lg:mt-14"
       >
         <AnimatePresence initial={false}>
           {slots.map((position) => {
@@ -110,7 +110,7 @@ export function GuestReviews({ reviews }: { reviews: HotelReview[] }) {
                 }}
                 style={{ width: cardWidth, marginLeft: -cardWidth / 2, originY: 0 }}
                 className={cn(
-                  "absolute top-0 left-1/2 flex flex-col overflow-hidden rounded-lg p-6 text-left transition-colors duration-500",
+                  "absolute top-0 left-1/2 flex flex-col overflow-hidden rounded-md p-6 text-left transition-colors duration-500",
                   open ? "text-white" : "text-ink hover:brightness-[0.98]",
                 )}
               >

@@ -28,12 +28,12 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
     return (
       <div
         role="status"
-        className={cn("flex flex-col items-start gap-4 rounded-card bg-turquoise-5 p-8", className)}
+        className={cn("flex flex-col items-start gap-4 rounded-md bg-turquoise-5 p-8", className)}
       >
         <span className="grid size-12 place-items-center rounded-full bg-turquoise text-white">
           <Icon name="check" className="size-6" />
         </span>
-        <p className="font-serif text-h3">Request received</p>
+        <p className="font-serif text-heading-5">Request received</p>
         <p className="text-slate">{state.message}</p>
       </div>
     );
@@ -77,7 +77,7 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
             className="sm:col-span-2"
             aria-describedby={error ? `${id}-error` : undefined}
           >
-            <legend className="eyebrow mb-4 text-[0.6875rem] text-slate">
+            <legend className="eyebrow mb-4 text-label text-slate">
               {field.label}
               {field.required ? <span aria-hidden> *</span> : null}
             </legend>
@@ -110,7 +110,7 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
               ))}
             </div>
             {error ? (
-              <p id={`${id}-error`} className="mt-2 text-caption text-alert">
+              <p id={`${id}-error`} className="mt-2 text-body-sm text-alert">
                 {error}
               </p>
             ) : null}
@@ -141,7 +141,7 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
               {field.label}
             </label>
             {error ? (
-              <p id={`${id}-error`} className="mt-2 text-caption text-alert">
+              <p id={`${id}-error`} className="mt-2 text-body-sm text-alert">
                 {error}
               </p>
             ) : null}
@@ -176,7 +176,7 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
       {definition.fields.map(renderField)}
       <div className="flex flex-col gap-4 sm:col-span-2">
         {state.status === "error" ? (
-          <p role="alert" className="text-caption text-alert">
+          <p role="alert" className="text-body-sm text-alert">
             {state.message}
           </p>
         ) : null}
@@ -186,7 +186,7 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
             {pending ? "Sending…" : definition.submitLabel}
           </Button>
         </div>
-        {definition.note ? <p className="text-caption text-slate">{definition.note}</p> : null}
+        {definition.note ? <p className="text-body-sm text-slate">{definition.note}</p> : null}
       </div>
     </form>
   );

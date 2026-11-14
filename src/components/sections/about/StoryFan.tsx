@@ -63,11 +63,7 @@ export function StoryFan({ title, paragraph, photos, children }: StoryFanProps) 
 
   return (
     <div ref={scope} className="flex flex-col items-center gap-14 text-center lg:gap-20">
-      <h2
-        id="story-title"
-        data-story-title
-        className="font-serif text-heading-2 leading-[1.15] text-ink"
-      >
+      <h2 id="story-title" data-story-title className="font-serif text-heading-2 text-ink">
         {title}
       </h2>
 
@@ -77,7 +73,7 @@ export function StoryFan({ title, paragraph, photos, children }: StoryFanProps) 
           <li
             key={photo.src}
             data-story-photo
-            className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-turquoise-10"
+            className="relative aspect-[3/4] overflow-hidden rounded-md bg-turquoise-10"
           >
             <ResponsiveImage
               asset={photo}

@@ -16,7 +16,7 @@ export function ContactChannels() {
           </h2>
         </Reveal>
         <div className="mt-10 grid gap-4 md:mt-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-6">
-          <ImageReveal className="relative aspect-[4/3] rounded-card lg:aspect-auto lg:min-h-full lg:rounded-media">
+          <ImageReveal className="relative aspect-[4/3] rounded-md lg:aspect-auto lg:min-h-full">
             <div className="absolute inset-0">
               <ResponsiveImage
                 asset={contactStripImage}
@@ -30,13 +30,13 @@ export function ContactChannels() {
               <RevealItem
                 as="li"
                 key={channel.label + channel.lines[0]}
-                className="flex flex-col gap-5 rounded-card bg-white p-6 md:p-8"
+                className="flex flex-col gap-5 rounded-md bg-white p-6 md:p-8"
               >
                 <span className="grid size-11 place-items-center rounded-full bg-turquoise-10 text-turquoise">
                   <Icon name={channel.icon} className="size-5" />
                 </span>
                 <div>
-                  <p className="font-serif text-h4">{channel.label}</p>
+                  <p className="font-serif text-heading-6">{channel.label}</p>
                   {channel.lines.map((line, index) =>
                     channel.href && index === 0 ? (
                       <a

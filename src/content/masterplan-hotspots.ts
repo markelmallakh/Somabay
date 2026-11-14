@@ -53,7 +53,7 @@ const hotelPins = hotels.flatMap((hotel) => {
   return coords
     ? [
         place(hotel.slug, "hotels", coords, {
-          // Same content as the hotel list card (HotelCard).
+          // Same content as the hotel list row (HotelRow).
           name: hotel.name,
           badges: { stars: hotel.stars, tags: hotel.themes.map(themeLabel) },
           kicker: hotel.tagline,

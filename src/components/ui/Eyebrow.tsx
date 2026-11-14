@@ -6,7 +6,7 @@ type EyebrowProps = {
   as?: ElementType;
   id?: string;
   /**
-   * `light` deep gold for white and sand surfaces; `dark` bright sun yellow for photos and deep
+   * `light` turquoise for white and sand surfaces; `dark` bright sun yellow for photos and deep
    * sections. Inside a `data-theme-surface="dark"` section it turns dark on its own.
    */
   tone?: "light" | "dark";
@@ -14,9 +14,9 @@ type EyebrowProps = {
 };
 
 /**
- * Section eyebrow: sun-yellow small caps with no background — bright sun over photos, a deeper gold
- * on light surfaces. The ink comes from the tone, so a stray text colour in `className` cannot
- * override it.
+ * Section eyebrow: small caps with no background — turquoise on light surfaces, bright sun yellow
+ * over photos and dark sections. The ink comes from the tone, so a stray text colour in
+ * `className` cannot override it.
  */
 export function Eyebrow({ children, as: Tag = "p", id, tone, className }: EyebrowProps) {
   return (

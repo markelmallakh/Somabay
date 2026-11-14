@@ -34,7 +34,7 @@ export function ResultCount({ count, label, className }: ResultCountProps) {
         </AnimatePresence>
         <span className="sr-only"> </span>
       </span>
-      <span className="eyebrow text-[0.6875rem] whitespace-nowrap text-slate">{label}</span>
+      <span className="eyebrow text-label whitespace-nowrap text-slate">{label}</span>
     </p>
   );
 }

@@ -60,16 +60,16 @@ export function RoomsFinder({ rooms, bookingHref }: { rooms: HotelRoom[]; bookin
           groups={groups}
           value={filters}
           onChange={setFilters}
-          className="rounded-xl border-transparent"
+          className="rounded-md border-transparent"
         />
       </div>
       <ul className="flex flex-col gap-4 md:gap-5" aria-live="polite">
         {visible.map((room) => (
           <li key={room.name}>
-            <article className="group grid overflow-hidden rounded-xl bg-white sm:grid-cols-[1fr_17rem]">
+            <article className="group grid overflow-hidden rounded-md bg-white sm:grid-cols-[1fr_17rem]">
               <div className="flex flex-col gap-5 p-6 md:p-8">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h3 className="font-serif text-h3">{room.name}</h3>
+                  <h3 className="font-serif text-heading-5">{room.name}</h3>
                   <Chip accent="twilight">
                     <Icon name={occupancy(room.guests).icon} className="size-3.5" />
                     {occupancy(room.guests).label}
@@ -94,7 +94,7 @@ export function RoomsFinder({ rooms, bookingHref }: { rooms: HotelRoom[]; bookin
                       variant="outline"
                       size="sm"
                       aria-label={`Book the ${room.name}`}
-                      className="min-h-9 border-turquoise px-5 text-[0.75rem] text-turquoise-160"
+                      className="min-h-9 border-turquoise px-5 text-body-xs text-turquoise-160"
                     >
                       Book now
                     </Button>
@@ -114,7 +114,7 @@ export function RoomsFinder({ rooms, bookingHref }: { rooms: HotelRoom[]; bookin
           </li>
         ))}
         {visible.length === 0 ? (
-          <li className="rounded-xl bg-white p-10 text-center text-slate">
+          <li className="rounded-md bg-white p-10 text-center text-slate">
             No rooms match these filters.
           </li>
         ) : null}

@@ -40,8 +40,8 @@ export function MoreToExperience({ intro, items }: MoreToExperienceProps) {
             >
               <m.div
                 variants={{
-                  hidden: { clipPath: "inset(100% 0% 0% 0% round 0.75rem)", y: 40 },
-                  shown: { clipPath: "inset(0% 0% 0% 0% round 0.75rem)", y: 0 },
+                  hidden: { clipPath: "inset(100% 0% 0% 0% round 0.25rem)", y: 40 },
+                  shown: { clipPath: "inset(0% 0% 0% 0% round 0.25rem)", y: 0 },
                 }}
                 transition={{ duration: 1.2, ease: easeOutExpo, delay: index * 0.15 }}
               >

@@ -34,7 +34,7 @@ export default function CareersPage() {
             title={careersIntro.title}
             description={careersIntro.description}
           />
-          <ImageReveal className="relative mt-10 aspect-[4/3] rounded-card sm:aspect-[16/9] md:mt-14 lg:aspect-[1312/516] lg:rounded-media">
+          <ImageReveal className="relative mt-10 aspect-[4/3] rounded-md sm:aspect-[16/9] md:mt-14 lg:aspect-[1312/516]">
             <div className="absolute inset-0">
               <ResponsiveImage
                 asset={careersIntro.image}

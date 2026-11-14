@@ -106,8 +106,11 @@
   --text-body-xs--line-height: 1.3;
   --text-body-2xs: 0.625rem;
   --text-body-2xs--line-height: 1.3;
+  /* Small uppercase labels (counts, card meta, form hints): 11px. */
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.3;
   /* Homepage About statement + story lines (Figma: DM Sans Regular 48 / 130%). */
-  --text-statement: clamp(1.5rem, 1.1524rem + 1.426vw, 2.5rem);
+  --text-statement: clamp(1.75rem, 1.2rem + 2vw, 3rem);
   --text-statement--line-height: 1.3;
   /* Desktop/CTA (DM Sans Medium, uppercase). */
   --text-cta-lg: 1rem;
@@ -115,32 +118,25 @@
   --text-cta-md: 0.875rem;
   --text-cta-md--line-height: 1.2;
 
-  /* Legacy scale names, mapped onto the Figma styles. */
-  --text-display: var(--text-heading-1);
-  --text-display--line-height: 1.06;
-  --text-h1: var(--text-heading-1);
-  --text-h1--line-height: 1.06;
-  --text-h2: var(--text-heading-2);
-  --text-h2--line-height: 1.2;
-  --text-h3: var(--text-heading-5);
-  --text-h3--line-height: 1.3;
-  --text-h4: var(--text-heading-6);
-  --text-h4--line-height: 1.3;
+  /* Lead paragraphs and long-form prose. */
   --text-lead: var(--text-body-lg);
   --text-lead--line-height: 1.4;
   --text-body: 1rem;
   --text-body--line-height: 1.55;
-  --text-caption: 0.875rem;
-  --text-caption--line-height: 1.4;
 
   --tracking-label: 0.04em;
 
-  /* Figma grid: 1512px frame, 60px side padding, 80px section padding. */
-  --spacing-gutter: clamp(1.25rem, 0.75rem + 3.2vw, 3.75rem);
+  /* Figma grid: 1512px frame, 60px side padding, 80px section padding. The side padding grows
+     from 60px on a 1512px laptop to 100px on a 1920px screen, and the container widens with it,
+     so large screens use their width instead of floating a 1512px column in the middle. */
+  --spacing-gutter: max(
+    clamp(1.25rem, 0.75rem + 3.2vw, 3.75rem),
+    min(6.25rem, 9.80392vw - 5.51471rem)
+  );
   --spacing-section: clamp(3.5rem, 2.4rem + 3.5vw, 5rem);
   --spacing-header: 4.5rem;
 
-  --container-site: 94.5rem;
+  --container-site: 120rem;
   --container-prose: 38rem;
 
   --radius-sm: 2px;
@@ -148,11 +144,18 @@
   --radius-lg: 8px;
   --radius-xl: 12px;
   /* Site shapes: small thumbnails, cards and panels, large media frames. */
-  --radius-thumb: 0.75rem;
-  --radius-card: 1.5rem;
-  --radius-media: 2rem;
+  --radius-thumb: 0.25rem;
+  --radius-card: 0.25rem;
+  --radius-media: 0.25rem;
 
   --shadow-soft: 0 30px 60px -30px rgb(44 44 44 / 0.3);
+  /* Cards lifting on hover, and floating controls over photos. */
+  --shadow-card: 0 12px 40px rgb(18 58 70 / 0.12);
+  --shadow-float: 0 8px 24px rgb(18 58 70 / 0.18);
+
+  /* Every transition without its own timing eases out softly instead of the browser default. */
+  --default-transition-duration: 300ms;
+  --default-transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
 
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
@@ -229,13 +232,18 @@
 @layer base {
   :root {
     color-scheme: light;
-    --header-height: var(--spacing-header);
+    /* The bar with the logo; on desktop a row of section tabs sits under it. */
+    --header-bar: var(--spacing-header);
+    --header-tabs: 0rem;
+    --header-height: calc(var(--header-bar) + var(--header-tabs));
   }
 
-  /* Header resting height on desktop; it condenses to 4rem once the page scrolls. */
+  /* Header resting height on desktop (bar + tabs row); it condenses to a 4rem bar once the page
+     scrolls. */
   @media (min-width: 1024px) {
     :root {
-      --header-height: 5.25rem;
+      --header-bar: 5.25rem;
+      --header-tabs: 3rem;
     }
   }
 
@@ -311,7 +319,7 @@
     position: relative;
     display: inline-block;
     transition:
-      color 0.5s ease,
+      color 0.5s var(--ease-out-quart),
       transform 0.7s var(--ease-out-expo);
   }
   .menu-link::before {
@@ -339,7 +347,7 @@
   @media (prefers-reduced-motion: reduce) {
     .menu-link,
     .menu-link::before {
-      transition: color 0.3s ease;
+      transition: color 0.3s var(--ease-out-quart);
     }
   }
 
@@ -353,11 +361,11 @@
   }
 
   .prose-somabay h2 {
-    @apply mt-[2em] text-h3 text-ink;
+    @apply mt-[2em] text-heading-5 text-ink;
   }
 
   .prose-somabay h3 {
-    @apply mt-[1.75em] text-h4 text-ink;
+    @apply mt-[1.75em] text-heading-6 text-ink;
   }
 
   .prose-somabay a {
@@ -377,7 +385,7 @@
   }
 
   .prose-somabay blockquote {
-    @apply border-l border-turquoise pl-6 font-serif text-h4 text-ink;
+    @apply border-l border-turquoise pl-6 font-serif text-heading-6 text-ink;
   }
 
   /* Underline that draws in from the left on hover/focus. */
@@ -483,6 +491,22 @@
 }
 
 /* Leaflet map styling (PlacesMap). */
+/* Leaflet leaves hairline seams between tiles at fractional pixel offsets; a half-pixel overlap
+   closes them. */
+.somabay-map .leaflet-tile-container img.leaflet-tile {
+  width: 256.5px !important;
+  height: 256.5px !important;
+}
+
+/* Brand tint for the drawn map (filter defined in PlacesMap). */
+.somabay-map .somabay-duotone {
+  filter: url(#somabay-duotone);
+}
+
+.somabay-map .somabay-labels {
+  opacity: 0.75;
+}
+
 .somabay-map .leaflet-control-attribution {
   background: rgb(251 250 247 / 0.85);
   font-size: 10px;
@@ -579,7 +603,7 @@
 
 .somabay-tooltip {
   border: 0;
-  border-radius: 2px;
+  border-radius: 4px;
   padding: 8px 12px;
   font-family: var(--font-sans);
   font-size: 13px;

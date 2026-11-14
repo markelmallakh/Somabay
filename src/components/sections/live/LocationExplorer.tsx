@@ -27,9 +27,9 @@ export function LocationExplorer({ origin, destinations }: LocationExplorerProps
         selectedId={selected}
         onSelect={(id) => setSelected((current) => (current === id ? null : id))}
         label={`Map of ${origin.name} and nearby destinations`}
-        className="aspect-[4/5] rounded-card sm:aspect-[2/1] lg:rounded-media"
+        className="aspect-[4/5] rounded-md sm:aspect-[2/1]"
       />
-      <div className="relative z-10 mx-4 -mt-12 rounded-card bg-white p-4 shadow-[0_12px_40px_rgb(18_58_70/0.12)] sm:mx-8 lg:absolute lg:top-8 lg:right-8 lg:mx-0 lg:mt-0 lg:w-80">
+      <div className="relative z-10 mx-4 -mt-12 rounded-md bg-white p-4 shadow-card sm:mx-8 lg:absolute lg:top-8 lg:right-8 lg:mx-0 lg:mt-0 lg:w-80">
         <ul className="flex flex-col gap-1">
           {destinations.map((destination) => (
             <li key={destination.id}>
@@ -40,7 +40,7 @@ export function LocationExplorer({ origin, destinations }: LocationExplorerProps
                 }
                 aria-pressed={selected === destination.id}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-thumb px-3 py-3.5 text-left transition-colors duration-500",
+                  "flex w-full items-center gap-3 rounded-md px-3 py-3.5 text-left transition-colors duration-500",
                   selected === destination.id ? "bg-turquoise-5" : "hover:bg-sand-100",
                 )}
               >

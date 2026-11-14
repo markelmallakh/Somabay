@@ -37,7 +37,7 @@ export default function SustainabilityPage() {
     <RevealItem
       key={item.label}
       className={cn(
-        "group relative overflow-hidden rounded-card",
+        "group relative overflow-hidden rounded-md",
         item.size === "wide" ? "col-span-2 aspect-[632/300]" : "aspect-square",
       )}
     >
@@ -103,7 +103,7 @@ export default function SustainabilityPage() {
                 </h2>
                 <p className="max-w-md text-lead text-slate">{approach.intro}</p>
               </Reveal>
-              <ImageReveal className="relative mt-8 aspect-[4/3] rounded-card lg:rounded-media">
+              <ImageReveal className="relative mt-8 aspect-[4/3] rounded-md">
                 <div className="absolute inset-0">
                   <ResponsiveImage
                     asset={approach.image}
@@ -119,7 +119,7 @@ export default function SustainabilityPage() {
               <RevealItem
                 as="li"
                 key={pillar.title}
-                className="flex gap-5 rounded-card bg-white p-6 md:gap-8 md:p-8"
+                className="flex gap-5 rounded-md bg-white p-6 md:gap-8 md:p-8"
               >
                 <span
                   aria-hidden
@@ -128,7 +128,7 @@ export default function SustainabilityPage() {
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <div>
-                  <h3 className="font-serif text-h4">{pillar.title}</h3>
+                  <h3 className="font-serif text-heading-6">{pillar.title}</h3>
                   <p className="mt-2 text-slate">{pillar.description}</p>
                 </div>
               </RevealItem>

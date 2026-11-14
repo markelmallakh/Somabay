@@ -11,6 +11,8 @@ type GalleryCarouselProps = {
   images: ImageAsset[];
   label: string;
   className?: string;
+  /** `dark` on deep sections: white dots. */
+  tone?: "light" | "dark";
 };
 
 /** Three copies of the photos; the user always sits in the middle one, so the row never ends. */
@@ -32,7 +34,12 @@ const currentSlide = (element: HTMLUListElement) => {
  * Square-slide gallery that loops endlessly: arrows and swipes carry straight on from the last
  * photo to the first. Any photo opens the full-screen viewer with every photo as a thumbnail.
  */
-export function GalleryCarousel({ images, label, className }: GalleryCarouselProps) {
+export function GalleryCarousel({
+  images,
+  label,
+  className,
+  tone = "light",
+}: GalleryCarouselProps) {
   const track = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState<number | null>(null);
@@ -114,7 +121,7 @@ export function GalleryCarousel({ images, label, className }: GalleryCarouselPro
             <li
               key={`${copy}-${index}`}
               aria-hidden={clone || undefined}
-              className="relative aspect-square w-[min(78vw,25.3rem)] shrink-0 snap-start overflow-hidden rounded-lg bg-sand-200"
+              className="relative aspect-square w-[min(78vw,25.3rem)] shrink-0 snap-start overflow-hidden rounded-md bg-sand-200"
             >
               <button
                 type="button"
@@ -127,7 +134,7 @@ export function GalleryCarousel({ images, label, className }: GalleryCarouselPro
                   asset={image}
                   sizes="(min-width: 768px) 26rem, 78vw"
                   fill
-                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.04]"
+                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                 />
               </button>
             </li>
@@ -159,8 +166,14 @@ export function GalleryCarousel({ images, label, className }: GalleryCarouselPro
             aria-label={`Go to image ${index + 1}`}
             aria-current={index === active ? "true" : undefined}
             className={cn(
-              "h-1.5 rounded-full transition-all duration-500",
-              index === active ? "w-8 bg-turquoise" : "w-1.5 bg-turquoise/30 hover:bg-turquoise/60",
+              "h-1.5 rounded-full transition-[width,background-color] duration-500 ease-out-expo",
+              tone === "dark"
+                ? index === active
+                  ? "w-8 bg-white"
+                  : "w-1.5 bg-white/30 hover:bg-white/60"
+                : index === active
+                  ? "w-8 bg-turquoise"
+                  : "w-1.5 bg-turquoise/30 hover:bg-turquoise/60",
             )}
           />
         ))}

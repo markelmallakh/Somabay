@@ -81,7 +81,7 @@ async function UnitContent({ params }: { params: PageProps<"/resale/[slug]">["pa
                 </Chip>
                 <Chip accent="twilight">{unit.neighborhood}</Chip>
               </div>
-              <h1 id="page-title" className="mt-5 text-heading-2 leading-[1.2]">
+              <h1 id="page-title" className="mt-5 text-heading-2">
                 {unit.title}
               </h1>
               <h2 className="mt-12 text-heading-5">Amenities</h2>
@@ -89,7 +89,7 @@ async function UnitContent({ params }: { params: PageProps<"/resale/[slug]">["pa
                 {unit.amenities.map((amenity) => (
                   <li
                     key={amenity}
-                    className="flex items-center gap-3 rounded-thumb bg-sand-100 p-3 text-body-sm text-ink"
+                    className="flex items-center gap-3 rounded-md bg-sand-100 p-3 text-body-sm text-ink"
                   >
                     <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white text-turquoise">
                       <Icon name={amenityIcons[amenity] ?? "check"} className="size-4.5" />
@@ -100,7 +100,7 @@ async function UnitContent({ params }: { params: PageProps<"/resale/[slug]">["pa
               </ul>
             </Reveal>
             <aside className="lg:col-span-4 lg:col-start-9">
-              <div className="flex flex-col gap-5 rounded-card bg-sand-100 p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
+              <div className="flex flex-col gap-5 rounded-md bg-sand-100 p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
                 <p className="font-serif text-heading-5">{unit.type}</p>
                 <Button href="#reserve" variant="primary" className="w-full">
                   Request call
@@ -128,7 +128,7 @@ async function UnitContent({ params }: { params: PageProps<"/resale/[slug]">["pa
         className="scroll-mt-(--header-height) bg-turquoise-5"
       >
         <Container className="max-w-3xl">
-          <Reveal className="rounded-card bg-white p-6 md:p-10 lg:rounded-media">
+          <Reveal className="rounded-md bg-white p-6 md:p-10">
             <SectionHeading
               id="reserve-title"
               title="Reserve Your Home"

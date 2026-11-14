@@ -22,7 +22,7 @@ export function UnitCard({ unit, href }: { unit: Unit; href: string }) {
     ...(unit.size ? [{ icon: "area-min" as const, label: `${unit.size} sqm` }] : []),
   ];
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-xl bg-white transition-shadow duration-700 ease-out-expo hover:shadow-[0_12px_40px_rgb(18_58_70/0.12)]">
+    <article className="group flex h-full flex-col overflow-hidden rounded-md bg-white transition-shadow duration-700 ease-out-expo hover:shadow-card">
       <div>
         <MediaSlider
           images={unit.images.slice(0, 5)}

@@ -31,7 +31,7 @@ export function FaqList({ items, filterable = false }: FaqListProps) {
           />
         </div>
       ) : null}
-      <div className="rounded-card bg-white px-6 md:px-10">
+      <div className="rounded-md bg-white px-6 md:px-10">
         <Accordion
           key={category}
           className="border-y-0"

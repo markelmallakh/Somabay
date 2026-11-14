@@ -18,15 +18,15 @@ export function TextLink({ href, children, className, external, srContext }: Tex
       href={href}
       external={external}
       className={cn(
-        "group/link inline-flex items-center gap-2 text-[0.75rem] font-semibold tracking-label uppercase",
+        "group/link inline-flex items-center gap-2 text-body-xs font-semibold tracking-label uppercase",
         className,
       )}
     >
       <span className="link-underline pb-0.5">{children}</span>
       {srContext ? <span className="sr-only">: {srContext}</span> : null}
       <Icon
-        name="chevron-right"
-        className="size-3.5 transition-transform duration-500 ease-out-quart group-hover/link:translate-x-1"
+        name="arrow-right"
+        className="size-4 transition-transform duration-700 ease-out-expo group-hover/link:translate-x-1"
       />
     </SmartLink>
   );

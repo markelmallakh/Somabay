@@ -153,7 +153,7 @@ export function GolfTeaser() {
         <div className="flex w-full flex-col justify-between gap-12 lg:flex-row lg:gap-10">
           {/* Heading and statement, top-left. */}
           <div data-golf-intro className="flex flex-col gap-4 lg:max-w-[34rem] lg:self-start">
-            <h2 id="golf-title" className="text-heading-2 leading-[1.15]">
+            <h2 id="golf-title" className="text-heading-2">
               {golfTeaser.title}
             </h2>
             <p className="font-serif text-heading-6 text-white/90">{golfTeaser.subtitle}</p>
@@ -173,12 +173,12 @@ export function GolfTeaser() {
                   />
                   <Link
                     href={link.href}
-                    className="group relative isolate -mx-4 flex items-start justify-between gap-6 overflow-hidden rounded-[4px] px-4 py-4 transition-colors duration-700 ease-out-expo outline-none hover:text-ink focus-visible:text-ink"
+                    className="group relative isolate -mx-4 flex items-start justify-between gap-6 overflow-hidden rounded-md px-4 py-4 transition-colors duration-700 ease-out-expo hover:text-ink focus-visible:text-ink"
                   >
                     {/* White panel that rises from the bottom on hover, reaching past the lines. */}
                     <span
                       aria-hidden
-                      className="absolute inset-0 -z-10 origin-bottom scale-y-0 rounded-[4px] bg-white transition-transform duration-700 ease-out-expo group-hover:scale-y-100 group-focus-visible:scale-y-100"
+                      className="absolute inset-0 -z-10 origin-bottom scale-y-0 rounded-md bg-white transition-transform duration-700 ease-out-expo group-hover:scale-y-100 group-focus-visible:scale-y-100"
                     />
                     <span className="flex flex-col gap-1.5">
                       <span className="block overflow-hidden">

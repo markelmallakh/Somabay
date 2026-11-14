@@ -163,8 +163,8 @@ export function AboutJourney({
             // follows it at the section rhythm instead of after a screen of empty dune.
             className={
               index === paragraphs.length - 1
-                ? "flex min-h-[70svh] items-end"
-                : "flex min-h-svh items-center"
+                ? "flex min-h-[48svh] items-end"
+                : "flex min-h-[60svh] items-center"
             }
           >
             <Container>

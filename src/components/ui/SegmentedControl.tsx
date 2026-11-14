@@ -76,7 +76,7 @@ export function SegmentedControl<T extends string>({
                 ? "bg-turquoise text-white"
                 : tone === "light"
                   ? "text-slate hover:text-turquoise-160"
-                  : "text-white/85 hover:text-white",
+                  : "text-white/80 hover:text-white",
             )}
           >
             <span className="flex items-center gap-2">

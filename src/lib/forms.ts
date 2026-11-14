@@ -1,4 +1,5 @@
 import { neighborhoods } from "@/content/neighborhoods";
+import { type Unit, units } from "@/content/resale";
 
 export type FormField =
   | {
@@ -70,7 +71,48 @@ const phone: FormField = {
 };
 const terms: FormField = { kind: "consent", name: "terms", label: "I accept the terms" };
 
+/** How a listed unit reads as a choice: "Studio", "3-bedroom Villa". */
+export const unitChoice = (unit: Pick<Unit, "type" | "bedrooms">) =>
+  /studio/i.test(unit.type) ? unit.type : `${unit.bedrooms}-bedroom ${unit.type}`;
+
+const NOT_SURE = "Not sure yet";
+
+/** Unit choices for a neighborhood's interest form: its listed units, else every listed type. */
+export function unitChoicesFor(neighborhood: string): string[] {
+  const own = units.filter((unit) => unit.neighborhood === neighborhood);
+  return [...new Set((own.length ? own : units).map(unitChoice)), NOT_SURE];
+}
+
 export const formDefinitions = {
+  // Fields are shared by every neighborhood page; each page narrows the unit list to its own.
+  neighborhoodInterest: {
+    id: "neighborhoodInterest",
+    subject: "Neighborhood interest request",
+    submitLabel: "Register interest",
+    note: "By submitting, you agree to our Terms & Conditions.",
+    fields: [
+      firstName,
+      lastName,
+      email,
+      phone,
+      {
+        kind: "select",
+        name: "unit",
+        label: "Preferred unit",
+        required: true,
+        placeholder: "Select a unit type",
+        span: 2,
+        options: [...new Set(units.map(unitChoice)), NOT_SURE],
+      },
+      {
+        kind: "textarea",
+        name: "message",
+        label: "Message",
+        placeholder: "Anything we should know? Budget, timing, questions...",
+      },
+      terms,
+    ],
+  },
   contact: {
     id: "contact",
     subject: "Website contact form",

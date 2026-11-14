@@ -58,7 +58,7 @@ export function SportsRow() {
           }
         />
       </Container>
-      <Reveal className="mt-12 lg:mt-16">
+      <Reveal className="mt-10 lg:mt-12">
         {/* No arrows: the row glides sideways on its own as the page scrolls past it. */}
         <div ref={rowScope} className="motion-reduce:overflow-x-auto">
           <ul
@@ -74,11 +74,11 @@ export function SportsRow() {
                   type="button"
                   onClick={() => setOpen(index)}
                   aria-label={`${sport.chip}: details`}
-                  className="group relative block aspect-[4/5] w-full overflow-hidden rounded-lg bg-white text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turquoise"
+                  className="group relative block aspect-[4/5] w-full overflow-hidden rounded-md bg-white text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turquoise"
                 >
                   {/* The photo keeps its rounded corners on hover, pulled up above the panel. */}
                   <span
-                    className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.5rem)] ${ease} group-hover:[clip-path:inset(0_0_30%_0_round_0.5rem_0.5rem_0_0)] group-focus-visible:[clip-path:inset(0_0_30%_0_round_0.5rem_0.5rem_0_0)]`}
+                    className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.25rem)] ${ease} group-hover:[clip-path:inset(0_0_30%_0_round_0.25rem_0.25rem_0_0)] group-focus-visible:[clip-path:inset(0_0_30%_0_round_0.25rem_0.25rem_0_0)]`}
                   >
                     <span
                       className={`absolute inset-0 transition-transform ${ease} group-hover:-translate-y-[12%] group-focus-visible:-translate-y-[12%]`}

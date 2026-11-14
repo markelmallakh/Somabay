@@ -23,16 +23,16 @@ export function DirectoryRows({ items, interactive = true }: DirectoryRowsProps)
         {items.map((item, index) => {
           const content = (
             <>
-              <span className="relative aspect-[224/154] w-28 shrink-0 overflow-hidden rounded-thumb bg-sand-200 sm:w-48 sm:rounded-card">
+              <span className="relative aspect-[224/154] w-28 shrink-0 overflow-hidden rounded-md bg-sand-200 sm:w-48">
                 <ResponsiveImage
                   asset={item.images[0]}
                   sizes="12rem"
                   fill
-                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.06]"
+                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                 />
               </span>
               <span className="flex-1">
-                <span className="block font-serif text-h4 transition-colors group-hover:text-lagoon sm:text-h3">
+                <span className="block font-serif text-heading-6 transition-colors group-hover:text-lagoon sm:text-heading-5">
                   {item.title}
                 </span>
                 {item.description ? (

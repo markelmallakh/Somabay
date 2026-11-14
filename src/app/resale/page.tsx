@@ -33,7 +33,7 @@ export default function ResalePage() {
             title="Explore Available Units"
             description={resale.description}
           />
-          <div className="mt-10 lg:mt-14">
+          <div className="mt-10 lg:mt-12">
             <UnitsFinder
               units={units}
               hrefs={Object.fromEntries(units.map((unit) => [unit.slug, routes.unit(unit.slug)]))}

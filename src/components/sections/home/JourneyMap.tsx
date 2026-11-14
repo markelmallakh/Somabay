@@ -361,45 +361,59 @@ export function JourneyMap() {
       <Container className="pointer-events-none relative z-[1000] flex h-full items-start pt-8 md:items-center md:pt-0">
         <div
           ref={card}
-          className="pointer-events-auto flex w-full max-w-[20.1875rem] flex-col gap-5 rounded-xl bg-white p-4 shadow-soft"
+          className="pointer-events-auto relative flex w-full max-w-[23rem] flex-col gap-6 overflow-hidden rounded-md bg-turquoise-160 p-6 text-white shadow-soft before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-sun"
         >
-          <h2 id="journey-title" className="text-heading-5">
-            {journeyIntro.title}
-          </h2>
+          <div className="flex flex-col gap-3">
+            <h2 id="journey-title" className="text-heading-5">
+              {journeyIntro.title}
+            </h2>
+            <p className="text-body-sm text-white/90">{journeyIntro.description}</p>
+          </div>
 
           {open ? (
-            <div className="flex flex-col gap-3">
-              <div role="tablist" className="flex gap-4 border-b border-gray-200 text-body-xs">
-                {(["global", "egypt"] as const).map((key) => (
-                  <button
-                    key={key}
-                    type="button"
-                    role="tab"
-                    aria-selected={tab === key}
-                    onClick={() => setTab(key)}
-                    className={cn(
-                      "-mb-px border-b-2 pb-1.5 font-semibold transition-colors",
-                      tab === key
-                        ? "border-turquoise text-ink"
-                        : "border-transparent text-slate hover:text-ink",
-                    )}
-                  >
-                    {journeyIntro.tabs[key]}
-                  </button>
-                ))}
+            <div className="flex flex-col gap-3 border-t border-white/30 pt-4">
+              {/* The picker sits on the card itself: white type, sun-yellow accents. */}
+              <div className="flex items-end justify-between gap-4 border-b border-white/30">
+                <div role="tablist" className="flex gap-4 text-body-xs">
+                  {(["global", "egypt"] as const).map((key) => (
+                    <button
+                      key={key}
+                      type="button"
+                      role="tab"
+                      aria-selected={tab === key}
+                      onClick={() => setTab(key)}
+                      className={cn(
+                        "-mb-px border-b-2 pb-1.5 font-semibold transition-colors",
+                        tab === key
+                          ? "border-sun text-white"
+                          : "border-transparent text-white/70 hover:text-white",
+                      )}
+                    >
+                      {journeyIntro.tabs[key]}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="mb-1.5 grid size-7 place-items-center rounded-full text-white transition-colors hover:bg-white/15"
+                >
+                  <Icon name="close" className="size-4" />
+                  <span className="sr-only">Close the city list</span>
+                </button>
               </div>
               <label className="flex flex-col gap-1.5">
-                <span className="text-body-xs text-slate">{journeyIntro.fromLabel}</span>
-                <span className="flex items-center gap-2 rounded-md bg-gray-50 px-2.5 py-2">
+                <span className="text-body-xs text-white/80">{journeyIntro.fromLabel}</span>
+                <span className="flex items-center gap-2 rounded-md bg-white/15 px-2.5 py-2">
                   <input
                     type="search"
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder={journeyIntro.searchLabel.toUpperCase()}
                     aria-controls={listId}
-                    className="min-w-0 flex-1 bg-transparent text-body-xs outline-none placeholder:text-mist"
+                    className="min-w-0 flex-1 bg-transparent text-body-xs text-white placeholder:text-white/65"
                   />
-                  <Icon name="search" className="size-3.5 text-slate" />
+                  <Icon name="search" className="size-3.5 text-white/80" />
                 </span>
               </label>
               <ul
@@ -407,7 +421,7 @@ export function JourneyMap() {
                 role="listbox"
                 aria-label={journeyIntro.fromLabel}
                 data-lenis-prevent
-                className="-mx-1 flex max-h-[min(18rem,calc(100svh-26rem))] [scrollbar-width:thin] [scrollbar-color:var(--color-gray-300)_transparent] flex-col overflow-y-auto overscroll-contain pr-1"
+                className="-mx-1 flex max-h-[min(18rem,calc(100svh-26rem))] [scrollbar-width:thin] [scrollbar-color:rgb(255_255_255/0.4)_transparent] flex-col overflow-y-auto overscroll-contain pr-1"
               >
                 {options.map((item) => (
                   <li key={item.id}>
@@ -419,8 +433,8 @@ export function JourneyMap() {
                       className={cn(
                         "w-full rounded-md px-2 py-2 text-left text-body-xs transition-colors",
                         item.id === origin.id
-                          ? "bg-turquoise-10 text-ink"
-                          : "text-ink/80 hover:bg-gray-50",
+                          ? "bg-sun/25 text-white"
+                          : "text-white/85 hover:bg-white/10 hover:text-white",
                       )}
                     >
                       {item.name}
@@ -428,33 +442,70 @@ export function JourneyMap() {
                   </li>
                 ))}
                 {options.length === 0 ? (
-                  <li className="px-2 py-2 text-body-xs text-slate">No matches</li>
+                  <li className="px-2 py-2 text-body-xs text-white/75">No matches</li>
                 ) : null}
               </ul>
             </div>
           ) : (
-            <button
-              type="button"
-              aria-expanded={false}
-              onClick={() => setOpen(true)}
-              className="group flex items-center gap-2 rounded-md bg-gray-50 px-2 py-1 text-left transition-colors hover:bg-gray-100"
-            >
-              <span className="flex min-w-0 flex-1 flex-col">
-                <span className="truncate text-body-md font-semibold">{origin.name}</span>
-                <span className="flex items-center gap-1 text-body-xs text-slate">
-                  <Icon name={origin.mode} className="size-3.5" />
-                  {formatDuration(origin.minutes)}
-                </span>
-              </span>
-              <Icon
-                name="chevron-right"
-                className="size-3 text-slate transition-transform duration-500 ease-out-expo group-hover:translate-x-0.5"
-              />
-              <span className="sr-only">Change where you travel from</span>
-            </button>
+            <div className="flex flex-col gap-5">
+              <div className="flex items-end justify-between gap-4 border-y border-white/30 py-5">
+                <div className="flex min-w-0 flex-col gap-1.5">
+                  <span className="truncate font-serif text-heading-6 leading-[1.2]">
+                    {origin.name}
+                  </span>
+                  <span className="flex items-center gap-1.5 text-body-md text-white/90">
+                    <Icon name={origin.mode} className="size-4.5 text-sun" />
+                    {formatDuration(origin.minutes)}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  aria-expanded={false}
+                  onClick={() => setOpen(true)}
+                  className="shrink-0 pb-1 text-body-sm font-semibold text-sun underline decoration-sun/60 underline-offset-4 transition-colors hover:decoration-sun"
+                >
+                  {journeyIntro.chooseLabel}
+                </button>
+              </div>
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${encodeURIComponent("Somabay, Egypt")}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex w-fit items-center gap-2 rounded-full bg-white py-2 pr-4 pl-2.5 text-body-xs font-semibold text-ink transition-colors duration-500 hover:bg-sand-100"
+              >
+                <GoogleMapsMark className="size-4.5" />
+                Open in Google Maps
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </div>
           )}
         </div>
       </Container>
     </section>
+  );
+}
+
+/** The Google Maps pin, in its four colours. */
+function GoogleMapsMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className={className}>
+      <path fill="#1a73e8" d="M14.45 2.4A7.6 7.6 0 0 0 5.9 4.84l3.82 3.2 4.73-5.64Z" />
+      <path
+        fill="#ea4335"
+        d="M5.9 4.84A7.55 7.55 0 0 0 4.4 9.6c0 1.4.42 2.7 1.08 4l4.24-5.03L5.9 4.84Z"
+      />
+      <path
+        fill="#4285f4"
+        d="M12 7.07a2.53 2.53 0 0 1 1.95 4.15l4.6-5.48A7.6 7.6 0 0 0 14.45 2.4L9.72 8.04A2.52 2.52 0 0 1 12 7.07Z"
+      />
+      <path
+        fill="#fbbc04"
+        d="M12 12.13a2.53 2.53 0 0 1-2.28-4.09L5.48 13.6c.66 1.34 1.6 2.6 2.53 3.84l5.94-7.06a2.52 2.52 0 0 1-1.95 1.75Z"
+      />
+      <path
+        fill="#34a853"
+        d="m13.95 11.22-5.94 7.06c1.17 1.53 2.42 3.07 3.18 4.66.12.25.5.25.62 0C14.9 17.93 19.6 13.6 19.6 9.6c0-1.43-.4-2.76-1.05-3.86l-4.6 5.48Z"
+      />
+    </svg>
   );
 }

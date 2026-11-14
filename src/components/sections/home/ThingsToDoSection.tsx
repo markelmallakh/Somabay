@@ -164,7 +164,7 @@ export function ThingsToDoSection() {
       ref={ref}
       aria-labelledby="things-title"
       data-theme-surface="light"
-      className="relative overflow-hidden bg-gray-50 py-section text-ink"
+      className="relative overflow-hidden bg-sand-100 py-section text-ink"
     >
       <Container>
         <div className="flex flex-col gap-2">
@@ -222,7 +222,7 @@ export function ThingsToDoSection() {
               )}
             >
               <m.span
-                className="absolute inset-0 block overflow-hidden rounded-[2rem]"
+                className="absolute inset-0 block overflow-hidden rounded-md"
                 initial={{ opacity: 0, y: 90, scale: 0.88 }}
                 animate={shown ? { opacity: 1, y: 0, scale: 1 } : undefined}
                 transition={{
@@ -241,7 +241,7 @@ export function ThingsToDoSection() {
                     asset={slide.image}
                     sizes="(min-width: 768px) 480px, 100vw"
                     fill
-                    className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.06]"
+                    className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                   />
                 </span>
                 <span
@@ -262,7 +262,7 @@ export function ThingsToDoSection() {
                   <span className={cn("font-serif", current ? "text-heading-5" : "text-body-lg")}>
                     {slide.title}
                   </span>
-                  {current && <span className="text-body-sm text-white/85">{slide.tagline}</span>}
+                  {current && <span className="text-body-sm text-white/80">{slide.tagline}</span>}
                 </span>
                 {current && (
                   <span
@@ -301,7 +301,7 @@ export function ThingsToDoSection() {
           <button
             type="button"
             onClick={() => step(-1)}
-            className="wave grid size-12 place-items-center rounded-md border border-gray-300 transition-colors duration-500 hover:border-turquoise hover:text-white"
+            className="wave grid size-12 place-items-center rounded-md border border-ink/15 transition-colors duration-500 hover:border-turquoise hover:text-white"
           >
             <span className="sr-only">Previous activity</span>
             <Icon name="arrow-right" className="size-5 rotate-180" />

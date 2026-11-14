@@ -10,7 +10,7 @@ import { Container } from "@/components/layout/Container";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { PriceFrom } from "@/components/ui/PriceFrom";
-import { Icon } from "@/components/ui/Icon";
+import { CarouselArrows } from "@/components/ui/CarouselArrows";
 import { Chip } from "@/components/ui/Chip";
 import { StarChip } from "@/components/sections/holidays/StarChip";
 
@@ -34,8 +34,6 @@ type HotelsShowcaseProps = {
   ctaLabel: string;
   intro: ReactNode;
 };
-
-const pad = (value: number) => String(value).padStart(2, "0");
 
 /**
  * Figma "Section / Hotels". On desktop the section pins and scrolling steps through the hotels:
@@ -104,14 +102,14 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
       <Container>
         <div className="grid gap-8 lg:grid-cols-[560fr_445fr_323fr]">
           {/* Photo */}
-          <div className="relative aspect-[560/460] overflow-hidden rounded-[2rem] bg-gray-100">
+          <div className="relative aspect-[560/460] overflow-hidden rounded-md bg-gray-100">
             {hotels.map((item, index) => (
               <div
                 key={item.slug}
                 aria-hidden={index !== active}
                 className={cn(
                   "absolute inset-0 transition-[opacity,scale] duration-[1200ms] ease-out-expo",
-                  index === active ? "scale-100 opacity-100" : "scale-[1.06] opacity-0",
+                  index === active ? "scale-100 opacity-100" : "scale-[1.05] opacity-0",
                 )}
               >
                 {(index === active ? item.gallery : [item.gallery[0]]).map((asset, slide) => {
@@ -121,7 +119,7 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
                       key={asset.src}
                       className={cn(
                         "absolute inset-0 transition-[opacity,scale] duration-[900ms] ease-out-expo",
-                        shown ? "scale-100 opacity-100" : "scale-[1.04] opacity-0",
+                        shown ? "scale-100 opacity-100" : "scale-[1.05] opacity-0",
                       )}
                     >
                       <ResponsiveImage asset={asset} sizes="(min-width: 1024px) 37vw, 100vw" fill />
@@ -130,30 +128,22 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
                 })}
               </div>
             ))}
-            <div className="absolute bottom-4 left-4 flex items-center gap-3 rounded-md bg-black/20 px-2.5 py-2 text-body-sm text-white backdrop-blur-lg">
-              <p aria-live="polite">
-                <span className="font-semibold">{pad(photoIndex + 1)}</span>
-                <span className="ml-1.5">/ {pad(photos)}</span>
-              </p>
-              <span className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => step(-1)}
-                  className="transition-opacity hover:opacity-70"
-                >
-                  <span className="sr-only">Previous photo of {hotel.name}</span>
-                  <Icon name="chevron-left" className="size-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => step(1)}
-                  className="transition-opacity hover:opacity-70"
-                >
-                  <span className="sr-only">Next photo of {hotel.name}</span>
-                  <Icon name="chevron-right" className="size-4" />
-                </button>
-              </span>
-            </div>
+            {/* A soft shade so the arrows read on bright photos. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(to_top,rgb(0_0_0/0.35),transparent)]"
+            />
+            <p aria-live="polite" className="sr-only">
+              Photo {photoIndex + 1} of {photos}
+            </p>
+            <CarouselArrows
+              canBack
+              canForward
+              onPage={step}
+              label={`photo of ${hotel.name}`}
+              tone="dark"
+              className="absolute right-5 bottom-5"
+            />
           </div>
 
           {/* Details */}
@@ -195,7 +185,11 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
                     type="button"
                     aria-current={current ? "true" : undefined}
                     onClick={() => goTo(index)}
-                    className="group relative flex h-full w-full items-center gap-3.5 border-l border-gray-300 py-2 pl-4.5 text-left"
+                    // The active hotel sits on a soft turquoise wash beside its rule.
+                    className={cn(
+                      "group relative flex h-full w-full items-center gap-3.5 rounded-r-md border-l border-ink/15 py-2 pr-4 pl-4.5 text-left transition-colors duration-500",
+                      current ? "bg-turquoise-5" : "hover:bg-sand-100",
+                    )}
                   >
                     <span
                       aria-hidden

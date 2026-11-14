@@ -39,7 +39,7 @@ export function FilterPanel({ groups, value, onChange, className }: FilterPanelP
   };
 
   return (
-    <div className={cn("rounded-xl bg-white p-6", className)}>
+    <div className={cn("rounded-md bg-white p-6", className)}>
       <div className="flex items-baseline justify-between gap-4">
         <p className="font-serif text-heading-6">Filters</p>
         <TextAction onClick={() => onChange({})} disabled={!active}>
@@ -50,7 +50,7 @@ export function FilterPanel({ groups, value, onChange, className }: FilterPanelP
         <fieldset key={group.id} className="mt-5">
           <span aria-hidden className="wave-line mb-5 text-turquoise/35" />
           <legend className="sr-only">{group.label}</legend>
-          <p aria-hidden className="eyebrow mb-3 text-[0.6875rem] text-slate">
+          <p aria-hidden className="eyebrow mb-3 text-label text-slate">
             {group.label}
           </p>
           <div className="flex flex-wrap gap-2">

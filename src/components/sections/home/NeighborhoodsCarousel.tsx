@@ -124,7 +124,7 @@ export function NeighborhoodsCarousel({
         <div
           role="tablist"
           aria-label="Neighborhood availability"
-          className="flex gap-8 border-b border-gray-200"
+          className="flex gap-8 border-b border-line"
         >
           {ORDER.map((key) => {
             const count = neighborhoods.filter((item) => item.status === key).length;
@@ -200,7 +200,7 @@ export function NeighborhoodsCarousel({
       </div>
 
       <Container className="flex items-center gap-8">
-        <div className="relative h-0.5 flex-1 bg-gray-200" aria-hidden>
+        <div className="relative h-0.5 flex-1 bg-line" aria-hidden>
           <span
             className="absolute inset-y-0 bg-turquoise transition-[width] duration-700 ease-out-expo"
             style={{ left: `${progress.start * 100}%`, width: `${progress.size * 100}%` }}
@@ -210,7 +210,7 @@ export function NeighborhoodsCarousel({
           <button
             type="button"
             onClick={() => step(-1)}
-            className="wave grid size-12 place-items-center rounded-md border border-gray-300 text-ink transition-colors duration-500 hover:border-turquoise hover:text-white"
+            className="wave grid size-12 place-items-center rounded-md border border-ink/15 text-ink transition-colors duration-500 hover:border-turquoise hover:text-white"
           >
             <span className="sr-only">Previous neighborhoods</span>
             <Icon name="arrow-right" className="size-5 rotate-180" />

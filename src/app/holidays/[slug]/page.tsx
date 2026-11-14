@@ -72,19 +72,19 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
                   </li>
                 ))}
               </ul>
-              <h1 id="page-title" className="mt-5 text-heading-2 leading-[1.15]">
+              <h1 id="page-title" className="mt-5 text-heading-2">
                 {hotel.name}
               </h1>
               <p className="mt-6 text-lead text-slate">{hotel.description}</p>
               {hotel.overview ? (
                 <>
-                  <h2 className="mt-10 text-h3">Overview</h2>
+                  <h2 className="mt-10 text-heading-5">Overview</h2>
                   <p className="mt-4 text-slate">{hotel.overview}</p>
                 </>
               ) : null}
             </Reveal>
             <aside className="lg:col-span-4 lg:col-start-9">
-              <div className="flex flex-col gap-6 rounded-2xl bg-sand-100 p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
+              <div className="flex flex-col gap-6 rounded-md bg-sand-100 p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
                 <PriceFrom amount={hotelPrice(hotel)} size="stacked" />
                 {hotel.website ? (
                   <Button
@@ -114,10 +114,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
           className={hotel.facilities ? "py-section" : "pb-section"}
         >
           <Container>
-            <ImageReveal
-              parallax={0}
-              className="relative h-[min(40rem,62svh)] rounded-xl lg:rounded-2xl"
-            >
+            <ImageReveal parallax={0} className="relative h-[min(40rem,62svh)] rounded-md">
               <div className="absolute inset-0">
                 <Video
                   asset={hotel.film}
@@ -136,7 +133,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
         <Section tone="white" aria-labelledby="rooms-title" className="bg-sand-100">
           <Container>
             <Reveal>
-              <h2 id="rooms-title" className="text-heading-2 leading-[1.2]">
+              <h2 id="rooms-title" className="text-heading-2">
                 Accommodation
               </h2>
             </Reveal>

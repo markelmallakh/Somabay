@@ -21,12 +21,12 @@ export function JobsList() {
         <RevealGroup as="ul" className="mt-10 grid gap-4 md:mt-12 lg:grid-cols-2 lg:gap-6">
           {jobs.map((job) => (
             <RevealItem as="li" key={job.slug} className="flex">
-              <article className="group relative flex w-full flex-col gap-4 rounded-card bg-white p-6 transition-shadow duration-700 ease-out-expo hover:shadow-[0_12px_40px_rgb(18_58_70/0.12)] md:p-8">
+              <article className="group relative flex w-full flex-col gap-4 rounded-md bg-white p-6 transition-shadow duration-700 ease-out-expo hover:shadow-card md:p-8">
                 <JobMeta job={job} />
-                <h3 className="font-serif text-h3">
+                <h3 className="font-serif text-heading-5">
                   <Link
                     href={routes.career(job.slug)}
-                    className="transition-colors group-hover:text-lagoon after:absolute after:inset-0 after:rounded-card"
+                    className="transition-colors group-hover:text-lagoon after:absolute after:inset-0 after:rounded-md"
                   >
                     {job.title}
                   </Link>

@@ -58,9 +58,9 @@ export function EventsCalendar({
   };
 
   return (
-    <div className="relative rounded-card bg-turquoise-5 p-3 sm:p-5 md:p-8 lg:rounded-media">
+    <div className="relative rounded-md bg-turquoise-5 p-3 sm:p-5 md:p-8">
       <div className="flex items-center justify-between px-1 sm:px-0">
-        <p className="font-serif text-h3" aria-live="polite">
+        <p className="font-serif text-heading-5" aria-live="polite">
           {monthName.format(cursor)} <span className="text-slate">{cursor.getUTCFullYear()}</span>
         </p>
         <div className="flex gap-2">
@@ -82,7 +82,7 @@ export function EventsCalendar({
           </button>
         </div>
       </div>
-      <div className="mt-6 grid grid-cols-7 text-center text-caption text-slate">
+      <div className="mt-6 grid grid-cols-7 text-center text-body-sm text-slate">
         {weekdays.map((day) => (
           <p key={day} className="py-2">
             <abbr title={day} className="no-underline">
@@ -91,7 +91,7 @@ export function EventsCalendar({
           </p>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-px overflow-hidden rounded-thumb bg-line ring-1 ring-line">
+      <div className="grid grid-cols-7 gap-px overflow-hidden rounded-md bg-line ring-1 ring-line">
         {visibleDays.map((date) => {
           const day = iso(date);
           const inMonth = date.getUTCMonth() === cursor.getUTCMonth();
@@ -106,7 +106,7 @@ export function EventsCalendar({
             >
               <p
                 className={cn(
-                  "mx-auto grid size-7 place-items-center rounded-full text-caption",
+                  "mx-auto grid size-7 place-items-center rounded-full text-body-sm",
                   day === today && "bg-turquoise text-white",
                 )}
               >
@@ -119,7 +119,7 @@ export function EventsCalendar({
                       type="button"
                       onClick={() => setSelected(event)}
                       className={cn(
-                        "flex w-full items-center gap-1 rounded-full bg-turquoise-10 px-1.5 py-0.5 text-left text-[0.625rem] leading-tight text-ink transition-colors duration-300 hover:bg-turquoise-20 md:text-[0.6875rem]",
+                        "flex w-full items-center gap-1 rounded-full bg-turquoise-10 px-1.5 py-0.5 text-left text-body-2xs leading-tight text-ink transition-colors duration-300 hover:bg-turquoise-20 md:text-label",
                         selected?.slug === event.slug && "bg-turquoise-20",
                       )}
                     >
@@ -150,7 +150,7 @@ export function EventsCalendar({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 12 }}
             transition={{ duration: 0.7, ease: easeOutExpo }}
-            className="absolute inset-x-3 bottom-3 z-10 overflow-hidden rounded-card bg-white shadow-[0_24px_60px_rgb(18_58_70/0.2)] sm:inset-x-5 sm:bottom-5 md:inset-x-auto md:right-8 md:bottom-8 md:w-[24rem]"
+            className="absolute inset-x-3 bottom-3 z-10 overflow-hidden rounded-md bg-white shadow-[0_24px_60px_rgb(18_58_70/0.2)] sm:inset-x-5 sm:bottom-5 md:inset-x-auto md:right-8 md:bottom-8 md:w-[24rem]"
           >
             <div className="relative aspect-[416/240]">
               <ResponsiveImage asset={selected.image} sizes="24rem" fill />
@@ -165,14 +165,14 @@ export function EventsCalendar({
             </div>
             <div className="flex flex-col gap-3 p-6">
               <Chip>{categoryLabels[selected.category]}</Chip>
-              <p className="font-serif text-h4">{selected.title}</p>
-              <p className="flex items-center gap-2 text-caption text-slate">
+              <p className="font-serif text-heading-6">{selected.title}</p>
+              <p className="flex items-center gap-2 text-body-sm text-slate">
                 <Icon name="pin" className="size-4" />
                 {selected.location}
               </p>
               <Link
                 href={hrefs[selected.slug]}
-                className="mt-1 inline-flex items-center gap-2 text-[0.75rem] font-semibold tracking-label uppercase hover:text-lagoon"
+                className="mt-1 inline-flex items-center gap-2 text-body-xs font-semibold tracking-label uppercase hover:text-lagoon"
               >
                 View event <Icon name="chevron-right" className="size-3.5" />
               </Link>

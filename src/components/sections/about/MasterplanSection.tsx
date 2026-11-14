@@ -10,7 +10,7 @@ import { MasterplanAerial } from "./MasterplanAerial";
  */
 export function MasterplanSection() {
   return (
-    <section aria-labelledby="masterplan-title" className="bg-sand-100 py-30 text-ink">
+    <section aria-labelledby="masterplan-title" className="bg-sand-100 py-section text-ink">
       <Container>
         <HeadingRow
           id="masterplan-title"

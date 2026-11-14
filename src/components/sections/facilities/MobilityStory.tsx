@@ -28,7 +28,7 @@ export function MobilityStory() {
           {mobilityOptions.map((option, index) => (
             <li
               key={option.title}
-              className="relative isolate flex min-h-[26rem] items-end overflow-hidden rounded-card text-white md:min-h-[32rem] lg:h-[min(78svh,42rem)] lg:rounded-media"
+              className="relative isolate flex min-h-[26rem] items-end overflow-hidden rounded-md text-white md:min-h-[32rem] lg:h-[min(78svh,42rem)]"
             >
               <ImageReveal className="absolute inset-0 -z-10" from={index % 2 ? "left" : "bottom"}>
                 <div className="absolute inset-0">
@@ -48,7 +48,7 @@ export function MobilityStory() {
                   {String(index + 1).padStart(2, "0")}
                 </p>
                 <h3 className="mt-2 text-heading-4">{option.title}</h3>
-                <p className="mt-4 text-white/85">{option.description}</p>
+                <p className="mt-4 text-white/80">{option.description}</p>
               </Reveal>
             </li>
           ))}

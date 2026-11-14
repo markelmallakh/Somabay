@@ -23,14 +23,14 @@ export function MarinaStoreList({ items }: { items: DirectoryItem[] }) {
             <button
               type="button"
               onClick={() => setOpen(index)}
-              className="group flex w-full items-center gap-4 rounded-card bg-sand-100 p-3 text-left transition-[background-color,box-shadow] duration-500 hover:bg-white hover:shadow-[0_12px_40px_rgb(18_58_70/0.12)] focus-visible:bg-white sm:gap-6 sm:p-4"
+              className="group flex w-full items-center gap-4 rounded-md bg-sand-100 p-3 text-left transition-[background-color,box-shadow] duration-500 hover:bg-white hover:shadow-card focus-visible:bg-white sm:gap-6 sm:p-4"
             >
-              <span className="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-thumb bg-sand-200 sm:w-36">
+              <span className="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-md bg-sand-200 sm:w-36">
                 <ResponsiveImage
                   asset={item.images[0]}
                   sizes="9rem"
                   fill
-                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.06]"
+                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                 />
               </span>
               <span className="flex min-w-0 flex-1 flex-col items-start gap-2">

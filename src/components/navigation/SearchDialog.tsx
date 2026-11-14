@@ -184,7 +184,7 @@ export function SearchDialog({ open, onClose, index, cards }: SearchDialogProps)
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: easeOutExpo }}
           style={{ transformOrigin: "50% 0%" }}
-          className="absolute top-[calc(var(--header-height)+0.75rem)] left-1/2 flex max-h-[min(42rem,calc(100svh-var(--header-height)-1.5rem))] w-[min(36rem,calc(100vw-2rem))] -translate-x-1/2 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_24px_70px_rgb(18_58_70/0.22)]"
+          className="absolute top-[calc(var(--header-height)+0.75rem)] left-1/2 flex max-h-[min(42rem,calc(100svh-var(--header-height)-1.5rem))] w-[min(36rem,calc(100vw-2rem))] -translate-x-1/2 flex-col overflow-hidden rounded-md bg-white shadow-[0_24px_70px_rgb(18_58_70/0.22)]"
         >
           {/* The field. */}
           <div className="flex shrink-0 items-center gap-3 border-b border-line py-2.5 pr-2.5 pl-4">
@@ -216,7 +216,7 @@ export function SearchDialog({ open, onClose, index, cards }: SearchDialogProps)
               type="button"
               onClick={close}
               aria-label="Close search"
-              className="grid size-9 shrink-0 place-items-center rounded-lg text-slate transition-colors hover:bg-turquoise-5 hover:text-ink"
+              className="grid size-9 shrink-0 place-items-center rounded-md text-slate transition-colors hover:bg-turquoise-5 hover:text-ink"
             >
               <Icon name="close" className="size-5" />
             </button>
@@ -254,7 +254,7 @@ export function SearchDialog({ open, onClose, index, cards }: SearchDialogProps)
                   </ul>
                 </div>
               ) : (
-                <p className="rounded-xl bg-turquoise-5 px-4 py-8 text-center text-body-sm text-slate">
+                <p className="rounded-md bg-turquoise-5 px-4 py-8 text-center text-body-sm text-slate">
                   Nothing matches “{query.trim()}”. Try a hotel, a community or an activity.
                 </p>
               )
@@ -321,7 +321,7 @@ export function SearchDialog({ open, onClose, index, cards }: SearchDialogProps)
                       <Link
                         href={section.href}
                         onClick={close}
-                        className="group flex w-fit items-center gap-1 text-[0.6875rem] font-semibold tracking-[0.12em] text-slate uppercase transition-colors hover:text-turquoise-160"
+                        className="group flex w-fit items-center gap-1 text-label font-semibold tracking-[0.12em] text-slate uppercase transition-colors hover:text-turquoise-160"
                       >
                         {section.title}
                         <Icon
@@ -350,9 +350,7 @@ export function SearchDialog({ open, onClose, index, cards }: SearchDialogProps)
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[0.6875rem] font-semibold tracking-[0.12em] text-slate uppercase">
-      {children}
-    </p>
+    <p className="text-label font-semibold tracking-[0.12em] text-slate uppercase">{children}</p>
   );
 }
 
@@ -374,7 +372,7 @@ function Widget({
     <Link
       href={result.href}
       onClick={onGo}
-      className="group flex items-center gap-2.5 rounded-lg p-1 pr-2 transition-colors duration-300 hover:bg-turquoise-5 focus-visible:bg-turquoise-5 focus-visible:outline-none"
+      className="group flex items-center gap-2.5 rounded-md p-1 pr-2 transition-colors duration-300 hover:bg-turquoise-5 focus-visible:bg-turquoise-5 focus-visible:outline-none"
     >
       {result.image ? (
         <span className="relative size-9 shrink-0 overflow-hidden rounded-md bg-turquoise-10">
@@ -382,7 +380,7 @@ function Widget({
             asset={result.image}
             sizes="36px"
             fill
-            className="transition-transform duration-700 ease-out-expo group-hover:scale-110"
+            className="transition-transform duration-700 ease-out-expo group-hover:scale-[1.05]"
           />
         </span>
       ) : date ? (
@@ -397,14 +395,14 @@ function Widget({
       )}
       <span className="flex min-w-0 flex-1 flex-col">
         {showPlace ? (
-          <span className="truncate text-[0.625rem] font-semibold tracking-[0.1em] text-turquoise-160 uppercase">
+          <span className="truncate text-body-2xs font-semibold tracking-[0.1em] text-turquoise-160 uppercase">
             In {result.place}
           </span>
         ) : null}
         <span className="truncate text-body-sm leading-tight font-medium text-ink">
           {result.title}
         </span>
-        <span className="truncate text-[0.6875rem] leading-snug text-slate">{result.subtitle}</span>
+        <span className="truncate text-label leading-snug text-slate">{result.subtitle}</span>
       </span>
       <Icon
         name="arrow-right"

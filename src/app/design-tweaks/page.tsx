@@ -33,7 +33,7 @@ function Arrow({ className, dark }: { className?: string; dark?: boolean }) {
 function Row({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="grid gap-6 border-t border-line py-10 lg:grid-cols-[14rem_1fr] lg:items-center">
-      <p className="text-caption font-semibold tracking-label text-slate uppercase">{title}</p>
+      <p className="text-body-sm font-semibold tracking-label text-slate uppercase">{title}</p>
       <div className="grid grid-cols-3 items-center gap-6">{children}</div>
     </div>
   );
@@ -52,7 +52,7 @@ export default function DesignTweaksPage() {
 
         <div className="mt-12 grid grid-cols-[14rem_1fr] gap-6 max-lg:hidden">
           <span />
-          <div className="grid grid-cols-3 gap-6 text-caption text-slate">
+          <div className="grid grid-cols-3 gap-6 text-body-sm text-slate">
             {states.map((state) => (
               <span key={state.label}>{state.label}</span>
             ))}
@@ -107,7 +107,7 @@ export default function DesignTweaksPage() {
       <section className="mt-16 bg-abyss py-16">
         <Container>
           <div className="grid gap-6 lg:grid-cols-[14rem_1fr] lg:items-center">
-            <p className="text-caption font-semibold tracking-label text-white/60 uppercase">
+            <p className="text-body-sm font-semibold tracking-label text-white/60 uppercase">
               On photos / dark
             </p>
             <div className="grid grid-cols-3 items-center gap-6">
@@ -131,7 +131,7 @@ export default function DesignTweaksPage() {
       </section>
 
       <Container className="mt-16">
-        <p className="text-caption font-semibold tracking-label text-slate uppercase">
+        <p className="text-body-sm font-semibold tracking-label text-slate uppercase">
           Live — hover these
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-4">

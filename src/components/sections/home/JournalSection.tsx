@@ -22,17 +22,17 @@ export function JournalSection() {
     <section
       aria-labelledby="journal-title"
       data-theme-surface="light"
-      className="bg-gray-50 py-section text-ink"
+      className="bg-sand-100 py-section text-ink"
     >
       <Container className="flex flex-col gap-12">
         <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <Eyebrow>{journalIntro.eyebrow}</Eyebrow>
             <h2 id="journal-title" className="text-heading-2">
               {journalIntro.title}
             </h2>
           </div>
-          <Button href={journalIntro.cta.href} variant="outline" icon="chevron-right">
+          <Button href={journalIntro.cta.href} variant="outline" icon="arrow-up-right">
             {journalIntro.cta.label}
           </Button>
         </Reveal>
@@ -41,7 +41,7 @@ export function JournalSection() {
           {articles.slice(0, 3).map((article) => (
             <RevealItem as="li" key={article.slug}>
               <SmartLink href={routes.article(article.slug)} className="group flex flex-col gap-6">
-                <span className="relative block aspect-[448/300] overflow-hidden rounded-[2rem]">
+                <span className="relative block aspect-[448/300] overflow-hidden rounded-md">
                   <ResponsiveImage
                     asset={article.image}
                     sizes="(min-width: 768px) 30vw, 100vw"
@@ -57,7 +57,7 @@ export function JournalSection() {
                     <span>{article.readingMinutes} min read</span>
                   </span>
                   <span className="font-serif text-heading-5">{article.title}</span>
-                  <span className="inline-flex items-center gap-2 text-body-xs font-semibold">
+                  <span className="inline-flex items-center gap-2 text-body-xs font-semibold tracking-label uppercase">
                     {journalIntro.itemCtaLabel}
                     <Icon
                       name="arrow-right"

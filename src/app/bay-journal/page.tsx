@@ -23,6 +23,7 @@ export default function JournalPage() {
         description="Stories, insights, and the latest from life by the Red Sea."
       />
       <Section spacing="none" className="pb-section" aria-label="Articles">
+        <h2 className="sr-only">Articles</h2>
         <Container>
           <JournalGrid articles={articles} />
         </Container>

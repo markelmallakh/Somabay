@@ -21,7 +21,7 @@ export function PriceFrom({ amount, size = "inline", tone = "light", className }
   if (size === "stacked") {
     return (
       <p className={cn("flex flex-col gap-1", className)}>
-        <span className={cn("text-[0.6875rem] font-semibold tracking-[0.14em] uppercase", muted)}>
+        <span className={cn("text-label font-semibold tracking-[0.14em] uppercase", muted)}>
           Starting from
         </span>
         <span className="flex items-baseline gap-2">
@@ -36,7 +36,7 @@ export function PriceFrom({ amount, size = "inline", tone = "light", className }
 
   return (
     <p className={cn("flex flex-col gap-0.5", className)}>
-      <span className={cn("text-[0.625rem] font-semibold tracking-[0.14em] uppercase", muted)}>
+      <span className={cn("text-body-2xs font-semibold tracking-[0.14em] uppercase", muted)}>
         Starting from
       </span>
       <span className="flex items-baseline gap-1.5">
