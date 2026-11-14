@@ -223,6 +223,16 @@
   }
 }
 
+/* Photo slider: the active thumbnail's progress line, timed to the autoplay. */
+@keyframes slider-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @keyframes marquee {
   to {
     transform: translateX(-50%);

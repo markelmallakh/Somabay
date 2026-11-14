@@ -6,7 +6,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { ImageReveal } from "@/components/animations/ImageReveal";
 import { Reveal } from "@/components/animations/Reveal";
-import { PhotoGrid } from "@/components/media/PhotoGrid";
+import { PhotoSlider } from "@/components/media/PhotoSlider";
 import { Video } from "@/components/media/Video";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { GuestReviews } from "@/components/sections/holidays/GuestReviews";
@@ -57,7 +57,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
             ]}
             className="mb-8"
           />
-          <PhotoGrid images={hotel.gallery} label={hotel.name} />
+          <PhotoSlider images={hotel.gallery} label={hotel.name} />
           <div className="mt-12 grid gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-6">
             <Reveal className="lg:col-span-7">
               <ul className="flex flex-wrap gap-2">
