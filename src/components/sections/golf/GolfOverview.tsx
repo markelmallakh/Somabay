@@ -51,7 +51,7 @@ export function GolfOverview() {
       className="scroll-mt-(--header-height) bg-white py-section text-ink"
     >
       <Container className="text-center">
-        <Eyebrow as="h2">
+        <Eyebrow as="h2" className="mx-auto">
           <span id="golf-overview-title">{title}</span>
         </Eyebrow>
         <div className="mt-8 lg:mt-10">
