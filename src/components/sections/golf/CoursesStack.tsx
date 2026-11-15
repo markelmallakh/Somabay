@@ -60,9 +60,6 @@ export function CoursesStack() {
                 sizes="(min-width: 1440px) 760px, (min-width: 1024px) 56vw, 100vw"
                 fill
               />
-              <span className="absolute top-5 left-5 rounded-md bg-white/92 px-3 py-1.5 text-body-xs font-semibold tracking-label text-ink uppercase backdrop-blur">
-                {String(index + 1).padStart(2, "0")} / {String(courses.length).padStart(2, "0")}
-              </span>
             </div>
             <div className="flex flex-col p-6 md:p-10 lg:col-span-5 lg:p-12">
               <p className="text-body-xs font-semibold tracking-label text-turquoise uppercase">
