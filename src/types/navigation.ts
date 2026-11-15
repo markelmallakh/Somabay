@@ -9,6 +9,8 @@ export type NavLink = {
 export type NavGroup = NavLink & {
   /** Optional nested links shown as an indented list (e.g. activities under Things To Do). */
   children?: NavLink[];
+  /** A few highlights shown under the group in the header's dropdown only (not the full menu). */
+  preview?: NavLink[];
 };
 
 export type MenuItem = NavLink & {

@@ -170,9 +170,8 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
               <button
                 type="button"
                 onClick={() => setOpenId(null)}
-                className="wave absolute top-5 left-5 z-20 grid size-12 place-items-center rounded-md bg-white text-ink shadow-float transition-colors hover:text-white"
+                className="wave absolute top-5 left-5 z-20 grid size-12 place-items-center rounded-md bg-white text-ink shadow-float transition-colors hover:text-white md:hidden"
                 aria-label="Close"
-                data-autofocus
               >
                 <Icon name="close" className="size-5" />
               </button>

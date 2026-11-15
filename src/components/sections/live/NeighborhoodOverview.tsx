@@ -4,20 +4,23 @@ import type { ImageAsset } from "@/types/media";
 import type { SectionIntro } from "@/types/content";
 import { useGsap } from "@/hooks/useGsap";
 import { gsap, SplitText } from "@/lib/gsap";
+import { cn } from "@/lib/utils";
 import { Container } from "@/components/layout/Container";
 import { Parallax } from "@/components/animations/Parallax";
 import { Reveal } from "@/components/animations/Reveal";
 import { SplitHeading } from "@/components/animations/SplitHeading";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
+import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
 type Stat = { value: string; unit?: string; label: string };
 
 type NeighborhoodOverviewProps = {
   id: string;
+  name: string;
+  /** The project's logo, centred above its numbers. */
+  logo?: string;
   stats?: Stat[];
-  /** "Living Now" / "Coming Soon", shown as the last tile. */
-  status: string;
   concept?: SectionIntro & { images: [ImageAsset, ImageAsset] };
 };
 
@@ -29,11 +32,12 @@ type NeighborhoodOverviewProps = {
  */
 export function NeighborhoodOverview({
   id,
+  name,
+  logo,
   stats = [],
-  status,
   concept,
 }: NeighborhoodOverviewProps) {
-  const tiles: Stat[] = [...stats, { value: status, label: "Status" }];
+  const tiles = stats;
 
   const ref = useGsap<HTMLElement>(({ scope, reducedMotion }) => {
     if (reducedMotion) return;
@@ -43,21 +47,11 @@ export function NeighborhoodOverview({
     const timeline = gsap.timeline({
       scrollTrigger: { trigger: cards[0], start: "top 85%", toggleActions: "play none none none" },
     });
-    // Tiles rise out of their own frames one after another…
-    timeline.fromTo(
-      cards,
-      { clipPath: "inset(100% 0% 0% 0% round 4px)" },
-      {
-        clipPath: "inset(0% 0% 0% 0% round 4px)",
-        duration: 1.2,
-        stagger: 0.1,
-        ease: "expo.out",
-      },
-    );
+    // The figures rise in one after another…
     timeline.from(
       gsap.utils.toArray<HTMLElement>("[data-tile-copy]", scope),
-      { y: 30, autoAlpha: 0, duration: 1, stagger: 0.1, ease: "power3.out" },
-      0.3,
+      { y: 24, autoAlpha: 0, duration: 1, stagger: 0.08, ease: "power3.out" },
+      0,
     );
     // …and each number counts up to its figure.
     gsap.utils.toArray<HTMLElement>("[data-count]", scope).forEach((element, index) => {
@@ -81,30 +75,35 @@ export function NeighborhoodOverview({
   return (
     <section ref={ref} aria-labelledby={id} className="bg-white py-section text-ink">
       <Container>
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {logo ? (
+          <Reveal className="mb-10 flex justify-center lg:mb-12">
+            {/* eslint-disable-next-line @next/next/no-img-element -- the project's brand SVG, shown as is. */}
+            <img src={logo} alt={`${name} logo`} className="h-12 w-auto lg:h-14" />
+          </Reveal>
+        ) : null}
+        {/* The figures in a light row between hairlines, divided by thin rules. */}
+        <ul
+          className={cn(
+            "mx-auto grid divide-y divide-line border-y border-line sm:divide-x sm:divide-y-0",
+            tiles.length >= 4 ? "max-w-6xl sm:grid-cols-4" : "max-w-4xl sm:grid-cols-3",
+          )}
+        >
           {tiles.map((tile) => {
             const numeric = /^\d[\d,]*$/.test(tile.value);
             return (
-              <li
-                key={tile.label}
-                data-tile
-                className="group relative flex min-h-56 flex-col justify-between overflow-hidden rounded-md bg-turquoise-160 p-7 text-white lg:aspect-[7/5] lg:min-h-0 lg:p-8"
-              >
-                {/* A soft light that slides across the tile on hover. */}
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(110deg,transparent_30%,rgb(255_255_255/0.08)_50%,transparent_70%)] transition-transform duration-[1400ms] ease-out-expo group-hover:translate-x-full"
-                />
-                <p data-tile-copy className="text-body-sm text-white/75">
-                  {tile.label}
-                </p>
-                <p data-tile-copy className="font-serif text-heading-2 leading-[1.05]">
+              <li key={tile.label} data-tile className="px-6 py-8 text-center lg:py-10">
+                <p data-tile-copy className="font-serif text-heading-2 leading-none text-ink">
                   <span data-count={numeric ? tile.value.replace(/,/g, "") : undefined}>
                     {tile.value}
                   </span>
                   {tile.unit ? (
-                    <span className="ml-2 font-sans text-body-lg text-sun">{tile.unit}</span>
+                    <span className="ml-1.5 font-sans text-body-md text-turquoise">
+                      {tile.unit}
+                    </span>
                   ) : null}
+                </p>
+                <p data-tile-copy className="mt-3 text-label tracking-label text-slate uppercase">
+                  {tile.label}
                 </p>
               </li>
             );
@@ -123,10 +122,18 @@ export function NeighborhoodOverview({
                 </SplitHeading>
               </div>
               {concept.description ? (
-                <FillText
-                  text={concept.description}
-                  className="font-sans text-[clamp(1.375rem,1rem+1.3vw,2.125rem)] leading-[1.35] tracking-[-0.01em] text-turquoise-160 lg:col-span-8 lg:col-start-5"
-                />
+                <div className="flex flex-col items-start gap-10 lg:col-span-8 lg:col-start-5">
+                  <FillText
+                    text={concept.description}
+                    className="font-sans text-[clamp(1.375rem,1rem+1.3vw,2.125rem)] leading-[1.35] tracking-[-0.01em] text-ink"
+                  />
+                  {/* Takes the visitor down to the register-interest form at the foot of the page. */}
+                  <Reveal delay={0.1}>
+                    <Button href="#register-interest" variant="primary">
+                      Request interest
+                    </Button>
+                  </Reveal>
+                </div>
               ) : null}
             </div>
 
@@ -163,32 +170,31 @@ export function NeighborhoodOverview({
 }
 
 /**
- * A statement that fills in as it is read: every word starts faint and turns solid one after
- * another while the paragraph scrolls up through the screen, after the block first rises in.
+ * A statement written in as it is read: the paragraph is split into masked lines, and every word
+ * rises into its line out of a soft blur, one after another in reading order, tied to the scroll
+ * (scrolling back up takes them away again).
  */
 function FillText({ text, className }: { text: string; className?: string }) {
   const ref = useGsap<HTMLParagraphElement>(
     ({ scope, reducedMotion }) => {
       if (reducedMotion) return;
-      gsap.from(scope, {
-        y: 40,
-        autoAlpha: 0,
-        duration: 1.2,
-        ease: "expo.out",
-        scrollTrigger: { trigger: scope, start: "top 90%", toggleActions: "play none none none" },
-      });
       const split = SplitText.create(scope, {
-        type: "words",
+        type: "lines,words",
+        mask: "lines",
         autoSplit: true,
         onSplit(self) {
+          // Let descenders (g, y, p) show below each line's mask without changing the rhythm.
+          gsap.set(self.masks, { paddingBottom: "0.18em", marginBottom: "-0.18em" });
           return gsap.fromTo(
             self.words,
-            { opacity: 0.16 },
+            { yPercent: 110, opacity: 0, filter: "blur(6px)" },
             {
+              yPercent: 0,
               opacity: 1,
-              stagger: 0.1,
-              ease: "none",
-              scrollTrigger: { trigger: scope, start: "top 78%", end: "bottom 50%", scrub: 0.6 },
+              filter: "blur(0px)",
+              stagger: 0.08,
+              ease: "power3.out",
+              scrollTrigger: { trigger: scope, start: "top 88%", end: "bottom 62%", scrub: 0.9 },
             },
           );
         },

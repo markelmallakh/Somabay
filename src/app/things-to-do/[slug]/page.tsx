@@ -3,7 +3,6 @@ import { PageSkeleton } from "@/components/layout/PageSkeleton";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActivitySections } from "@/components/sections/activity/ActivitySections";
-import { SpaSections } from "@/components/sections/activity/SpaSections";
 import { ContactCta } from "@/components/sections/shared/ContactCta";
 import { MoreToExperience } from "@/components/sections/shared/MoreToExperience";
 import { PageHero } from "@/components/sections/shared/PageHero";
@@ -41,7 +40,6 @@ async function ActivityContent({
 }) {
   const activity = getActivity((await params).slug);
   if (!activity) notFound();
-  const isSpa = activity.slug === "spa-and-thalasso";
 
   return (
     <>
@@ -53,11 +51,8 @@ async function ActivityContent({
         // A shorter band than the section landing heroes, so it reads as a sub-page.
         height="band"
       />
-      {isSpa ? (
-        <SpaSections activity={activity} />
-      ) : (
-        <ActivitySections activity={activity} sections={getActivitySections(activity.slug)} />
-      )}
+      {/* One template for every activity, Spa & Thalasso included. */}
+      <ActivitySections activity={activity} sections={getActivitySections(activity.slug)} />
       <MoreToExperience intro={moreToExperienceIntro} items={moreFromThingsToDo} />
       <ContactCta />
     </>

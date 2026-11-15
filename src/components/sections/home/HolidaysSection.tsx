@@ -31,6 +31,8 @@ export function HolidaysSection() {
           gallery: [hotel.cover ?? hotel.images[0], ...hotel.gallery].slice(0, 6),
           href: hotelHref(hotel),
           price: hotelPrice(hotel),
+          // The hotel page's facilities, as short names.
+          amenities: (hotel.facilities ?? []).map((item) => item.title).slice(0, 6),
           tags: [hotel.tagline, ...hotel.themes.map((theme) => themeLabel.get(theme) ?? theme)]
             .filter((tag, index, all) => all.indexOf(tag) === index)
             .slice(0, 2),

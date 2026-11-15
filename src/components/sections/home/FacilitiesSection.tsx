@@ -5,52 +5,61 @@ import { image } from "@/lib/media";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 
-const school = image(
-  "/images/facilities/facility-school.webp",
-  "A modern school building framed by cacti",
+// Photos of the real places, from somabay.com's Facilities & Services page. The Medical Center
+// photo leads because it is the only one wide and sharp enough for the full-width tile. There is no
+// pharmacy photo yet, so that tile shows the bay's Cosmodent clinic until one is supplied.
+const medicalCenter = image(
+  "/images/facilities/medical-center.webp",
+  "A bright corridor in the Somabay Medical Center",
 );
-const lounge = image(
-  "/images/facilities/facility-lounge.webp",
-  "A guest relaxing on a shaded terrace",
+const classroom = image(
+  "/images/facilities/kompass-classroom.webp",
+  "A lesson in a Kompass Primary School classroom",
 );
+const limousine = image(
+  "/images/facilities/somabay-limousine.webp",
+  "Somabay Limousine cars parked under the palms",
+);
+const homeServices = image(
+  "/images/facilities/coral-home-services.webp",
+  "The Coral interior design and home services studio",
+);
+const clinic = image("/images/facilities/cosmodent-clinic.webp", "A treatment room at Cosmodent");
 
 /** Figma "Section / Facilities & Services — Collage" (416:17854). */
 const lead: Facility = {
-  title: "Education & Schools",
-  description:
-    "International curricula and early years learning within a close-knit coastal community.",
-  image: school,
-  href: `${facilitiesIntro.cta.href}#education`,
+  title: "Medical Centers",
+  description: "Expert care and emergency support, 24/7.",
+  image: medicalCenter,
+  href: `${facilitiesIntro.cta.href}#medical`,
 };
 const rows: [Facility, Facility][] = [
   [
     {
       title: "Mobility & Transfers",
       description: "Shuttles, G-Ride and airport transfers across the bay.",
-      image: school,
+      image: limousine,
       href: `${facilitiesIntro.cta.href}#mobility`,
     },
     {
-      title: "Medical Centers",
-      description: "Expert care and emergency support, 24/7.",
-      image: image(
-        "/images/facilities/facility-kiter.webp",
-        "A kitesurfer carrying his board at sunset",
-      ),
-      href: `${facilitiesIntro.cta.href}#medical`,
+      title: "Education & Schools",
+      description:
+        "International curricula and early years learning within a close-knit coastal community.",
+      image: classroom,
+      href: `${facilitiesIntro.cta.href}#education`,
     },
   ],
   [
     {
       title: "Maintenance",
       description: "Complete home support, from repairs to housekeeping.",
-      image: lounge,
+      image: homeServices,
       href: `${facilitiesIntro.cta.href}#maintenance`,
     },
     {
       title: "Pharmacies",
       description: "Everyday medicines and essentials, open daily.",
-      image: lounge,
+      image: clinic,
       href: `${facilitiesIntro.cta.href}#pharmacy`,
     },
   ],

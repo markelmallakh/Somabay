@@ -6,10 +6,12 @@ import { SelectMenu } from "./SelectMenu";
  * Boxed controls with the label inside: at rest it sits where the value goes; on focus, or once
  * there is a value, it shrinks and floats to the top of the box.
  */
-const control = cn(
+export const control = cn(
   "peer block w-full rounded-md border border-ink/15 bg-white px-4 pt-6 pb-2 text-body text-ink outline-none",
-  "transition-[border-color,box-shadow] duration-300 hover:border-ink/35",
-  "focus:border-turquoise focus:shadow-[0_0_0_3px_rgb(0_178_186/0.18)]",
+  "transition-[border-color,box-shadow,background-color] duration-500 ease-out-expo hover:border-ink/35",
+  // Focus: a quiet deep-teal edge and a soft, low shadow that settles under the box (no glow).
+  "focus:border-turquoise-160/55 focus:shadow-[0_6px_16px_-12px_rgb(0_107_112/0.18)]",
+  "aria-expanded:border-turquoise-160/55 aria-expanded:shadow-[0_6px_16px_-12px_rgb(0_107_112/0.18)]",
   "aria-invalid:border-alert",
 );
 
@@ -55,7 +57,7 @@ function FieldShell({
       {/* The control comes first so the label can react to it (peer). */}
       <div className="relative">
         {children}
-        <label htmlFor={id} className={labelClassName}>
+        <label htmlFor={id} data-field-label className={labelClassName}>
           {text}
           {required ? <span aria-hidden> *</span> : null}
         </label>

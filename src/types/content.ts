@@ -74,6 +74,8 @@ export type Neighborhood = {
     subtitle?: string;
     stats?: { value: string; unit?: string; label: string }[];
     concept?: SectionIntro & { images: [ImageAsset, ImageAsset] };
+    /** The project's own logo (an SVG in public/), shown above its numbers and in its section bar. */
+    logo?: string;
     hasMasterplan?: boolean;
   };
 };
@@ -180,6 +182,11 @@ export type DirectoryItem = {
   price?: string;
   /** Second button beside the primary action, outlined in turquoise (e.g. Book now). */
   secondaryAction?: Cta & { external?: boolean };
+  /**
+   * The venue's online menu (a page or PDF). When set, the drawer shows "View menu", which
+   * opens it in a new tab.
+   */
+  menuUrl?: string;
   /** Secondary link shown in the drawer info row (e.g. Get direction). */
   infoLink?: Cta & { external?: boolean };
 };
@@ -205,5 +212,5 @@ export type SequenceStep = {
   title: string;
   description?: string;
   /** Where the copy sits for this step. */
-  placement: "center" | "bottom-left" | "right";
+  placement: "center" | "bottom-left" | "right" | "split";
 };

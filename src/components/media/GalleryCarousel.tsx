@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ImageAsset } from "@/types/media";
-import { Icon } from "@/components/ui/Icon";
+import { Container } from "@/components/layout/Container";
+import { CarouselArrows } from "@/components/ui/CarouselArrows";
 import { PhotoLightbox } from "./PhotoLightbox";
 import { ResponsiveImage } from "./ResponsiveImage";
 
@@ -89,15 +90,6 @@ export function GalleryCarousel({
     const element = track.current;
     if (element) go((heading.current ?? currentSlide(element)) + delta);
   };
-  const toDot = (index: number) => {
-    const element = track.current;
-    if (!element) return;
-    const base = heading.current ?? currentSlide(element);
-    go(base - (base % count) + index);
-  };
-
-  const arrow =
-    "absolute top-1/2 z-10 hidden size-12 -translate-y-1/2 place-items-center rounded-md border border-ink/15 bg-white/95 text-ink shadow-soft transition-colors wave hover:text-white md:grid";
 
   const slides = Array.from({ length: COPIES }, (_, copy) =>
     images.map((image, index) => ({ image, index, copy })),
@@ -110,74 +102,66 @@ export function GalleryCarousel({
       aria-roledescription="carousel"
       aria-label={label}
     >
-      <ul
-        ref={track}
-        className="scrollbar-none flex snap-x snap-mandatory scroll-ps-site gap-3 overflow-x-auto ps-site pe-gutter"
-      >
-        {slides.map(({ image, index, copy }) => {
-          // Only the middle copy is announced and reachable by keyboard.
-          const clone = copy !== 1;
-          return (
-            <li
-              key={`${copy}-${index}`}
-              aria-hidden={clone || undefined}
-              className="relative aspect-square w-[min(78vw,25.3rem)] shrink-0 snap-start overflow-hidden rounded-md bg-sand-200"
-            >
-              <button
-                type="button"
-                tabIndex={clone ? -1 : undefined}
-                onClick={() => setOpen(index)}
-                aria-label={`Open photo ${index + 1} of ${count}`}
-                className="group absolute inset-0 cursor-zoom-in outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-turquoise"
+      {/* The track sits inside the page padding, so the photos line up with the headings. */}
+      <div className="mx-auto max-w-site px-gutter">
+        <ul ref={track} className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto">
+          {slides.map(({ image, index, copy }) => {
+            // Only the middle copy is announced and reachable by keyboard.
+            const clone = copy !== 1;
+            return (
+              <li
+                key={`${copy}-${index}`}
+                aria-hidden={clone || undefined}
+                className="relative aspect-square w-[min(78vw,25.3rem)] shrink-0 snap-start overflow-hidden rounded-md bg-sand-200 lg:w-[calc((100%-1.5rem)/3)]"
               >
-                <ResponsiveImage
-                  asset={image}
-                  sizes="(min-width: 768px) 26rem, 78vw"
-                  fill
-                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
-                />
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      <button
-        type="button"
-        className={cn(arrow, "left-[max(1rem,calc((100vw-var(--container-site))/2))]")}
-        onClick={() => step(-1)}
-        aria-label="Previous image"
-      >
-        <Icon name="chevron-left" className="size-4.5" />
-      </button>
-      <button
-        type="button"
-        className={cn(arrow, "right-[max(1rem,calc((100vw-var(--container-site))/2))]")}
-        onClick={() => step(1)}
-        aria-label="Next image"
-      >
-        <Icon name="chevron-right" className="size-4.5" />
-      </button>
-      <div className="mt-8 flex justify-center gap-2">
-        {images.map((image, index) => (
-          <button
-            key={image.src + index}
-            type="button"
-            onClick={() => toDot(index)}
-            aria-label={`Go to image ${index + 1}`}
-            aria-current={index === active ? "true" : undefined}
-            className={cn(
-              "h-1.5 rounded-full transition-[width,background-color] duration-500 ease-out-expo",
-              tone === "dark"
-                ? index === active
-                  ? "w-8 bg-white"
-                  : "w-1.5 bg-white/30 hover:bg-white/60"
-                : index === active
-                  ? "w-8 bg-turquoise"
-                  : "w-1.5 bg-turquoise/30 hover:bg-turquoise/60",
-            )}
-          />
-        ))}
+                <button
+                  type="button"
+                  tabIndex={clone ? -1 : undefined}
+                  onClick={() => setOpen(index)}
+                  aria-label={`Open photo ${index + 1} of ${count}`}
+                  className="group absolute inset-0 cursor-zoom-in outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-turquoise"
+                >
+                  <ResponsiveImage
+                    asset={image}
+                    sizes="(min-width: 768px) 26rem, 78vw"
+                    fill
+                    className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
+                  />
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>
+      {/* The site's slider controls: a progress line (the lit part is the photo on show) and
+          two arrows side by side. */}
+      <Container className="mt-8 flex items-center gap-8">
+        <div
+          aria-hidden
+          className={cn("relative h-0.5 flex-1", tone === "dark" ? "bg-white/20" : "bg-line")}
+        >
+          <span
+            className="absolute inset-y-0 bg-turquoise transition-[left] duration-700 ease-out-expo"
+            style={{ left: `${(active / count) * 100}%`, width: `${100 / count}%` }}
+          />
+        </div>
+        <p
+          aria-live="polite"
+          className={cn(
+            "text-body-sm tabular-nums",
+            tone === "dark" ? "text-white/80" : "text-slate",
+          )}
+        >
+          {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+        </p>
+        <CarouselArrows
+          canBack
+          canForward
+          onPage={(direction) => step(direction)}
+          label="photo"
+          tone={tone}
+        />
+      </Container>
 
       <PhotoLightbox
         images={images}

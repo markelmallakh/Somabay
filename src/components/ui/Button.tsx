@@ -9,7 +9,15 @@ import { SmartLink } from "./SmartLink";
  * Border Black and White.
  */
 export type ButtonVariant =
-  "primary" | "dark" | "outline" | "light" | "outline-light" | "glass" | "solid" | "solid-light";
+  | "primary"
+  | "dark"
+  | "outline"
+  | "light"
+  | "outline-light"
+  | "glass"
+  | "solid"
+  | "solid-light"
+  | "orange";
 export type ButtonSize = "lg" | "md" | "sm";
 
 const base =
@@ -49,6 +57,11 @@ const variants: Record<ButtonVariant, { idle: string; fill: string }> = {
   "solid-light": {
     idle: "border-white bg-white text-ink hover:border-black hover:text-white focus-visible:text-white",
     fill: "[--wave:#000]",
+  },
+  // Brand orange, for accents on deep-teal surfaces.
+  orange: {
+    idle: "border-deep-orange bg-deep-orange text-white hover:border-[#d9681a]",
+    fill: "[--wave:#d9681a]",
   },
 };
 

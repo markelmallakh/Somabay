@@ -4,31 +4,38 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Reveal, RevealGroup, RevealItem } from "@/components/animations/Reveal";
-import { EnquiryForm } from "@/components/forms/EnquiryForm";
-import { PhotoGrid } from "@/components/media/PhotoGrid";
+import { PhotoSlider } from "@/components/media/PhotoSlider";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
+import { BookingPanel } from "@/components/sections/activity/BookingPanel";
 import { HeadingRow } from "@/components/sections/live/HeadingRow";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import { UnitCard } from "@/components/sections/live/UnitCard";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { routes } from "@/config/routes";
 import { getUnit, units } from "@/content/resale";
+import { image } from "@/lib/media";
 import { formDefinitions } from "@/lib/forms";
 import { pageMetadata } from "@/lib/metadata";
 
 const amenityIcons: Record<string, IconName> = {
-  "Beach Front": "umbrella",
-  "Wi-Fi": "wifi",
-  "Fully Finished": "key",
-  "Gym Access": "dumbbell",
-  "Medical Center": "medical",
-  "Golf Course": "flag",
-  "Tennis Court": "sparkle",
-  Bazar: "shop",
+  "Beach Front": "umbrella-solid",
+  "Wi-Fi": "wifi-solid",
+  "Fully Finished": "key-solid",
+  "Gym Access": "dumbbell-solid",
+  "Medical Center": "medical-solid",
+  "Golf Course": "flag-solid",
+  "Tennis Court": "sparkle-solid",
+  Bazar: "shop-solid",
 };
+
+/** The photo beside the reserve form: a sea-view suite. */
+const reserveImage = image(
+  "/images/resale/reserve-sea-view.webp",
+  "A sea-view suite opening onto a terrace over the Red Sea",
+);
 
 export function generateStaticParams() {
   return units.map((unit) => ({ slug: unit.slug }));
@@ -49,6 +56,17 @@ async function UnitContent({ params }: { params: PageProps<"/resale/[slug]">["pa
   const unit = getUnit((await params).slug);
   if (!unit) notFound();
   const related = units.filter((other) => other.slug !== unit.slug).slice(0, 3);
+  const facts: { icon: IconName; label: string }[] = [
+    { icon: "bed-min", label: `${unit.bedrooms} ${unit.bedrooms === 1 ? "Bedroom" : "Bedrooms"}` },
+    {
+      icon: "bath-min",
+      label: `${unit.bathrooms} ${unit.bathrooms === 1 ? "Bathroom" : "Bathrooms"}`,
+    },
+    ...(unit.size ? [{ icon: "area-min" as const, label: `${unit.size} sqm` }] : []),
+    { icon: "pin-min", label: unit.neighborhood },
+  ];
+  // DRAFT COPY: a description built from the unit's details.
+  const overview = `A ${unit.bedrooms}-bedroom ${unit.type.toLowerCase()} in ${unit.neighborhood}, Somabay, with ${unit.bathrooms} ${unit.bathrooms === 1 ? "bathroom" : "bathrooms"}${unit.size ? ` and ${unit.size} sqm of living space` : ""}. Bright, open rooms lead out to the light and air of the Red Sea, with the beach, the marina, golf and everyday services all close at hand, ready for holidays or for living at the bay year round.`;
   const specs: { icon: IconName; label: string; value: string }[] = [
     { icon: "bed", label: "Bedrooms", value: String(unit.bedrooms) },
     { icon: "bath", label: "Bathrooms", value: String(unit.bathrooms) },
@@ -71,77 +89,97 @@ async function UnitContent({ params }: { params: PageProps<"/resale/[slug]">["pa
             ]}
             className="mb-8"
           />
-          <PhotoGrid images={unit.images} label={unit.title} />
-          <div className="mt-14 grid gap-12 lg:grid-cols-12 lg:gap-6">
-            <Reveal className="lg:col-span-7">
-              <div className="flex flex-wrap gap-2">
-                <Chip accent="turquoise">{unit.type}</Chip>
-                <Chip accent="dune">
-                  {unit.bedrooms} {unit.bedrooms === 1 ? "Bedroom" : "Bedrooms"}
-                </Chip>
-                <Chip accent="twilight">{unit.neighborhood}</Chip>
-              </div>
-              <h1 id="page-title" className="mt-5 text-heading-2">
-                {unit.title}
-              </h1>
-              <h2 className="mt-12 text-heading-5">Amenities</h2>
-              <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-                {unit.amenities.map((amenity) => (
-                  <li
-                    key={amenity}
-                    className="flex items-center gap-3 rounded-md bg-sand-100 p-3 text-body-sm text-ink"
-                  >
-                    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white text-turquoise">
-                      <Icon name={amenityIcons[amenity] ?? "check"} className="size-4.5" />
-                    </span>
-                    {amenity}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+          {/* The gallery: a wide slider with thumbnails; a photo opens the full-screen viewer. */}
+          <PhotoSlider images={unit.images} label={unit.title} />
+          <div className="mt-12 grid gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-6">
+            <div className="flex flex-col gap-14 lg:col-span-7">
+              <Reveal>
+                <div className="flex flex-wrap gap-2">
+                  <Chip accent="turquoise">{unit.type}</Chip>
+                  <Chip accent="twilight">{unit.neighborhood}</Chip>
+                </div>
+                <h1 id="page-title" className="mt-5 text-heading-2">
+                  {unit.title}
+                </h1>
+                {/* The key facts in one quiet row under the name. */}
+                <ul className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 border-y border-line py-5 text-body-md text-ink">
+                  {facts.map((fact) => (
+                    <li key={fact.label} className="flex items-center gap-2.5">
+                      <Icon name={fact.icon} strokeWidth={1.5} className="size-5 text-turquoise" />
+                      {fact.label}
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+
+              {/* Overview. DRAFT COPY: written from the unit's details until each listing has its
+                  own description. */}
+              <Reveal className="flex flex-col gap-4">
+                <Eyebrow>Overview</Eyebrow>
+                <h2 className="text-heading-4">{`Your ${unit.type.toLowerCase()} in ${unit.neighborhood}`}</h2>
+                <p className="max-w-2xl text-body-md leading-relaxed text-slate">{overview}</p>
+              </Reveal>
+
+              {/* Amenities: a clean two-column list, each with its icon, between hairlines. */}
+              <Reveal className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4">
+                  <Eyebrow>Amenities</Eyebrow>
+                  <h2 className="text-heading-4">What comes with it</h2>
+                </div>
+                <ul className="grid border-t border-line sm:grid-cols-2 sm:gap-x-10">
+                  {unit.amenities.map((amenity) => (
+                    <li
+                      key={amenity}
+                      className="flex items-center gap-4 border-b border-line py-4 text-body-md text-ink"
+                    >
+                      <Icon
+                        name={amenityIcons[amenity] ?? "check-solid"}
+                        className="size-5.5 text-turquoise"
+                      />
+                      {amenity}
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+            </div>
+
             <aside className="lg:col-span-4 lg:col-start-9">
-              <div className="flex flex-col gap-5 rounded-md bg-sand-100 p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
-                <p className="font-serif text-heading-5">{unit.type}</p>
-                <Button href="#reserve" variant="primary" className="w-full">
-                  Request call
-                </Button>
-                <dl className="divide-y divide-ink/10">
+              <div className="flex flex-col gap-5 rounded-md border border-ink/8 bg-white p-6 shadow-[0_18px_48px_-28px_rgb(18_58_70/0.2)] md:p-8 lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
+                <div className="flex flex-col gap-1">
+                  <p className="text-body-xs font-semibold tracking-label text-slate uppercase">
+                    For resale
+                  </p>
+                  <p className="font-serif text-heading-5">{unit.title}</p>
+                </div>
+                <dl className="divide-y divide-line border-y border-line">
                   {specs.map((spec) => (
                     <div key={spec.label} className="flex items-center justify-between gap-4 py-3">
                       <dt className="flex items-center gap-2 text-body-sm text-slate">
                         <Icon name={spec.icon} className="size-4.5" />
                         {spec.label}
                       </dt>
-                      <dd className="font-semibold">{spec.value}</dd>
+                      <dd className="text-body-sm font-semibold">{spec.value}</dd>
                     </div>
                   ))}
                 </dl>
+                <Button href="#booking" variant="primary" className="w-full">
+                  Request a call
+                </Button>
               </div>
             </aside>
           </div>
         </Container>
       </Section>
 
-      <Section
-        id="reserve"
-        aria-labelledby="reserve-title"
-        className="scroll-mt-(--header-height) bg-turquoise-5"
-      >
-        <Container className="max-w-3xl">
-          <Reveal className="rounded-md bg-white p-6 md:p-10">
-            <SectionHeading
-              id="reserve-title"
-              title="Reserve Your Home"
-              description="Connect with our team and take the next step towards living in Somabay."
-            />
-            <EnquiryForm
-              definition={formDefinitions.unit}
-              context={`${unit.title} — ${unit.neighborhood}`}
-              className="mt-10"
-            />
-          </Reveal>
-        </Container>
-      </Section>
+      {/* The enquiry, in the site's booking layout: the home's photo with the form beside it. */}
+      <BookingPanel
+        eyebrow="Request a call"
+        title="Reserve Your Home"
+        description="Connect with our team and take the next step towards living in Somabay."
+        image={reserveImage}
+        definition={formDefinitions.unit}
+        context={`${unit.title} — ${unit.neighborhood}`}
+      />
 
       <Section aria-labelledby="related-title" className="bg-sand-100">
         <Container>
@@ -149,7 +187,7 @@ async function UnitContent({ params }: { params: PageProps<"/resale/[slug]">["pa
             id="related-title"
             title="You May Also Like"
             aside={
-              <div>
+              <div className="flex lg:justify-end">
                 <Button href={routes.resale} variant="outline" icon="arrow-up-right">
                   Explore all units
                 </Button>

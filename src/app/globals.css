@@ -571,13 +571,15 @@
 }
 
 /* The starting point (e.g. a neighbourhood) stays dark, apart from the turquoise places. */
+/* The starting point (the neighborhood or venue itself) in deep orange, apart from the
+   turquoise destinations. */
 .somabay-pin--origin {
-  border-color: var(--color-ink);
-  box-shadow: 0 0 0 6px rgb(44 44 44 / 0.08);
+  border-color: var(--color-deep-orange);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-deep-orange) 16%, transparent);
 }
 
 .somabay-pin--origin::after {
-  background: var(--color-ink);
+  background: var(--color-deep-orange);
 }
 
 /* On hover, focus and selection the pin grows and fills turquoise with a sun-yellow border and
@@ -807,14 +809,11 @@ html.lenis body {
  * (`wave-underline`, which drifts on hover).
  */
 @layer components {
+  /* Divider: a straight, light grey hairline (it used to be a wave). */
   .wave-line {
     display: block;
-    height: 6px;
-    background-color: currentColor;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.6 12 3 T24 3' fill='none' stroke='%23000' stroke-width='1.1'/%3E%3C/svg%3E")
-      0 0 / 24px 6px repeat-x;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.6 12 3 T24 3' fill='none' stroke='%23000' stroke-width='1.1'/%3E%3C/svg%3E")
-      0 0 / 24px 6px repeat-x;
+    height: 1px;
+    background-color: var(--color-line);
   }
   .wave-underline {
     position: relative;
@@ -851,4 +850,37 @@ html.lenis body {
   .wave-underline::after {
     animation: none !important;
   }
+}
+
+/* Form fields on a deep-teal card (EnquiryForm tone="teal"): a lighter tint of the teal with
+   white text, soft white labels and rules. The dropdown and calendar panels stay white. */
+[data-form-tone="teal"] :is(input, textarea, button).border-ink\/15,
+[data-form-tone="teal"] [data-field-box] {
+  background-color: rgb(255 255 255 / 0.08);
+  border-color: rgb(255 255 255 / 0.22);
+  color: #fff;
+}
+[data-form-tone="teal"] :is(input, textarea, button).border-ink\/15:hover,
+[data-form-tone="teal"] [data-field-box]:hover {
+  border-color: rgb(255 255 255 / 0.4);
+}
+[data-form-tone="teal"]
+  :is(input, textarea, button).border-ink\/15:is(:focus, [aria-expanded="true"]),
+[data-form-tone="teal"] [data-field-box]:focus-within {
+  background-color: rgb(255 255 255 / 0.12);
+  border-color: rgb(255 255 255 / 0.6);
+  box-shadow: none;
+}
+[data-form-tone="teal"] [data-field-box] :is(input, button) {
+  color: #fff;
+}
+[data-form-tone="teal"] :is([data-field-label], [data-field-icon]) {
+  color: rgb(255 255 255 / 0.65);
+}
+[data-form-tone="teal"] [data-field-rule] {
+  background-color: rgb(255 255 255 / 0.22);
+}
+[data-form-tone="teal"] input:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  transition: background-color 9999s;
 }

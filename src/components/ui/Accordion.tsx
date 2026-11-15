@@ -4,6 +4,7 @@ import { AnimatePresence, m } from "framer-motion";
 import { type ReactNode, useId, useState } from "react";
 import { cn } from "@/lib/utils";
 import { easeOutExpo } from "@/components/animations/easing";
+import { Icon } from "./Icon";
 
 export type AccordionItem = {
   id: string;
@@ -16,6 +17,10 @@ type AccordionProps = {
   /** Allow several panels open at once. */
   multiple?: boolean;
   defaultOpen?: string[];
+  /** `minimal`: hairlines and a small chevron that turns, for split FAQ layouts. */
+  variant?: "default" | "minimal";
+  /** `dark`: white type and faint white rules, for deep-teal sections. */
+  tone?: "light" | "dark";
   className?: string;
 };
 
@@ -24,6 +29,8 @@ export function Accordion({
   items,
   multiple = false,
   defaultOpen = [],
+  variant = "default",
+  tone = "light",
   className,
 }: AccordionProps) {
   const [open, setOpen] = useState<string[]>(defaultOpen);
@@ -39,7 +46,13 @@ export function Accordion({
     );
 
   return (
-    <div className={cn("divide-y divide-line border-y border-line", className)}>
+    <div
+      className={cn(
+        "divide-y border-y",
+        tone === "dark" ? "divide-white/15 border-white/15" : "divide-line border-line",
+        className,
+      )}
+    >
       {items.map((item) => {
         const expanded = open.includes(item.id);
         const buttonId = `${baseId}-${item.id}-button`;
@@ -53,21 +66,36 @@ export function Accordion({
                 aria-expanded={expanded}
                 aria-controls={panelId}
                 onClick={() => toggle(item.id)}
-                className="group flex w-full items-center justify-between gap-6 py-6 text-left font-serif text-heading-6 transition-colors hover:text-lagoon"
+                className={cn(
+                  "group flex w-full items-center justify-between gap-6 text-left font-serif text-heading-6 transition-colors",
+                  tone === "dark" ? "hover:text-turquoise-40" : "hover:text-lagoon",
+                  variant === "minimal" ? "py-5" : "py-6",
+                )}
               >
                 {item.title}
-                <span
-                  aria-hidden
-                  className="relative grid size-9 shrink-0 place-items-center rounded-full border border-line transition-colors duration-500 group-hover:border-ink"
-                >
-                  <span className="absolute h-px w-3.5 bg-current" />
-                  <span
+                {variant === "minimal" ? (
+                  <Icon
+                    name="chevron-down"
                     className={cn(
-                      "absolute h-3.5 w-px bg-current transition-transform duration-500 ease-out-expo",
-                      expanded && "scale-y-0",
+                      "size-4 shrink-0 transition-transform duration-500 ease-out-expo",
+                      tone === "dark" ? "text-white/70" : "text-slate",
+                      expanded && "rotate-180",
                     )}
                   />
-                </span>
+                ) : (
+                  <span
+                    aria-hidden
+                    className="relative grid size-9 shrink-0 place-items-center rounded-full border border-line transition-colors duration-500 group-hover:border-ink"
+                  >
+                    <span className="absolute h-px w-3.5 bg-current" />
+                    <span
+                      className={cn(
+                        "absolute h-3.5 w-px bg-current transition-transform duration-500 ease-out-expo",
+                        expanded && "scale-y-0",
+                      )}
+                    />
+                  </span>
+                )}
               </button>
             </h3>
             <AnimatePresence initial={false}>
@@ -83,7 +111,15 @@ export function Accordion({
                   transition={{ duration: 0.6, ease: easeOutExpo }}
                   className="overflow-hidden"
                 >
-                  <div className="max-w-3xl pb-8 text-slate">{item.content}</div>
+                  <div
+                    className={cn(
+                      "max-w-3xl",
+                      tone === "dark" ? "text-white/75" : "text-slate",
+                      variant === "minimal" ? "pb-6 text-body-md" : "pb-8",
+                    )}
+                  >
+                    {item.content}
+                  </div>
                 </m.div>
               ) : null}
             </AnimatePresence>

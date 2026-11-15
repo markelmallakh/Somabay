@@ -60,49 +60,50 @@ const marina = {
 
 export function DiningSection() {
   return (
-    <section
-      aria-labelledby="dining-title"
-      data-theme-surface="light"
-      className="bg-white py-section text-ink"
-    >
-      <Container className="flex flex-col gap-[3.75rem]">
-        <div className="grid gap-8 lg:grid-cols-[800fr_560fr]">
-          <div className="flex flex-col gap-8">
-            <Reveal className="flex max-w-[31.25rem] flex-col gap-8">
-              <div className="flex flex-col gap-4">
-                <Eyebrow>{dining.eyebrow}</Eyebrow>
-                <h2 id="dining-title" className="text-heading-2">
-                  {dining.title}
-                </h2>
-              </div>
-              <p className="text-body-md text-slate">{dining.description}</p>
-            </Reveal>
+    <>
+      <section
+        aria-labelledby="dining-title"
+        data-theme-surface="light"
+        className="bg-white py-section text-ink"
+      >
+        <Container className="flex flex-col gap-[3.75rem]">
+          <div className="grid gap-8 lg:grid-cols-[800fr_560fr]">
+            <div className="flex flex-col gap-8">
+              <Reveal className="flex max-w-[31.25rem] flex-col gap-8">
+                <div className="flex flex-col gap-4">
+                  <Eyebrow>{dining.eyebrow}</Eyebrow>
+                  <h2 id="dining-title" className="text-heading-2">
+                    {dining.title}
+                  </h2>
+                </div>
+                <p className="text-body-md text-slate">{dining.description}</p>
+              </Reveal>
 
-            <div className="flex flex-col gap-4">
-              <DiningList places={dining.places} thumb={dining.thumb} />
-              <SmartLink
-                href={dining.cta.href}
-                className="link-underline w-fit pb-0.5 text-body-sm text-slate transition-colors duration-500 ease-out-expo hover:text-ink"
-              >
-                {dining.more}
-              </SmartLink>
+              <div className="flex flex-col gap-4">
+                <DiningList places={dining.places} thumb={dining.thumb} />
+                <SmartLink
+                  href={dining.cta.href}
+                  className="link-underline w-fit pb-0.5 text-body-sm text-slate transition-colors duration-500 ease-out-expo hover:text-ink"
+                >
+                  {dining.more}
+                </SmartLink>
+              </div>
+
+              <Reveal>
+                <Button href={dining.cta.href} variant="primary" icon="arrow-up-right">
+                  {dining.cta.label}
+                </Button>
+              </Reveal>
             </div>
 
-            <Reveal>
-              <Button href={dining.cta.href} variant="primary" icon="arrow-up-right">
-                {dining.cta.label}
-              </Button>
+            <Reveal className="relative min-h-[28rem] overflow-hidden rounded-md lg:min-h-0">
+              <ResponsiveImage asset={dining.image} sizes="(min-width: 1024px) 37vw, 100vw" fill />
             </Reveal>
           </div>
-
-          <Reveal className="relative min-h-[28rem] overflow-hidden rounded-md lg:min-h-0">
-            <ResponsiveImage asset={dining.image} sizes="(min-width: 1024px) 37vw, 100vw" fill />
-          </Reveal>
-        </div>
-
-        {/* The Marina: film panel with a quiet line of amenities along its foot. */}
-        <MarinaPanel {...marina} />
-      </Container>
-    </section>
+        </Container>
+      </section>
+      {/* The Marina: "Somabay / Marina" parted by the film, full width, then its content. */}
+      <MarinaPanel {...marina} />
+    </>
   );
 }

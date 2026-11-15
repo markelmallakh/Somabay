@@ -9,7 +9,6 @@ import { Section } from "@/components/layout/Section";
 import { DetailDrawer } from "@/components/directory/DetailDrawer";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { DragRow } from "@/components/ui/DragRow";
-import { Icon } from "@/components/ui/Icon";
 import { HeadingRow } from "@/components/sections/things-to-do/HeadingRow";
 
 type VenueSliderProps = {
@@ -71,7 +70,7 @@ export function VenueSlider({ id, eyebrow, title, description, items }: VenueSli
               key={item.id}
               custom={index}
               variants={card}
-              className="w-[min(80vw,20rem)] shrink-0 snap-start"
+              className="w-[min(80vw,20rem)] shrink-0 snap-start lg:w-[calc((100%-3rem)/4)]"
             >
               <button
                 type="button"
@@ -104,7 +103,8 @@ export function VenueSlider({ id, eyebrow, title, description, items }: VenueSli
                   {item.title}
                 </span>
 
-                {/* Open: the white panel with the category, name, a short line and the arrow. */}
+                {/* Open: the white panel with the category, name and a short line (no arrow: the card
+                    opens details on this page, not another site). */}
                 <span
                   className={`absolute inset-x-0 bottom-0 flex h-[40%] translate-y-4 flex-col justify-center gap-1.5 px-5 pb-1 opacity-0 transition-[opacity,translate] ${ease} group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100`}
                 >
@@ -116,12 +116,6 @@ export function VenueSlider({ id, eyebrow, title, description, items }: VenueSli
                   <span className="flex items-start justify-between gap-3">
                     <span className="font-serif text-heading-6 leading-[1.2] text-ink">
                       {item.title}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="grid size-8 shrink-0 place-items-center rounded-full bg-turquoise text-white"
-                    >
-                      <Icon name="arrow-up-right" className="size-4" />
                     </span>
                   </span>
                   {item.description ? (

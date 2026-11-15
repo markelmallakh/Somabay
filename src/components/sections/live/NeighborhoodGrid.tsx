@@ -190,7 +190,11 @@ export function NeighborhoodGrid({
         spread ? "justify-between" : "justify-center",
       )}
     >
-      <div role="radiogroup" aria-label="Neighborhood status" className="flex flex-wrap gap-2">
+      <div
+        role="radiogroup"
+        aria-label="Neighborhood status"
+        className={cn("flex flex-wrap", spread ? "gap-2" : "gap-1")}
+      >
         {filters.map((option) => {
           const checked = option.id === filter;
           return (
@@ -202,6 +206,8 @@ export function NeighborhoodGrid({
               onClick={() => chooseFilter(option.id)}
               className={cn(
                 "inline-flex min-h-10 items-center rounded-md border px-4 text-[0.8125rem] transition-colors duration-500",
+                // Floating over the photos, each chip carries its own soft shadow.
+                !spread && "shadow-float",
                 checked
                   ? "border-turquoise bg-turquoise text-white"
                   : "border-line bg-white text-ink hover:border-turquoise/60 hover:text-turquoise-160",
@@ -212,16 +218,18 @@ export function NeighborhoodGrid({
           );
         })}
       </div>
-      {spread ? null : <span aria-hidden className="hidden h-6 w-px bg-line sm:block" />}
-      <SegmentedControl
-        label="Neighborhood view"
-        value={view}
-        onChange={chooseView}
-        options={[
-          { id: "grid", label: "Grid", icon: "grid" },
-          { id: "map", label: "Map", icon: "map" },
-        ]}
-      />
+      {/* The floating bar carries the status chips only; the view switch stays up top. */}
+      {spread ? (
+        <SegmentedControl
+          label="Neighborhood view"
+          value={view}
+          onChange={chooseView}
+          options={[
+            { id: "grid", label: "Grid", icon: "grid" },
+            { id: "map", label: "Map", icon: "map" },
+          ]}
+        />
+      ) : null}
     </div>
   );
 
@@ -248,11 +256,11 @@ export function NeighborhoodGrid({
           <div
             key={filter}
             ref={grid}
-            className="mt-6 grid gap-6 lg:grid-cols-2 lg:gap-x-10 lg:pb-8"
+            className="mt-6 grid gap-5 lg:grid-cols-2 lg:gap-x-6 lg:pb-8"
           >
             {(["left", "right"] as const).map((side) => (
               <div key={side} data-column={side} className="contents lg:block">
-                <ul className="contents lg:flex lg:flex-col lg:gap-10">
+                <ul className="contents lg:flex lg:flex-col lg:gap-6">
                   {items
                     .filter((_, index) => index % 2 === (side === "left" ? 0 : 1))
                     .map((item) => (
@@ -272,7 +280,8 @@ export function NeighborhoodGrid({
                           summary={item.summary}
                           action={neighborhoodsIntro.cardCta}
                           size="lg"
-                          className="aspect-[4/5] w-full"
+                          // Desktop: a whole card fits on screen under the header, never taller than 42rem.
+                          className="aspect-[4/5] w-full lg:aspect-auto lg:h-[min(calc(100svh-var(--header-bar)-8rem),42rem)]"
                         />
                       </li>
                     ))}
@@ -335,9 +344,7 @@ export function NeighborhoodGrid({
           floating ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
         )}
       >
-        <div className="rounded-md bg-white/95 p-2 shadow-float backdrop-blur-lg">
-          {controls(false)}
-        </div>
+        <div>{controls(false)}</div>
       </div>
     </>
   );

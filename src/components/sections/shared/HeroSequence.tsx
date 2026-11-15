@@ -17,6 +17,8 @@ const placements = {
   center: "items-center justify-center text-center",
   "bottom-left": "items-end justify-start pb-16 md:pb-24",
   right: "items-center justify-end",
+  // Like the other page heroes: eyebrow and title on the left, the paragraph on the right.
+  split: "items-end pb-16 md:pb-24",
 };
 
 /**
@@ -25,7 +27,8 @@ const placements = {
  */
 export function HeroSequence({ media, steps }: HeroSequenceProps) {
   const ref = useGsap<HTMLElement>(({ scope, reducedMotion }) => {
-    if (reducedMotion) return;
+    // A single step needs no pinning: the hero simply sits over its film.
+    if (reducedMotion || steps.length < 2) return;
     const items = gsap.utils.toArray<HTMLElement>("[data-step]", scope);
     gsap.set(items.slice(1), { autoAlpha: 0, y: 40 });
     const timeline = gsap.timeline({
@@ -77,19 +80,37 @@ export function HeroSequence({ media, steps }: HeroSequenceProps) {
                 step.placement === "right" && "justify-end",
               )}
             >
-              <div className={cn(step.placement === "center" ? "mx-auto max-w-3xl" : "max-w-xl")}>
-                {step.eyebrow ? <Eyebrow>{step.eyebrow}</Eyebrow> : null}
-                {index === 0 ? (
-                  <h1 id="page-title" className="mt-5 text-heading-1">
-                    {step.title}
-                  </h1>
-                ) : (
-                  <h2 className="mt-5 text-heading-1">{step.title}</h2>
-                )}
-                {step.description ? (
-                  <p className="mt-6 text-lead text-white/80">{step.description}</p>
-                ) : null}
-              </div>
+              {step.placement === "split" ? (
+                <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+                  <div className="max-w-3xl">
+                    {step.eyebrow ? <Eyebrow>{step.eyebrow}</Eyebrow> : null}
+                    {index === 0 ? (
+                      <h1 id="page-title" className="mt-5 text-heading-1">
+                        {step.title}
+                      </h1>
+                    ) : (
+                      <h2 className="mt-5 text-heading-1">{step.title}</h2>
+                    )}
+                  </div>
+                  {step.description ? (
+                    <p className="max-w-lg text-lead text-white/80 lg:pb-2">{step.description}</p>
+                  ) : null}
+                </div>
+              ) : (
+                <div className={cn(step.placement === "center" ? "mx-auto max-w-3xl" : "max-w-xl")}>
+                  {step.eyebrow ? <Eyebrow>{step.eyebrow}</Eyebrow> : null}
+                  {index === 0 ? (
+                    <h1 id="page-title" className="mt-5 text-heading-1">
+                      {step.title}
+                    </h1>
+                  ) : (
+                    <h2 className="mt-5 text-heading-1">{step.title}</h2>
+                  )}
+                  {step.description ? (
+                    <p className="mt-6 text-lead text-white/80">{step.description}</p>
+                  ) : null}
+                </div>
+              )}
             </div>
           </div>
         ))}

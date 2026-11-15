@@ -9,6 +9,7 @@ import { getLenis } from "@/components/animations/SmoothScroll";
 import { Container } from "@/components/layout/Container";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
 import { PriceFrom } from "@/components/ui/PriceFrom";
 import { CarouselArrows } from "@/components/ui/CarouselArrows";
 import { Chip } from "@/components/ui/Chip";
@@ -27,6 +28,8 @@ export type ShowcaseHotel = {
   tags: string[];
   /** "Starting from" nightly price. */
   price: string;
+  /** A few of the hotel's facilities, listed compactly under the description. */
+  amenities: string[];
 };
 
 type HotelsShowcaseProps = {
@@ -102,7 +105,7 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
       <Container>
         <div className="grid gap-8 lg:grid-cols-[560fr_445fr_323fr]">
           {/* Photo */}
-          <div className="relative aspect-[560/460] overflow-hidden rounded-md bg-gray-100">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-gray-100">
             {hotels.map((item, index) => (
               <div
                 key={item.slug}
@@ -131,7 +134,7 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
             {/* A soft shade so the arrows read on bright photos. */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(to_top,rgb(0_0_0/0.35),transparent)]"
+              className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-2/5 bg-[linear-gradient(to_top,rgb(0_0_0/0.6),rgb(0_0_0/0.25)_45%,transparent)]"
             />
             <p aria-live="polite" className="sr-only">
               Photo {photoIndex + 1} of {photos}
@@ -142,7 +145,7 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
               onPage={step}
               label={`photo of ${hotel.name}`}
               tone="dark"
-              className="absolute right-5 bottom-5"
+              className="absolute right-5 bottom-5 z-20"
             />
           </div>
 
@@ -165,6 +168,19 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
               <p className="animate-rise text-body-md text-slate [animation-delay:120ms]">
                 {hotel.description}
               </p>
+              {hotel.amenities.length ? (
+                <ul
+                  aria-label={`${hotel.name} amenities`}
+                  className="mt-2 grid animate-rise grid-cols-2 gap-x-6 gap-y-2.5 border-t border-line pt-5 [animation-delay:180ms]"
+                >
+                  {hotel.amenities.map((amenity) => (
+                    <li key={amenity} className="flex items-center gap-2 text-body-sm text-ink">
+                      <Icon name="check" className="size-4 shrink-0 text-turquoise" />
+                      {amenity}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </div>
             <div className="flex animate-rise flex-wrap items-center gap-x-8 gap-y-4 [animation-delay:240ms]">
               <PriceFrom amount={hotel.price} />

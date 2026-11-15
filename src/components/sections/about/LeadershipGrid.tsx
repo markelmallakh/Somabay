@@ -3,8 +3,10 @@
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import type { Leader } from "@/content/about";
+import { cn } from "@/lib/utils";
 import { DragRow } from "@/components/ui/DragRow";
 import { Dialog } from "@/components/ui/Dialog";
+import { DrawerSteppers } from "@/components/ui/DrawerSteppers";
 import { Icon } from "@/components/ui/Icon";
 import { CardActionBar } from "@/components/ui/PhotoCard";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
@@ -26,14 +28,30 @@ const stagger = (index: number) => ({ "--i": index }) as CSSProperties;
  * "Read bio" bar flooding turquoise) and opens a side drawer with the full biography. Until
  * portraits are supplied, a card shows a turquoise field with the person's initials.
  */
-export function LeadershipGrid({ leaders }: { leaders: Leader[] }) {
+export function LeadershipGrid({
+  leaders,
+  fit = false,
+  label = "Leadership team",
+}: {
+  leaders: Leader[];
+  /** Share the full row width between the cards on large screens (for a short list). */
+  fit?: boolean;
+  label?: string;
+}) {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
     <>
-      <DragRow label="Leadership team" className="gap-2">
+      <DragRow label={label} className="gap-2">
         {leaders.map((leader, index) => (
-          <li key={leader.name} className="w-[min(78vw,22rem)] shrink-0">
+          <li
+            key={leader.name}
+            className={cn(
+              "w-[min(78vw,22rem)] shrink-0",
+              fit && "lg:w-[calc((100%-(var(--n)-1)*0.5rem)/var(--n))]",
+            )}
+            style={fit ? ({ "--n": leaders.length } as CSSProperties) : undefined}
+          >
             <button
               type="button"
               onClick={() => setOpen(index)}
@@ -43,7 +61,11 @@ export function LeadershipGrid({ leaders }: { leaders: Leader[] }) {
               {leader.portrait ? (
                 <ResponsiveImage
                   asset={leader.portrait}
-                  sizes="(min-width: 768px) 22rem, 78vw"
+                  sizes={
+                    fit
+                      ? "(min-width: 1024px) 31vw, (min-width: 768px) 22rem, 78vw"
+                      : "(min-width: 768px) 22rem, 78vw"
+                  }
                   fill
                   className="-z-10 transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                 />
@@ -63,7 +85,7 @@ export function LeadershipGrid({ leaders }: { leaders: Leader[] }) {
                 <span className="font-serif text-heading-6 leading-tight">{leader.name}</span>
                 <span className="text-body-sm text-white/75">{leader.role}</span>
               </span>
-              <CardActionBar label="Read bio" className="px-5 pt-3 pb-4" />
+              <CardActionBar label="Read bio" className="px-5 py-3.5" />
             </button>
           </li>
         ))}
@@ -100,9 +122,6 @@ function LeaderDrawer({
   const position = index ?? 0;
   const [lead, ...rest] = leader?.bio ?? [];
 
-  const stepper =
-    "wave grid size-12 place-items-center rounded-md bg-white text-ink shadow-[0_8px_24px_rgb(0_0_0/0.18)] transition-colors duration-500 hover:text-white";
-
   return (
     <Dialog
       open={leader !== null}
@@ -111,26 +130,12 @@ function LeaderDrawer({
       variant="drawer"
       drawerWidth="max-w-[68rem]"
       outside={
-        count > 1 ? (
-          <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={() => onNavigate((position - 1 + count) % count)}
-              className={stepper}
-              aria-label="Previous team member"
-            >
-              <Icon name="arrow-right" className="size-5 -rotate-90" />
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate((position + 1) % count)}
-              className={stepper}
-              aria-label="Next team member"
-            >
-              <Icon name="arrow-right" className="size-5 rotate-90" />
-            </button>
-          </div>
-        ) : null
+        <DrawerSteppers
+          position={position}
+          count={count}
+          onNavigate={onNavigate}
+          noun="team member"
+        />
       }
     >
       {leader ? (
@@ -162,9 +167,8 @@ function LeaderDrawer({
             <button
               type="button"
               onClick={onClose}
-              className="wave absolute top-5 right-5 z-20 grid size-12 place-items-center rounded-md bg-white text-ink shadow-[0_8px_24px_rgb(18_58_70/0.12)] transition-colors duration-500 hover:text-white"
+              className="wave absolute top-5 right-5 z-20 grid size-12 place-items-center rounded-md bg-white text-ink shadow-[0_8px_24px_rgb(18_58_70/0.12)] transition-colors duration-500 hover:text-white md:hidden"
               aria-label="Close"
-              data-autofocus
             >
               <Icon name="close" className="size-5" />
             </button>
@@ -189,7 +193,7 @@ function LeaderDrawer({
               <p
                 data-drawer-item
                 style={stagger(3)}
-                className="mt-2 text-body-lg leading-relaxed text-ink"
+                className="mt-2 text-body-md leading-relaxed text-slate"
               >
                 {lead}
               </p>
@@ -204,9 +208,6 @@ function LeaderDrawer({
                 {paragraph}
               </p>
             ))}
-            <p className="mt-auto pt-6 text-body-xs text-mist tabular-nums">
-              {String(position + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
-            </p>
           </div>
         </article>
       ) : null}

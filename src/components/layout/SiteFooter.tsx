@@ -86,7 +86,12 @@ export async function SiteFooter() {
   const forecast = await getWeatherForecast();
 
   return (
-    <footer data-site-footer className="bg-white text-ink" data-theme-surface="light">
+    <footer
+      data-site-footer
+      // Above any sticky hero, and tucked a pixel up so no sliver of it shows at the seam.
+      className="relative z-10 -mt-px bg-white text-ink"
+      data-theme-surface="light"
+    >
       <Container className="flex flex-col gap-14 pt-20 pb-8">
         {/* Brand + newsletter */}
         <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">

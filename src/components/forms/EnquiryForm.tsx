@@ -4,6 +4,8 @@ import { useActionState, useId } from "react";
 import { type EnquiryState, submitEnquiry } from "@/lib/actions/enquiry";
 import type { FormDefinition, FormField } from "@/lib/forms";
 import { cn } from "@/lib/utils";
+import { DateField } from "@/components/ui/DateField";
+import { PhoneField } from "@/components/ui/PhoneField";
 import { Button } from "@/components/ui/Button";
 import { SelectField, TextAreaField, TextField } from "@/components/ui/Field";
 import { Icon } from "@/components/ui/Icon";
@@ -13,12 +15,14 @@ type EnquiryFormProps = {
   definition: FormDefinition;
   /** Extra context sent with the request, e.g. the unit or event name. */
   context?: string;
+  /** `teal`: on a deep-teal card (white fields, an orange submit, light small print). */
+  tone?: "light" | "teal";
   className?: string;
 };
 
 const initialState: EnquiryState = { status: "idle", message: "" };
 
-export function EnquiryForm({ definition, context, className }: EnquiryFormProps) {
+export function EnquiryForm({ definition, context, tone = "light", className }: EnquiryFormProps) {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialState);
   const baseId = useId();
   const errors = state.fieldErrors ?? {};
@@ -82,10 +86,8 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
               {field.required ? <span aria-hidden> *</span> : null}
             </legend>
             <div
-              className={cn(
-                "grid gap-3",
-                field.columns === 2 ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-2",
-              )}
+              // The choices side by side, close together, wrapping on narrow screens.
+              className="flex flex-wrap gap-x-8 gap-y-3"
             >
               {field.options.map((option, index) => (
                 <label
@@ -147,6 +149,30 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
             ) : null}
           </div>
         );
+      case "date":
+        return (
+          <DateField
+            key={field.name}
+            id={id}
+            name={field.name}
+            label={field.label}
+            required={field.required}
+            error={error}
+            className={cn(field.span === 2 && "sm:col-span-2")}
+          />
+        );
+      case "tel":
+        return (
+          <PhoneField
+            key={field.name}
+            id={id}
+            name={field.name}
+            label={field.label}
+            required={field.required}
+            error={error}
+            className={cn(field.span === 2 && "sm:col-span-2")}
+          />
+        );
       default:
         return (
           <TextField
@@ -169,6 +195,7 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
     <form
       action={formAction}
       noValidate
+      data-form-tone={tone}
       className={cn("grid gap-x-5 gap-y-6 sm:grid-cols-2", className)}
     >
       <input type="hidden" name="formId" value={definition.id} />
@@ -180,13 +207,23 @@ export function EnquiryForm({ definition, context, className }: EnquiryFormProps
             {state.message}
           </p>
         ) : null}
-        {/* A wide submit, set to the right edge of the form. */}
-        <div className="flex justify-end">
-          <Button type="submit" variant="solid" disabled={pending} className="min-w-52">
+        {/* A large submit two thirds of the form wide, at the left edge; its small print under it. */}
+        <div className="flex flex-col items-start gap-3">
+          <Button
+            type="submit"
+            variant={tone === "teal" ? "orange" : "solid"}
+            size="lg"
+            disabled={pending}
+            className="w-full sm:w-2/3"
+          >
             {pending ? "Sending…" : definition.submitLabel}
           </Button>
+          {definition.note ? (
+            <p className={cn("text-body-xs", tone === "teal" ? "text-white/70" : "text-slate")}>
+              {definition.note}
+            </p>
+          ) : null}
         </div>
-        {definition.note ? <p className="text-body-sm text-slate">{definition.note}</p> : null}
       </div>
     </form>
   );

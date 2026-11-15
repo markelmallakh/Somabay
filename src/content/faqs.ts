@@ -47,6 +47,36 @@ export const faqs: FaqItem[] = [
     answer:
       "The Somabay Medical Center provides everyday healthcare for residents, guests and visitors, with a pharmacy on site.",
   },
+  // DRAFT COPY: the four buying questions below were written for the neighborhood pages, not taken
+  // from somabay.com; confirm the answers with the Somabay sales team before launch.
+  {
+    id: "visit",
+    category: "buying",
+    question: "Can I visit a neighborhood before I buy?",
+    answer:
+      "Yes. Register your interest and our sales team will arrange a guided visit of the neighborhood and the homes available.",
+  },
+  {
+    id: "resale",
+    category: "buying",
+    question: "Are there ready homes for sale?",
+    answer:
+      "Alongside new neighborhoods, resale units across Somabay are listed on this site, with photos, sizes and the neighborhood they sit in.",
+  },
+  {
+    id: "payment",
+    category: "buying",
+    question: "What payment plans are available?",
+    answer:
+      "Payment plans vary by neighborhood and unit type. Our sales team will share the current plans and prices with you.",
+  },
+  {
+    id: "home-care",
+    category: "buying",
+    question: "Who looks after my home when I am away?",
+    answer:
+      "Home services in Somabay can look after maintenance and housekeeping while you are away, so your home is ready whenever you arrive.",
+  },
   {
     id: "golf",
     category: "experience",

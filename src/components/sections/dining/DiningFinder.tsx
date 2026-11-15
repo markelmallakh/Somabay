@@ -6,8 +6,7 @@ import type { Venue } from "@/content/dining";
 import { cn } from "@/lib/utils";
 import { RevealGroup, RevealItem } from "@/components/animations/Reveal";
 import { DetailDrawer } from "@/components/directory/DetailDrawer";
-import { MediaSlider } from "@/components/media/MediaSlider";
-import { Chip } from "@/components/ui/Chip";
+import { PhotoCard } from "@/components/ui/PhotoCard";
 import { Icon } from "@/components/ui/Icon";
 
 type DiningFinderProps = {
@@ -105,38 +104,20 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
         label={visible.length === 1 ? "venue" : "venues"}
         className="mt-8"
       />
-      <RevealGroup as="ul" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+      <RevealGroup as="ul" className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((venue) => (
           <RevealItem as="li" key={venue.id}>
-            <article className="group flex h-full flex-col overflow-hidden rounded-md bg-white transition-shadow duration-500 hover:shadow-card">
-              <MediaSlider
-                images={venue.images}
-                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
-                label={`${venue.title} photos`}
-                controls="sm"
-                className="aspect-[412/300]"
-              />
-              <div className="flex flex-1 items-end justify-between gap-4 p-5 md:p-6">
-                <div className="flex flex-col items-start gap-3">
-                  {venue.chip ? <Chip>{venue.chip}</Chip> : null}
-                  <h3 className="font-serif text-heading-5">{venue.title}</h3>
-                  {venue.location ? (
-                    <p className="flex items-center gap-2 text-body-sm text-slate">
-                      <Icon name="pin" className="size-4" />
-                      {venue.location}
-                    </p>
-                  ) : null}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setOpen(venues.indexOf(venue))}
-                  className="wave grid size-11 shrink-0 place-items-center rounded-md border border-ink/15 transition-colors duration-500 hover:border-turquoise hover:text-white"
-                  aria-label={`View ${venue.title} details`}
-                >
-                  <Icon name="arrow-right" className="size-4" />
-                </button>
-              </div>
-            </article>
+            {/* The Marina shop card: the photo fills it, the type as a badge, the name at the foot
+                and the turquoise bar flooding up on hover; it opens the venue's drawer. */}
+            <PhotoCard
+              onClick={() => setOpen(venues.indexOf(venue))}
+              image={venue.images[0]}
+              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
+              tag={venue.chip}
+              title={venue.title}
+              action="View details"
+              className="aspect-[400/520]"
+            />
           </RevealItem>
         ))}
       </RevealGroup>

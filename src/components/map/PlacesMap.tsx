@@ -18,6 +18,11 @@ type PlacesMapProps = {
   /** `drawn` is the brand-tinted map; `satellite` shows aerial imagery. */
   basemap?: "drawn" | "satellite";
   className?: string;
+  /** Fit the places as closely as possible (fractional zoom, slim padding) instead of the
+   *  default whole-step fit, which can leave a lot of empty map around them. */
+  fitTight?: boolean;
+  /** Extra room on the right when fitting, in px, for a panel laid over the map on large screens. */
+  insetRight?: number;
 };
 
 /**
@@ -77,6 +82,8 @@ export function PlacesMap({
   label,
   basemap = "drawn",
   className,
+  fitTight = false,
+  insetRight = 0,
 }: PlacesMapProps) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<LeafletMap | null>(null);
@@ -102,6 +109,7 @@ export function PlacesMap({
         scrollWheelZoom: false,
         zoomControl: true,
         attributionControl: true,
+        zoomSnap: fitTight ? 0.1 : 1,
       });
       map.current = instance;
       const satellite = basemap === "satellite";
@@ -133,6 +141,8 @@ export function PlacesMap({
         const isOrigin = origin?.id === place.id;
         const marker = L.marker([place.lat, place.lng], {
           icon: icon(isOrigin ? "origin" : "place"),
+          // The starting point stays on top of any destination right beside it.
+          zIndexOffset: isOrigin ? 1000 : 0,
           keyboard: true,
           title: place.name,
           alt: place.name,
@@ -152,10 +162,15 @@ export function PlacesMap({
       }
 
       if (view) instance.setView([view.lat, view.lng], view.zoom);
-      else
+      else {
+        const wide = window.matchMedia("(min-width: 1024px)").matches;
         instance.fitBounds(L.latLngBounds(all.map((place) => [place.lat, place.lng])), {
-          padding: [48, 48],
+          paddingTopLeft: fitTight ? [40, 40] : [48, 48],
+          paddingBottomRight: fitTight
+            ? [40 + (wide ? insetRight : 0), 56]
+            : [48 + (wide ? insetRight : 0), 48],
         });
+      }
     };
 
     const observer = new IntersectionObserver(
@@ -176,7 +191,7 @@ export function PlacesMap({
       map.current = null;
       currentMarkers.clear();
     };
-  }, [places, origin, view, basemap]);
+  }, [places, origin, view, basemap, fitTight, insetRight]);
 
   useEffect(() => {
     let cancelled = false;

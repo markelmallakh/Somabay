@@ -139,7 +139,7 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
             their full contrast. */}
         <div
           className={cn(
-            "absolute inset-0 shadow-[0_1px_0_var(--color-line)] backdrop-blur-lg backdrop-saturate-150 transition-[opacity,background-color] duration-500 ease-in-out",
+            "absolute inset-0 shadow-[0_10px_32px_-14px_rgb(18_58_70/0.1)] backdrop-blur-lg backdrop-saturate-150 transition-[opacity,background-color] duration-500 ease-in-out",
             megaOpen ? "bg-white" : "bg-white/75",
             backdropOverHero ? "opacity-0" : "opacity-100",
           )}

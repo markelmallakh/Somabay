@@ -1,7 +1,10 @@
 "use client";
 
-import { useId } from "react";
+import { AnimatePresence, m } from "framer-motion";
+import { useId, useState } from "react";
 import { cn } from "@/lib/utils";
+import { easeOutExpo } from "@/components/animations/easing";
+import { Icon } from "./Icon";
 import { OptionTag } from "./OptionTag";
 import { TextAction } from "./TextAction";
 
@@ -21,12 +24,14 @@ type FilterPanelProps = {
 };
 
 /**
- * Filter groups as selectable tags, divided by wave hairlines, with a small-caps Clear all.
- * Empty groups mean "no restriction".
+ * Filters on a white panel: a header with the number of active filters and Clear all, then each
+ * group as a light accordion (its name, how many of its options are chosen, a chevron) holding
+ * soft chips that turn solid turquoise once chosen. Empty groups mean "no restriction".
  */
 export function FilterPanel({ groups, value, onChange, className }: FilterPanelProps) {
   const baseId = useId();
-  const active = Object.values(value).some((selected) => selected.length > 0);
+  const total = Object.values(value).reduce((sum, selected) => sum + selected.length, 0);
+  const [closed, setClosed] = useState<string[]>([]);
 
   const toggle = (group: string, option: string) => {
     const selected = value[group] ?? [];
@@ -40,33 +45,98 @@ export function FilterPanel({ groups, value, onChange, className }: FilterPanelP
 
   return (
     <div className={cn("rounded-md bg-white p-6", className)}>
-      <div className="flex items-baseline justify-between gap-4">
-        <p className="font-serif text-heading-6">Filters</p>
-        <TextAction onClick={() => onChange({})} disabled={!active}>
+      <div className="flex items-center justify-between gap-4">
+        <p className="flex items-center gap-2.5 font-serif text-heading-6">
+          Filters
+          <AnimatePresence>
+            {total > 0 ? (
+              <m.span
+                key="count"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ duration: 0.4, ease: easeOutExpo }}
+                className="grid size-6 place-items-center rounded-full bg-turquoise font-sans text-body-xs font-semibold text-white tabular-nums"
+                aria-label={`${total} active`}
+              >
+                {total}
+              </m.span>
+            ) : null}
+          </AnimatePresence>
+        </p>
+        <TextAction
+          onClick={() => onChange({})}
+          disabled={total === 0}
+          className="text-[0.6875rem] tracking-[0.12em]"
+        >
           Clear all
         </TextAction>
       </div>
-      {groups.map((group) => (
-        <fieldset key={group.id} className="mt-5">
-          <span aria-hidden className="wave-line mb-5 text-turquoise/35" />
-          <legend className="sr-only">{group.label}</legend>
-          <p aria-hidden className="eyebrow mb-3 text-label text-slate">
-            {group.label}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {group.options.map((option) => (
-              <OptionTag
-                key={option.value}
-                id={`${baseId}-${group.id}-${option.value}`}
-                checked={(value[group.id] ?? []).includes(option.value)}
-                onChange={() => toggle(group.id, option.value)}
+
+      <div className="mt-4 flex flex-col">
+        {groups.map((group) => {
+          const open = !closed.includes(group.id);
+          const chosen = (value[group.id] ?? []).length;
+          const panelId = `${baseId}-${group.id}-panel`;
+          return (
+            <fieldset key={group.id} className="border-t border-line first:border-t-0">
+              <legend className="sr-only">{group.label}</legend>
+              <button
+                type="button"
+                aria-expanded={open}
+                aria-controls={panelId}
+                onClick={() =>
+                  setClosed((current) =>
+                    open ? [...current, group.id] : current.filter((id) => id !== group.id),
+                  )
+                }
+                className="group flex w-full items-center gap-3 py-4 text-left"
               >
-                {option.label}
-              </OptionTag>
-            ))}
-          </div>
-        </fieldset>
-      ))}
+                <span className="flex-1 text-body-xs font-semibold tracking-label text-ink uppercase">
+                  {group.label}
+                </span>
+                {chosen > 0 ? (
+                  <span className="text-body-xs text-turquoise-160 tabular-nums">
+                    {chosen} selected
+                  </span>
+                ) : null}
+                <Icon
+                  name="chevron-down"
+                  className={cn(
+                    "size-4 text-slate transition-transform duration-500 ease-out-expo group-hover:text-ink",
+                    open && "rotate-180",
+                  )}
+                />
+              </button>
+              <AnimatePresence initial={false}>
+                {open ? (
+                  <m.div
+                    id={panelId}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.5, ease: easeOutExpo }}
+                    className="overflow-hidden"
+                  >
+                    <div className="flex flex-wrap gap-2 pb-5">
+                      {group.options.map((option) => (
+                        <OptionTag
+                          key={option.value}
+                          id={`${baseId}-${group.id}-${option.value}`}
+                          checked={(value[group.id] ?? []).includes(option.value)}
+                          onChange={() => toggle(group.id, option.value)}
+                        >
+                          {option.label}
+                        </OptionTag>
+                      ))}
+                    </div>
+                  </m.div>
+                ) : null}
+              </AnimatePresence>
+            </fieldset>
+          );
+        })}
+      </div>
     </div>
   );
 }

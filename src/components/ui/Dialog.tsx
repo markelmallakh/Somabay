@@ -6,6 +6,7 @@ import { getLenis } from "@/components/animations/SmoothScroll";
 import { easeInOutQuart } from "@/components/animations/easing";
 
 import { cn } from "@/lib/utils";
+import { Icon } from "./Icon";
 
 /** Brand orange and turquoise layers that lead the drawer panel in (React Bits "staggered menu"). */
 const DRAWER_LAYERS = ["#F58025", "#00B2BA"];
@@ -135,21 +136,32 @@ export function Dialog({
             >
               {children}
             </m.div>
-            {outside ? (
-              <m.div
-                className={cn(
-                  "pointer-events-none absolute inset-y-0 right-0 hidden w-full md:block",
-                  drawerWidth,
-                )}
-                initial={{ opacity: 0, x: 16 }}
-                animate={{ opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.55 } }}
-                exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            {/* Outside the panel's left edge: the close X at the top and any controls (e.g.
+                previous / next) at the foot, in one column. Phones keep the panel's own close. */}
+            <m.div
+              className={cn(
+                "pointer-events-none absolute inset-y-0 right-0 hidden w-full md:block",
+                drawerWidth,
+              )}
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.55 } }}
+              exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            >
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close"
+                data-autofocus
+                className="pointer-events-auto absolute top-6 right-full mr-4 grid size-12 place-items-center text-white opacity-80 transition-opacity duration-300 hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-white"
               >
+                <Icon name="close" className="size-7" />
+              </button>
+              {outside ? (
                 <div className="pointer-events-auto absolute right-full bottom-6 mr-4">
                   {outside}
                 </div>
-              </m.div>
-            ) : null}
+              ) : null}
+            </m.div>
           </m.div>
         ) : open ? (
           <m.div

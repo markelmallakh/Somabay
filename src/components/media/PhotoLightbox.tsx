@@ -52,11 +52,12 @@ export function PhotoLightbox({ images, label, open, onChange, onClose }: PhotoL
       label={`${label} photos`}
       className="bg-black/95"
     >
-      {/* The photo as large as the screen allows, with every photo as a thumbnail beside it. */}
+      {/* The photo as large as the screen allows; along the foot, within the page padding, the
+          thumbnails on the left and the count with the arrows on the right. */}
       <div
         ref={backdrop}
         data-backdrop
-        className="relative flex h-full flex-col gap-4 px-4 py-6 md:flex-row md:gap-6 md:px-8 md:py-8"
+        className="relative flex h-full flex-col pt-16 pb-6 md:pb-8"
       >
         <button
           type="button"
@@ -67,11 +68,8 @@ export function PhotoLightbox({ images, label, open, onChange, onClose }: PhotoL
         >
           <Icon name="close" className="size-8 stroke-1" />
         </button>
-        <div
-          data-backdrop
-          className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-5 pt-10 md:pt-0"
-        >
-          <div data-backdrop className="relative min-h-0 w-full flex-1">
+        <div data-backdrop className="relative mx-auto min-h-0 w-full max-w-site flex-1 px-gutter">
+          <div data-backdrop className="relative size-full">
             <AnimatePresence initial={false}>
               {open !== null ? (
                 <m.div
@@ -84,7 +82,7 @@ export function PhotoLightbox({ images, label, open, onChange, onClose }: PhotoL
                 >
                   <ResponsiveImage
                     asset={images[open]}
-                    sizes="85vw"
+                    sizes="90vw"
                     fill
                     className="object-contain"
                   />
@@ -92,57 +90,62 @@ export function PhotoLightbox({ images, label, open, onChange, onClose }: PhotoL
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="flex items-center gap-6 text-white">
-            <button
-              type="button"
-              className="wave grid size-12 place-items-center rounded-md border border-white/40 [--wave:#fff] hover:text-ink"
-              onClick={() => onChange(((open ?? 0) - 1 + images.length) % images.length)}
-              aria-label="Previous photo"
-            >
-              <Icon name="chevron-left" className="size-4.5" />
-            </button>
+        </div>
+
+        <div className="mx-auto mt-6 flex w-full max-w-site items-center gap-6 px-gutter text-white md:mt-8 md:gap-10">
+          {/* Every photo as a thumbnail; the current one is outlined in turquoise. */}
+          <ul
+            ref={strip}
+            aria-label="All photos"
+            className="scrollbar-none flex min-w-0 flex-1 gap-2 overflow-x-auto p-1"
+          >
+            {images.map((image, index) => {
+              const current = index === open;
+              return (
+                <li key={`${image.src}-${index}`} className="shrink-0">
+                  <button
+                    type="button"
+                    data-current={current || undefined}
+                    onClick={() => onChange(index)}
+                    aria-label={`Show photo ${index + 1} of ${images.length}`}
+                    aria-current={current ? "true" : undefined}
+                    className={cn(
+                      "relative block size-14 overflow-hidden rounded-md outline-2 outline-offset-2 transition-[opacity,outline-color] duration-300 md:size-16",
+                      current
+                        ? "opacity-100 outline-turquoise"
+                        : "opacity-50 outline-transparent hover:opacity-90",
+                    )}
+                  >
+                    <ResponsiveImage asset={image} sizes="64px" fill />
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="flex shrink-0 items-center gap-4 md:gap-6">
             <p className="text-body-sm tabular-nums" aria-live="polite">
-              {(open ?? 0) + 1} / {images.length}
+              {String((open ?? 0) + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </p>
-            <button
-              type="button"
-              className="wave grid size-12 place-items-center rounded-md border border-white/40 [--wave:#fff] hover:text-ink"
-              onClick={() => onChange(((open ?? 0) + 1) % images.length)}
-              aria-label="Next photo"
-            >
-              <Icon name="chevron-right" className="size-4.5" />
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="wave grid size-12 place-items-center rounded-md border border-white/40 [--wave:#fff] hover:text-ink"
+                onClick={() => onChange(((open ?? 0) - 1 + images.length) % images.length)}
+                aria-label="Previous photo"
+              >
+                <Icon name="chevron-left" className="size-4.5" />
+              </button>
+              <button
+                type="button"
+                className="wave grid size-12 place-items-center rounded-md border border-white/40 [--wave:#fff] hover:text-ink"
+                onClick={() => onChange(((open ?? 0) + 1) % images.length)}
+                aria-label="Next photo"
+              >
+                <Icon name="chevron-right" className="size-4.5" />
+              </button>
+            </div>
           </div>
         </div>
-        {/* Every photo as a thumbnail; the current one is outlined in turquoise. */}
-        <ul
-          ref={strip}
-          aria-label="All photos"
-          className="scrollbar-none flex max-w-full shrink-0 gap-2 overflow-x-auto p-1 md:max-h-full md:flex-col md:overflow-x-visible md:overflow-y-auto md:pt-16"
-        >
-          {images.map((image, index) => {
-            const current = index === open;
-            return (
-              <li key={`${image.src}-${index}`} className="shrink-0">
-                <button
-                  type="button"
-                  data-current={current || undefined}
-                  onClick={() => onChange(index)}
-                  aria-label={`Show photo ${index + 1} of ${images.length}`}
-                  aria-current={current ? "true" : undefined}
-                  className={cn(
-                    "relative block size-16 overflow-hidden rounded-md outline-2 outline-offset-2 transition-[opacity,outline-color] duration-300 md:size-20",
-                    current
-                      ? "opacity-100 outline-turquoise"
-                      : "opacity-50 outline-transparent hover:opacity-90",
-                  )}
-                >
-                  <ResponsiveImage asset={image} sizes="80px" fill />
-                </button>
-              </li>
-            );
-          })}
-        </ul>
       </div>
     </Dialog>
   );

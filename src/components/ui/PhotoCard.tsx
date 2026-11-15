@@ -21,7 +21,7 @@ export function CardActionBar({ label, tone = "dark", className }: CardActionBar
   return (
     <span
       className={cn(
-        "relative isolate flex items-center justify-between overflow-hidden border-t px-6 pt-4 pb-6 text-body-sm font-semibold transition-colors duration-500",
+        "relative isolate flex items-center justify-between overflow-hidden border-t px-6 py-5 text-body-xs font-semibold tracking-label uppercase transition-colors duration-500",
         tone === "dark"
           ? "border-white/30 text-white"
           : "border-line text-ink group-hover:text-white group-focus-visible:text-white",
@@ -42,7 +42,9 @@ export function CardActionBar({ label, tone = "dark", className }: CardActionBar
 }
 
 type PhotoCardProps = {
-  href: string;
+  /** Where the card links to; or pass `onClick` instead to open something on the page. */
+  href?: string;
+  onClick?: () => void;
   image: ImageAsset;
   sizes: string;
   title: ReactNode;
@@ -68,6 +70,7 @@ type PhotoCardProps = {
  */
 export function PhotoCard({
   href,
+  onClick,
   image,
   sizes,
   title,
@@ -82,12 +85,14 @@ export function PhotoCard({
   size = "md",
 }: PhotoCardProps) {
   return (
-    <Link
+    <CardShell
       href={href}
+      onClick={onClick}
+      label={typeof title === "string" ? `${title}: details` : undefined}
       draggable={draggable}
       tabIndex={tabIndex}
       className={cn(
-        "group relative isolate flex flex-col justify-between overflow-hidden rounded-md text-white",
+        "group relative isolate flex flex-col justify-between overflow-hidden rounded-md text-left text-white",
         className,
       )}
     >
@@ -104,7 +109,9 @@ export function PhotoCard({
       />
       <span className={cn("flex items-start pb-0", size === "lg" ? "p-8" : "p-6")}>
         {tag ? (
-          <span className="eyebrow rounded-md bg-black/30 px-2 py-0.5 backdrop-blur-lg">{tag}</span>
+          <span className="eyebrow rounded-md bg-black/30 px-2 py-1 text-[0.6875rem] leading-none font-medium tracking-[0.16em] backdrop-blur-lg">
+            {tag}
+          </span>
         ) : null}
       </span>
       <span className="flex flex-col gap-4">
@@ -127,8 +134,46 @@ export function PhotoCard({
             </span>
           ) : null}
         </span>
-        <CardActionBar label={action} className={size === "lg" ? "px-8 pb-7" : undefined} />
+        <CardActionBar label={action} className={size === "lg" ? "px-8 py-6" : undefined} />
       </span>
-    </Link>
+    </CardShell>
+  );
+}
+
+/** The card's outer element: a link when it has an `href`, otherwise a button. */
+function CardShell({
+  href,
+  onClick,
+  label,
+  draggable,
+  tabIndex,
+  className,
+  children,
+}: {
+  href?: string;
+  onClick?: () => void;
+  label?: string;
+  draggable?: boolean;
+  tabIndex?: number;
+  className: string;
+  children: ReactNode;
+}) {
+  if (href !== undefined) {
+    return (
+      <Link href={href} draggable={draggable} tabIndex={tabIndex} className={className}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      tabIndex={tabIndex}
+      className={cn(className, "w-full")}
+    >
+      {children}
+    </button>
   );
 }

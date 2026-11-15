@@ -69,7 +69,6 @@ const phone: FormField = {
   required: true,
   autoComplete: "tel",
 };
-const terms: FormField = { kind: "consent", name: "terms", label: "I accept the terms" };
 
 /** How a listed unit reads as a choice: "Studio", "3-bedroom Villa". */
 export const unitChoice = (unit: Pick<Unit, "type" | "bedrooms">) =>
@@ -110,7 +109,6 @@ export const formDefinitions = {
         label: "Message",
         placeholder: "Anything we should know? Budget, timing, questions...",
       },
-      terms,
     ],
   },
   contact: {
@@ -189,7 +187,6 @@ export const formDefinitions = {
         options: ["Hotel guest", "Homeowner", "Day visitor", "Group booking", "Member", "Other"],
       },
       { kind: "textarea", name: "message", label: "Message", placeholder: "Type your message..." },
-      terms,
     ],
   },
   watersports: {
@@ -216,7 +213,20 @@ export const formDefinitions = {
       },
       { kind: "date", name: "date", label: "Preferred date" },
       { kind: "textarea", name: "message", label: "Message" },
-      terms,
+    ],
+  },
+  // The Marina's "Book a boat trip" drawer: the watersports form without the activity choice.
+  boatTrip: {
+    id: "boatTrip",
+    subject: "Marina boat trip booking request",
+    submitLabel: "Submit",
+    fields: [
+      firstName,
+      lastName,
+      email,
+      phone,
+      { kind: "date", name: "date", label: "Preferred date", span: 2 },
+      { kind: "textarea", name: "message", label: "Message" },
     ],
   },
   adventure: {
@@ -243,7 +253,6 @@ export const formDefinitions = {
       },
       { kind: "date", name: "date", label: "Preferred date" },
       { kind: "textarea", name: "message", label: "Message" },
-      terms,
     ],
   },
   playpark: {
@@ -265,7 +274,6 @@ export const formDefinitions = {
       },
       { kind: "date", name: "date", label: "Preferred date" },
       { kind: "textarea", name: "message", label: "Message" },
-      terms,
     ],
   },
   sports: {
@@ -294,7 +302,6 @@ export const formDefinitions = {
       },
       { kind: "date", name: "date", label: "Preferred date" },
       { kind: "textarea", name: "message", label: "Message" },
-      terms,
     ],
   },
   coworking: {
@@ -316,7 +323,6 @@ export const formDefinitions = {
       },
       { kind: "date", name: "date", label: "Preferred date" },
       { kind: "textarea", name: "message", label: "Message" },
-      terms,
     ],
   },
   tee: {
@@ -343,7 +349,6 @@ export const formDefinitions = {
         ],
       },
       { kind: "textarea", name: "message", label: "Message", placeholder: "Type your message..." },
-      terms,
     ],
   },
   unit: {

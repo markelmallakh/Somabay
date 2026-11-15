@@ -66,7 +66,16 @@ export const mainMenu: MenuItem[] = [
     href: routes.neighborhoods,
     image: image("/images/menu/menu-live.webp", ""),
     groups: [
-      { label: "Somabay Neighborhoods", href: routes.neighborhoods },
+      {
+        label: "Somabay Neighborhoods",
+        href: routes.neighborhoods,
+        // Previewed in the header dropdown: the communities people live in today, then the
+        // first of those coming next.
+        preview: [...neighborhoods]
+          .sort((a, b) => Number(b.status === "living") - Number(a.status === "living"))
+          .slice(0, 10)
+          .map((item) => ({ label: item.name, href: routes.neighborhood(item.slug) })),
+      },
       { label: "Resale", href: routes.resale },
     ],
   },

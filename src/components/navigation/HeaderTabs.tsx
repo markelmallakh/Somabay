@@ -179,30 +179,17 @@ export function HeaderTabs({ items, onOpenChange, onDark }: HeaderTabsProps) {
                 className="mx-auto grid max-w-site grid-cols-12 gap-10 px-gutter py-10"
               >
                 <m.div {...rise(0)} className="col-span-3">
-                  <Link
-                    href={item.href}
-                    onClick={close}
-                    className="group relative block aspect-[4/3] overflow-hidden rounded-md text-white"
-                  >
-                    <ResponsiveImage
-                      asset={item.image}
-                      alt=""
-                      sizes="22rem"
-                      fill
-                      className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
-                    />
+                  {/* A picture of the section, not a link: the pages beside it are the way in. */}
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-md text-white">
+                    <ResponsiveImage asset={item.image} alt="" sizes="22rem" fill />
                     <span
                       aria-hidden
                       className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_40%,rgb(0_0_0/0.7)_100%)]"
                     />
-                    <span className="absolute inset-x-5 bottom-4 flex items-end justify-between gap-3">
-                      <span className="font-serif text-heading-6 leading-[1.15]">{item.label}</span>
-                      <Icon
-                        name="arrow-right"
-                        className="mb-1 size-4 shrink-0 transition-transform duration-500 ease-out-expo group-hover:translate-x-1"
-                      />
+                    <span className="absolute inset-x-5 bottom-4 font-serif text-heading-6 leading-[1.15]">
+                      {item.label}
                     </span>
-                  </Link>
+                  </div>
                 </m.div>
 
                 <MegaGroups item={item} onNavigate={close} />
@@ -221,7 +208,8 @@ function MegaGroups({ item, onNavigate }: { item: MenuItem; onNavigate: () => vo
     "group inline-block text-navy transition-colors hover:text-turquoise-160 focus-visible:text-turquoise-160";
   let order = 1;
   const groups = item.groups ?? [];
-  const flat = groups.every((group) => !group.children);
+  const nested = (group: (typeof groups)[number]) => group.children ?? group.preview;
+  const flat = groups.every((group) => !nested(group));
 
   return (
     <div className="col-span-9 flex flex-col">
@@ -241,9 +229,10 @@ function MegaGroups({ item, onNavigate }: { item: MenuItem; onNavigate: () => vo
         </ul>
       ) : (
         // Groups with children spread over two columns; the single links stack in the third.
-        <div className="grid grid-cols-3 gap-x-10 gap-y-6">
+        // Fills the panel height, so the divider before the single pages runs its full length.
+        <div className="grid flex-1 grid-cols-3 gap-x-10 gap-y-6">
           {groups
-            .filter((group) => group.children)
+            .filter((group) => nested(group))
             .map((group) => (
               <div key={group.href} className="col-span-2">
                 <m.div {...rise(order++)}>
@@ -256,7 +245,7 @@ function MegaGroups({ item, onNavigate }: { item: MenuItem; onNavigate: () => vo
                   </Link>
                 </m.div>
                 <ul className="mt-4 grid grid-cols-2 gap-x-10 gap-y-2.5">
-                  {group.children?.map((child) => (
+                  {nested(group)?.map((child) => (
                     <m.li key={child.href} {...rise(order++)}>
                       <Link
                         href={child.href}
@@ -268,11 +257,28 @@ function MegaGroups({ item, onNavigate }: { item: MenuItem; onNavigate: () => vo
                     </m.li>
                   ))}
                 </ul>
+                {/* A preview is a taste of a longer list: link to all of it. */}
+                {group.preview ? (
+                  <m.div {...rise(order++)} className="mt-5">
+                    <Link
+                      href={group.href}
+                      onClick={onNavigate}
+                      className="group eyebrow inline-flex items-center gap-2 text-turquoise transition-colors hover:text-turquoise-160"
+                    >
+                      View all
+                      <Icon
+                        name="arrow-right"
+                        className="size-4 transition-transform duration-500 ease-out-expo group-hover:translate-x-1"
+                      />
+                    </Link>
+                  </m.div>
+                ) : null}
               </div>
             ))}
-          <ul className="flex flex-col gap-4">
+          {/* A hairline sets the single pages apart from the group beside them. */}
+          <ul className="flex flex-col gap-4 border-l border-line pl-10">
             {groups
-              .filter((group) => !group.children)
+              .filter((group) => !nested(group))
               .map((group) => (
                 <m.li key={group.href} {...rise(order++)}>
                   <Link

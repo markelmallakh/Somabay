@@ -111,6 +111,7 @@ export function SelectMenu({
       </button>
       <Icon
         name="chevron-down"
+        data-field-icon
         className={cn(
           "pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2 text-slate transition-transform duration-500 ease-out-expo",
           open && "rotate-180",

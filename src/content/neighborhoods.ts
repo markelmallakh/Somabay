@@ -8,10 +8,12 @@ import type { Neighborhood } from "@/types/content";
 export const neighborhoods: Neighborhood[] = [
   {
     slug: "wadi-jebal",
-    heroMedia: image(
-      "/images/about/peninsula-aerial.webp",
-      "Aerial view of the Somabay peninsula and its cliffs",
-    ),
+    // The Wadi Jebal film (shared with Wadi Jebal Extension, from the client's WJ Extension shoot).
+    heroMedia: video({
+      label: "Aerial film of the Wadi Jebal homes along the cliffs",
+      poster: image("/images/video/wadi-jebal-ext-loop-poster.webp", ""),
+      sources: [{ src: "/videos/wadi-jebal-ext-loop.webm", type: "video/webm" }],
+    }),
     name: "Wadi Jebal",
     tagline: "Peninsula Edge",
     status: "living",
@@ -46,11 +48,16 @@ export const neighborhoods: Neighborhood[] = [
       ),
     ],
     detail: {
-      subtitle: "Elevated Living by the Red Sea",
+      // DRAFT COPY: the hero paragraph, condensed from the concept text below; confirm with the
+      // client.
+      subtitle:
+        "Elevated living by the Red Sea. Homes set along the cliffs, with only 15% of the land developed and open views all around.",
       stats: [
         { value: "210", unit: "K sqm", label: "Land Area" },
         { value: "11", unit: "KM", label: "Somabay Coastline" },
         { value: "165", label: "Residences" },
+        // From the concept text: "only 15% of the cliff developed".
+        { value: "15", unit: "%", label: "Of the Cliff Developed" },
       ],
       concept: {
         eyebrow: "Where the landscape leads",
@@ -68,6 +75,7 @@ export const neighborhoods: Neighborhood[] = [
           ),
         ],
       },
+      logo: "/images/neighborhoods/wadi-jebal-logo.svg",
       hasMasterplan: true,
     },
   },

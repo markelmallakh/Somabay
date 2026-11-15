@@ -5,6 +5,7 @@ import type { Cta } from "@/types/content";
 import type { VideoAsset } from "@/types/media";
 import { useGsap } from "@/hooks/useGsap";
 import { gsap } from "@/lib/gsap";
+import { Container } from "@/components/layout/Container";
 import { ScrollScrubVideo, type ScrubController } from "@/components/media/ScrollScrubVideo";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -17,12 +18,16 @@ type MarinaPanelProps = {
   cta: Cta;
   film: VideoAsset;
   categories: { label: string; icon: KitIconName }[];
+  /** The two large lines the film opens between. */
+  lines?: [string, string];
 };
 
 /**
- * "The Marina" panel. On large screens it arrives as a full-bleed film with nothing on it; while
- * the section is pinned, scrolling draws the film in to the content width, then the copy and a
- * quiet line of amenities along the film's foot fade in. The panel keeps four clean corners.
+ * "The Marina" on the homepage, with the Things To Do hero's reveal, in four steps along the
+ * scroll (sticky, no pinning): "Somabay / Marina" rises in on white; the marina film, held on its
+ * first frame, opens from nothing between the two lines and grows to fill the screen; the film
+ * then plays in step with the scroll; last, the eyebrow, title, line, button and amenities rise
+ * over it.
  */
 export function MarinaPanel({
   eyebrow,
@@ -31,94 +36,97 @@ export function MarinaPanel({
   cta,
   film,
   categories,
+  lines = ["Somabay", "Marina"],
 }: MarinaPanelProps) {
   const scrub = useRef<ScrubController>(null);
-  const ref = useGsap<HTMLDivElement>(({ scope, reducedMotion }) => {
+
+  const scope = useGsap<HTMLElement>(({ scope, reducedMotion }) => {
     if (reducedMotion) return;
-    const photo = scope.querySelector<HTMLElement>("[data-photo]");
-    const zoom = scope.querySelector<HTMLElement>("[data-zoom]");
-    const veil = scope.querySelector<HTMLElement>("[data-veil]");
-    const bar = scope.querySelector<HTMLElement>("[data-bar]");
-    const panel = scope.querySelector<HTMLElement>("[data-panel]");
-    if (!photo || !zoom || !veil || !bar || !panel) return;
-    const copy = scope.querySelectorAll("[data-copy]");
-    const chips = scope.querySelectorAll("[data-chip]");
+    const q = gsap.utils.selector(scope);
+    const frame = q<HTMLElement>("[data-frame]")[0];
+    const lineTop = q<HTMLElement>("[data-line-top]")[0];
+    const lineBottom = q<HTMLElement>("[data-line-bottom]")[0];
+    if (!frame || !lineTop || !lineBottom) return;
 
-    const mm = gsap.matchMedia();
-    mm.add("(min-width: 1024px)", () => {
-      // How far the panel sits in from each side of the full-viewport stage it is centred in.
-      const gaps = () => {
-        const stage = scope.getBoundingClientRect();
-        const box = panel.getBoundingClientRect();
-        return {
-          left: box.left,
-          right: document.documentElement.clientWidth - box.right,
-          top: box.top - stage.top,
-          bottom: stage.bottom - box.bottom,
-        };
-      };
+    // The film's top and bottom edges push the two lines ahead of them, so the title always
+    // parts around the film and never sits over it.
+    const gap = 20;
+    const topEdge = () => lineTop.offsetTop + lineTop.offsetHeight;
+    const bottomEdge = () => lineBottom.offsetTop;
+    const setTop = gsap.quickSetter(lineTop, "y", "px");
+    const setBottom = gsap.quickSetter(lineBottom, "y", "px");
+    const setFade = gsap.quickSetter([lineTop, lineBottom], "opacity");
+    const radius = 4;
 
-      const timeline = gsap.timeline({
-        defaults: { ease: "power2.inOut" },
-        scrollTrigger: {
-          trigger: scope,
-          start: "top top",
-          end: "+=120%",
-          pin: true,
-          // The parent is a flex column, where GSAP would otherwise skip the spacing.
-          pinSpacing: true,
-          scrub: 0.8,
-          invalidateOnRefresh: true,
-        },
-      });
-      timeline
-        .fromTo(
-          photo,
-          {
-            left: () => -gaps().left,
-            right: () => -gaps().right,
-            top: () => -gaps().top,
-            bottom: () => -gaps().bottom,
-            borderRadius: 0,
-          },
-          { left: 0, right: 0, top: 0, bottom: 0, borderRadius: 4, duration: 1 },
-          0,
-        )
-        .fromTo(zoom, { scale: 1.12 }, { scale: 1, duration: 1 }, 0)
-        .fromTo(veil, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, 0.45)
-        .fromTo(bar, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 0.6)
-        .fromTo(
-          copy,
-          { autoAlpha: 0, y: 40 },
-          { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.08, ease: "power3.out" },
-          0.65,
-        )
-        .fromTo(
-          chips,
-          { autoAlpha: 0, y: 12 },
-          { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.04, ease: "power3.out" },
-          0.8,
-        )
-        .to({}, { duration: 0.25 });
-
-      // The clip runs from the first scroll until the last amenity has landed.
-      const contentEnd = timeline.duration() - 0.25;
-      timeline.eventCallback("onUpdate", () =>
-        scrub.current?.seek(Math.min(1, timeline.time() / contentEnd)),
-      );
+    // 1. Entrance: as the section arrives, the two lines rise into place, one after the other.
+    gsap.from(q("[data-rise]"), {
+      yPercent: 100,
+      opacity: 0,
+      duration: 1.2,
+      ease: "expo.out",
+      stagger: 0.12,
+      scrollTrigger: { trigger: scope, start: "top 75%", toggleActions: "play none none none" },
     });
-    return () => mm.revert();
+
+    // 2. Opening: the film (held on its first frame) opens from nothing between the lines and
+    //    grows to fill the screen, pushing the lines apart until they fade.
+    const open = { k: 0 };
+    const drawOpen = () => {
+      const vh = frame.offsetHeight;
+      const k = open.k;
+      const inset = 50 * (1 - k);
+      const r = radius * Math.min(1, (1 - k) / 0.25);
+      frame.style.clipPath = `inset(${inset}% ${inset}% ${inset}% ${inset}% round ${r}px)`;
+      const half = ((50 - inset) / 100) * vh;
+      setTop(Math.min(0, vh / 2 - half - gap - topEdge()));
+      setBottom(Math.max(0, vh / 2 + half + gap - bottomEdge()));
+      setFade(1 - Math.min(Math.max((k - 0.55) / 0.3, 0), 1));
+    };
+    drawOpen();
+    // 3. Playing: once full screen, the film plays in step with the scroll.
+    const play = { t: 0 };
+    const drawPlay = () => scrub.current?.seek(play.t);
+
+    // The phases follow each other along the section's scroll (a short hold on the headline,
+    // the opening, the film, then the text).
+    const tl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: { trigger: scope, start: "top top", end: "bottom bottom", scrub: true },
+    });
+    tl.to(open, { k: 1, duration: 0.32, onUpdate: drawOpen }, 0.06)
+      .fromTo(q("[data-zoom]"), { scale: 1.3 }, { scale: 1, duration: 0.32 }, 0.06)
+      .to(play, { t: 1, duration: 0.56, onUpdate: drawPlay }, 0.38)
+      // 4. As soon as the film is full screen, while it plays: the shade and the copy rise in,
+      //    then the hairline draws across, then the amenities appear along it.
+      .fromTo(q("[data-shade]"), { opacity: 0 }, { opacity: 1, duration: 0.06 }, 0.38)
+      .fromTo(
+        q("[data-copy]"),
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.08, stagger: 0.025 },
+        0.4,
+      )
+      .fromTo(q("[data-rule]"), { scaleX: 0 }, { scaleX: 1, duration: 0.12 }, 0.52)
+      .fromTo(
+        q("[data-chip]"),
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.05, stagger: 0.012 },
+        0.6,
+      );
   }, []);
 
   return (
-    // Large screens: a full-viewport stage that pins, with the panel centred in it. The film
-    // starts out filling the whole stage (the viewport) and draws in to the panel.
-    <div ref={ref} className="lg:flex lg:h-svh lg:items-center">
-      <div data-panel className="relative isolate w-full rounded-md text-white">
-        {/* The film clips itself and the amenities bar inside it. */}
-        <div data-photo className="absolute inset-0 -z-10 overflow-hidden rounded-md">
-          <div data-zoom className="absolute inset-0">
-            {/* Holds its first frame until the scroll starts, then plays in step with it. */}
+    <section
+      ref={scope}
+      aria-labelledby="marina-title"
+      className="relative h-[450svh] bg-white motion-reduce:h-auto"
+    >
+      <div className="sticky top-0 h-svh overflow-hidden motion-reduce:static motion-reduce:h-auto">
+        {/* The film that opens from nothing between the lines to the full screen. */}
+        <div
+          data-frame
+          className="absolute inset-0 z-10 overflow-hidden bg-turquoise-10 will-change-[clip-path] [clip-path:inset(50%_50%_50%_50%)] motion-reduce:relative motion-reduce:h-svh motion-reduce:[clip-path:none]"
+        >
+          <div data-zoom className="absolute inset-0 will-change-transform">
             <ScrollScrubVideo
               asset={film}
               mode="external"
@@ -127,50 +135,84 @@ export function MarinaPanel({
             />
           </div>
           <div
-            data-veil
+            data-shade
             aria-hidden
-            className="absolute inset-0 bg-[linear-gradient(to_right,rgb(0_0_0/0.65),rgb(0_0_0/0.15)_55%,transparent)]"
+            className="absolute inset-0 bg-[linear-gradient(to_right,rgb(0_0_0/0.65),rgb(0_0_0/0.15)_55%,transparent),linear-gradient(to_top,rgb(0_0_0/0.55),transparent_35%)] opacity-0 motion-reduce:opacity-100"
           />
-
-          {/* Amenities: one quiet line along the film's foot, over a soft shade, under a hairline. */}
-          <div
-            data-bar
-            className="absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,rgb(0_0_0/0.55),transparent)] px-[clamp(1.5rem,4vw,3.75rem)] pt-16 pb-7"
-          >
-            <ul className="scrollbar-none flex gap-x-8 overflow-x-auto border-t border-white/25 pt-5 lg:flex-wrap lg:gap-x-10 lg:gap-y-3 lg:overflow-visible">
-              {categories.map((category) => (
-                <li
-                  key={category.label}
-                  data-chip
-                  className="flex shrink-0 items-center gap-2 text-white/80 transition-colors duration-500 hover:text-white"
-                >
-                  <KitIcon name={category.icon} className="size-4" />
-                  <span className="text-body-xs font-medium tracking-label uppercase">
-                    {category.label}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
 
-        <div className="pointer-events-none flex min-h-[clamp(30rem,45vw,42.5rem)] flex-col justify-center px-[clamp(1.5rem,4vw,3.75rem)] pt-16 pb-32">
-          <div className="pointer-events-auto flex max-w-[32.5rem] flex-col gap-6">
-            <div data-copy className="flex flex-col gap-4">
-              <Eyebrow tone="dark">{eyebrow}</Eyebrow>
-              <h3 className="text-heading-2">{title}</h3>
+        {/* "Somabay / Marina", parted by the film. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center text-center motion-reduce:hidden"
+        >
+          <p className="font-serif text-[clamp(3.5rem,2rem+6vw,8.5rem)] leading-[1] text-ink">
+            {/* Each line rises out of its own mask on entry. */}
+            <span data-line-top className="block overflow-hidden pb-[0.08em]">
+              <span data-rise className="block">
+                {lines[0]}
+              </span>
+            </span>
+            <span data-line-bottom className="block overflow-hidden pb-[0.08em]">
+              <span data-rise className="block">
+                {lines[1]}
+              </span>
+            </span>
+          </p>
+        </div>
+
+        {/* The content, rising over the full-screen film. */}
+        <div
+          data-theme-surface="dark"
+          className="absolute inset-0 z-30 flex flex-col justify-end pb-10 text-white lg:pb-12"
+        >
+          <Container className="flex flex-col gap-12 lg:gap-16">
+            <div className="flex max-w-[32.5rem] flex-col gap-6">
+              <div data-copy className="flex flex-col gap-4 opacity-0 motion-reduce:opacity-100">
+                <Eyebrow tone="dark">{eyebrow}</Eyebrow>
+                <h2 id="marina-title" className="text-heading-2">
+                  {title}
+                </h2>
+              </div>
+              <p
+                data-copy
+                className="text-body-md text-white/90 opacity-0 motion-reduce:opacity-100"
+              >
+                {description}
+              </p>
+              <div data-copy className="opacity-0 motion-reduce:opacity-100">
+                <Button href={cta.href} variant="primary" icon="arrow-up-right">
+                  {cta.label}
+                </Button>
+              </div>
             </div>
-            <p data-copy className="text-body-md text-white/90">
-              {description}
-            </p>
-            <div data-copy>
-              <Button href={cta.href} variant="primary" icon="arrow-up-right">
-                {cta.label}
-              </Button>
+
+            {/* Amenities: one quiet line along the foot, under a hairline. */}
+            <div className="relative">
+              {/* The hairline draws across from the left before the amenities appear. */}
+              <span
+                data-rule
+                aria-hidden
+                className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-white/25 motion-reduce:scale-x-100"
+              />
+              <ul className="scrollbar-none flex gap-x-8 overflow-x-auto pt-5 lg:flex-wrap lg:gap-x-10 lg:gap-y-3 lg:overflow-visible">
+                {categories.map((category) => (
+                  <li
+                    key={category.label}
+                    data-chip
+                    className="flex shrink-0 items-center gap-2 text-white/80 opacity-0 transition-colors duration-500 hover:text-white motion-reduce:opacity-100"
+                  >
+                    <KitIcon name={category.icon} className="size-4" />
+                    <span className="text-body-xs font-medium tracking-label uppercase">
+                      {category.label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          </Container>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -38,9 +38,9 @@ export function InfoRows({ id, eyebrow, title, items, aside }: InfoRowsProps) {
           <RevealGroup as="ul" className="mt-10 border-t border-line lg:mt-14">
             {items.map((item, index) => (
               <RevealItem as="li" key={item.title} className="border-b border-line">
-                <div className="grid items-start gap-5 py-6 sm:grid-cols-[9rem_1fr] md:py-8 lg:grid-cols-12 lg:gap-6">
-                  <span className="relative block aspect-[3/2] w-36 overflow-hidden rounded-md bg-sand-200 lg:col-span-3">
-                    <ResponsiveImage asset={item.image} sizes="9rem" fill />
+                <div className="grid items-start gap-5 py-6 sm:grid-cols-[13rem_1fr] md:py-8 lg:grid-cols-12 lg:gap-6">
+                  <span className="relative block h-24 w-52 overflow-hidden rounded-md bg-sand-200 lg:col-span-4">
+                    <ResponsiveImage asset={item.image} sizes="13rem" fill />
                   </span>
                   <span className="flex gap-6 sm:col-start-2 lg:col-span-7 lg:col-start-6 lg:gap-10">
                     <span className="w-8 shrink-0 pt-1 text-heading-6 text-slate tabular-nums lg:w-12">

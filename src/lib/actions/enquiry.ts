@@ -45,11 +45,15 @@ export async function submitEnquiry(
 
   const values: Record<string, string> = {};
   const fieldErrors: Record<string, string> = {};
-  for (const field of definition.fields) {
+  for (const field of definition.fields as readonly FormField[]) {
     const raw = String(formData.get(field.name) ?? "");
     const error = validate(field, raw);
     if (error) fieldErrors[field.name] = error;
-    else if (field.kind !== "consent") values[field.name] = raw.trim();
+    else if (field.kind === "tel" && raw.trim() && !raw.trim().startsWith("+")) {
+      // The country code from the phone field's dropdown, joined to the number.
+      const code = String(formData.get(`${field.name}Code`) ?? "").trim();
+      values[field.name] = code ? `${code} ${raw.trim()}` : raw.trim();
+    } else if (field.kind !== "consent") values[field.name] = raw.trim();
   }
   if (Object.keys(fieldErrors).length > 0) {
     return { status: "error", message: "Please check the highlighted fields.", fieldErrors };
