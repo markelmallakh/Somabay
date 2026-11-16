@@ -2,6 +2,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { EventsExplorer } from "@/components/sections/events/EventsExplorer";
 import { ContactCta } from "@/components/sections/shared/ContactCta";
+import { image } from "@/lib/media";
 import { PageHero } from "@/components/sections/shared/PageHero";
 import { routes } from "@/config/routes";
 import { eventCategories, events } from "@/content/events";
@@ -28,12 +29,18 @@ export default async function EventsPage() {
   return (
     <>
       <PageHero
-        variant="title"
+        variant="split"
+        height="band"
+        media={image(
+          "/images/events/events-hero-beach-party.webp",
+          "Friends dancing at a beach party in Somabay",
+          { position: "50% 4%" },
+        )}
         eyebrow="What’s Up Soma"
         title="Somabay Events"
         description="From world-class sporting events to unforgettable celebrations, discover what’s happening across the bay."
       />
-      <Section spacing="none" className="pb-section" aria-label="Events">
+      <Section spacing="none" className="bg-sand-100 pt-10 pb-section md:pt-14" aria-label="Events">
         <h2 className="sr-only">Events</h2>
         <Container>
           <EventsExplorer

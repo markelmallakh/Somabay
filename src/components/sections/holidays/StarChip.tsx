@@ -1,19 +1,21 @@
-import { Chip } from "@/components/ui/Chip";
+import { cn } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
 
 /**
- * The one star-rating badge (homepage hotels, hotel list, hotel page): a sun chip with gold stars,
- * always first in the row of tag chips above the hotel name.
+ * The one star-rating badge (homepage hotels, hotel list, hotel page, map drawers): a small
+ * sun-yellow pill, "5 ★", set beside the hotel's name.
  */
-export function StarChip({ count, tone }: { count: number; tone?: "light" | "soft" | "plain" }) {
+export function StarChip({ count, className }: { count: number; className?: string }) {
   return (
-    <Chip accent="sun" tone={tone}>
-      <span className="flex gap-0.5" aria-hidden>
-        {Array.from({ length: count }, (_, index) => (
-          <Icon key={index} name="star" className="size-2.5" />
-        ))}
-      </span>
-      {count} Stars
-    </Chip>
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center gap-1 rounded-full bg-sun px-3 py-1.5 font-sans text-body-sm leading-none font-semibold text-ink tabular-nums",
+        className,
+      )}
+      aria-label={`${count}-star hotel`}
+    >
+      {count}
+      <Icon name="star" className="size-3.5" />
+    </span>
   );
 }

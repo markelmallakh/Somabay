@@ -12,29 +12,35 @@ import { gsap } from "@/lib/gsap";
 
 /**
  * "Hotel Facilities": on desktop the section pins and scrolling down slides the facility cards
- * across, with a turquoise line under them filling as you go. On small screens (or with reduced
- * motion) the row scrolls sideways by touch or drag and the line follows it. Each card opens
- * its detail drawer.
+ * across; each photo drifts the other way inside its frame as it travels (a sideways parallax).
+ * On small screens (or with reduced motion) the row scrolls sideways by touch or drag, and the
+ * photos drift with it. Each card opens its detail drawer.
  */
 export function HotelFacilities({ items, label }: { items: DirectoryItem[]; label: string }) {
   const [open, setOpen] = useState<number | null>(null);
   const row = useRef<HTMLUListElement>(null);
-  const fill = useRef<HTMLSpanElement>(null);
   useDragScroll(row);
 
   const scope = useGsap<HTMLElement>(
     ({ scope, reducedMotion }) => {
       const list = row.current;
-      const bar = fill.current;
-      if (!list || !bar) return;
+      if (!list) return;
+      const media = gsap.utils.toArray<HTMLElement>("[data-facility-media]", list);
 
-      // Native sideways scroll drives the line wherever the row isn't pinned.
-      const onScroll = () => {
-        const max = list.scrollWidth - list.clientWidth;
-        gsap.set(bar, { scaleX: max > 0 ? list.scrollLeft / max : 1 });
+      // Each photo drifts against the direction of travel: from the right edge of its frame as
+      // the card enters on the right, to the left edge as it leaves on the left.
+      const drift = () => {
+        if (reducedMotion) return;
+        const width = window.innerWidth;
+        for (const item of media) {
+          const box = item.parentElement!.getBoundingClientRect();
+          const progress = gsap.utils.clamp(0, 1, (width - box.left) / (width + box.width));
+          gsap.set(item, { xPercent: 9 - 18 * progress });
+        }
       };
-      list.addEventListener("scroll", onScroll, { passive: true });
-      onScroll();
+      // Native sideways scroll (phones, tablets) drives it wherever the row isn't pinned.
+      list.addEventListener("scroll", drift, { passive: true });
+      drift();
 
       const mm = gsap.matchMedia();
       if (!reducedMotion) {
@@ -57,16 +63,16 @@ export function HotelFacilities({ items, label }: { items: DirectoryItem[]; labe
                 scrub: 0.6,
                 invalidateOnRefresh: true,
               },
+              onUpdate: drift,
             })
-            .fromTo(list, { x: 0 }, { x: () => -distance(), ease: "none" }, 0)
-            .fromTo(bar, { scaleX: 0 }, { scaleX: 1, ease: "none" }, 0);
+            .fromTo(list, { x: 0 }, { x: () => -distance(), ease: "none" }, 0);
           return () => {
             list.style.overflowX = "";
           };
         });
       }
       return () => {
-        list.removeEventListener("scroll", onScroll);
+        list.removeEventListener("scroll", drift);
         mm.revert();
       };
     },
@@ -77,7 +83,7 @@ export function HotelFacilities({ items, label }: { items: DirectoryItem[]; labe
     <section
       ref={scope}
       aria-labelledby="facilities-title"
-      className="relative overflow-hidden bg-turquoise-5 py-section"
+      className="relative overflow-hidden bg-white py-section"
     >
       <Container>
         <Reveal>
@@ -92,19 +98,22 @@ export function HotelFacilities({ items, label }: { items: DirectoryItem[]; labe
         className="mt-10 scrollbar-none flex cursor-grab gap-4 overflow-x-auto ps-site pe-gutter data-[dragging=true]:cursor-grabbing md:mt-12 lg:cursor-auto"
       >
         {items.map((item, index) => (
-          <li key={item.id} className="w-[min(62vw,14.5rem)] shrink-0">
+          <li key={item.id} className="w-[min(70vw,17.5rem)] shrink-0">
             <button
               type="button"
               onClick={() => setOpen(index)}
               className="group block w-full rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turquoise"
             >
-              <span className="relative block aspect-[205/265] overflow-hidden rounded-md bg-sand-200">
-                <ResponsiveImage
-                  asset={item.images[0]}
-                  sizes="15rem"
-                  fill
-                  className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
-                />
+              <span className="relative block aspect-[2/3] overflow-hidden rounded-md bg-sand-200">
+                {/* Wider than its frame so the sideways drift never shows an edge. */}
+                <span data-facility-media className="absolute -inset-x-[12%] inset-y-0 block">
+                  <ResponsiveImage
+                    asset={item.images[0]}
+                    sizes="22rem"
+                    fill
+                    className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
+                  />
+                </span>
               </span>
               <span className="mt-4 block font-serif text-heading-6 transition-colors duration-500 group-hover:text-lagoon">
                 {item.title}
@@ -113,14 +122,6 @@ export function HotelFacilities({ items, label }: { items: DirectoryItem[]; labe
           </li>
         ))}
       </ul>
-      <Container>
-        <div aria-hidden className="relative mt-10 h-0.5 overflow-hidden rounded-full bg-ink/10">
-          <span
-            ref={fill}
-            className="absolute inset-0 origin-left scale-x-0 rounded-full bg-turquoise"
-          />
-        </div>
-      </Container>
       <DetailDrawer items={items} index={open} onClose={() => setOpen(null)} onNavigate={setOpen} />
     </section>
   );

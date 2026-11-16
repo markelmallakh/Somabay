@@ -228,3 +228,29 @@ export const contactCta: SectionIntro & { cta: Cta; image: ImageAsset } = {
   cta: { label: "Contact us", href: routes.contact },
   image: image("/images/cta/journey.webp", "The Somabay swing standing in the sea at sunset"),
 };
+
+/**
+ * Full-screen photo chapters between homepage sections. DRAFT COPY: the lines are placeholders
+ * written for the layout, to be replaced with approved wording.
+ */
+export const homeChapters = {
+  days: {
+    eyebrow: "Life by the bay",
+    title: "Long days, warm water, good company",
+    image: image(
+      "/images/library/beaches/somabay-may321.webp",
+      "A family building sandcastles on the beach beside a kayak",
+      { position: "50% 70%" },
+    ),
+    align: "top" as const,
+  },
+  evenings: {
+    eyebrow: "All year round",
+    title: "Every season has its moment",
+    image: image(
+      "/images/library/beaches/img-0468-1.webp",
+      "Friends playing beach volleyball as the sun sets over the mountains",
+      { position: "50% 55%" },
+    ),
+  },
+};

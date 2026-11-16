@@ -4,7 +4,9 @@ import { useState } from "react";
 import { faqCategories } from "@/content/faqs";
 import type { FaqCategory, FaqItem } from "@/types/content";
 import { Accordion } from "@/components/ui/Accordion";
-import { SegmentedControl } from "@/components/ui/SegmentedControl";
+import { cn } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
+import { filterChipClass } from "@/components/ui/filterChip";
 
 type FaqListProps = {
   items: FaqItem[];
@@ -22,16 +24,40 @@ export function FaqList({ items, filterable = false }: FaqListProps) {
   return (
     <div className="mx-auto w-full max-w-4xl">
       {filterable ? (
-        <div className="mb-10 flex justify-center">
-          <SegmentedControl
-            label="Question category"
-            options={faqCategories}
-            value={category}
-            onChange={setCategory}
-          />
+        // The site's filter chips: "All", then one chip per category (one at a time).
+        <div
+          role="group"
+          aria-label="Question category"
+          className="mb-10 flex flex-wrap justify-center gap-2"
+        >
+          {faqCategories.map((option) => {
+            const on = category === option.id;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                aria-pressed={on}
+                onClick={() => setCategory(option.id)}
+                className={filterChipClass(on)}
+              >
+                {option.id === "all" ? null : (
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "grid overflow-hidden transition-[width,margin,opacity] duration-500 ease-out-expo",
+                      on ? "mr-1.5 w-3.5 opacity-100" : "w-0 opacity-0",
+                    )}
+                  >
+                    <Icon name="check" className="size-3.5" />
+                  </span>
+                )}
+                {option.label}
+              </button>
+            );
+          })}
         </div>
       ) : null}
-      <div className="rounded-md bg-white px-6 md:px-10">
+      <div className="rounded-md border border-line bg-white px-6 md:px-10">
         <Accordion
           key={category}
           className="border-y-0"

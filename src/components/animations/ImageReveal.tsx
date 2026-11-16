@@ -80,7 +80,7 @@ export function ImageReveal({
   );
 
   return (
-    <div ref={ref} className={cn("overflow-hidden", className)}>
+    <div ref={ref} data-no-motion="" className={cn("overflow-hidden", className)}>
       {children}
     </div>
   );

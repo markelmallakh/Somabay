@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useGsap } from "@/hooks/useGsap";
 import { gsap } from "@/lib/gsap";
 import type { VideoAsset } from "@/types/media";
@@ -14,6 +15,8 @@ type AboutJourneyProps = {
   statementLead: number;
   paragraphs: string[];
   ambient: VideoAsset;
+  /** Shown under the closing line, on the film's last frame (the key figures). */
+  outro?: ReactNode;
 };
 
 /**
@@ -23,7 +26,10 @@ type AboutJourneyProps = {
  * Reduced motion: static stage, copy simply scrolls.
  */
 /** Fraction of the film's height hidden above the stage at the start (its dark top band). */
-const FILM_START = 0.28;
+const FILM_START = 0.18;
+/** Fraction of the film's height the travel stops short of its foot, so the open sea stays in
+ *  view longer under the copy and the sand arrives later. */
+const FILM_DROP = 0.06;
 
 export function AboutJourney({
   eyebrow,
@@ -31,6 +37,7 @@ export function AboutJourney({
   statementLead,
   paragraphs,
   ambient,
+  outro,
 }: AboutJourneyProps) {
   const ref = useGsap<HTMLDivElement>(({ scope, reducedMotion }) => {
     if (reducedMotion) {
@@ -71,7 +78,7 @@ export function AboutJourney({
       film,
       { y: () => -film.offsetHeight * FILM_START },
       {
-        y: () => -(film.offsetHeight - window.innerHeight),
+        y: () => -(film.offsetHeight * (1 - FILM_DROP) - window.innerHeight),
         ease: "none",
         scrollTrigger: {
           trigger: track,
@@ -155,25 +162,31 @@ export function AboutJourney({
             />
           </Container>
         </section>
-        {paragraphs.map((paragraph, index) => (
-          <div
-            key={paragraph}
-            data-block
-            // The closing line settles at the bottom of a shorter block, so the stats band
-            // follows it at the section rhythm instead of after a screen of empty dune.
-            className={
-              index === paragraphs.length - 1
-                ? "flex min-h-[48svh] items-end"
-                : "flex min-h-[60svh] items-center"
-            }
-          >
-            <Container>
-              <p className="max-w-[66.875rem] text-statement text-white [text-shadow:0_1px_24px_rgb(0_0_0/0.25)]">
-                {paragraph}
-              </p>
-            </Container>
-          </div>
-        ))}
+        {paragraphs.map((paragraph, index) => {
+          const last = index === paragraphs.length - 1;
+          return (
+            <div
+              key={paragraph}
+              data-block
+              // Story lines follow each other closely; the closing line and the key figures share
+              // the last screen, laid over the end of the film (sand) with no band of their own.
+              className={
+                last
+                  ? "flex min-h-[135svh] items-end pb-section"
+                  : "flex min-h-[42svh] items-center"
+              }
+            >
+              <Container className="flex flex-col gap-12 lg:gap-16">
+                <p className="max-w-[66.875rem] text-statement text-white [text-shadow:0_1px_24px_rgb(0_0_0/0.25)]">
+                  {paragraph}
+                </p>
+                {last && outro ? (
+                  <div className="[text-shadow:0_1px_18px_rgb(0_0_0/0.3)]">{outro}</div>
+                ) : null}
+              </Container>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

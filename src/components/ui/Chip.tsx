@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { type Accent, accentClasses, accentFor } from "@/lib/accents";
+import type { Accent } from "@/lib/accents";
 import { cn } from "@/lib/utils";
 
 type ChipProps = {
@@ -12,17 +12,19 @@ type ChipProps = {
 };
 
 /**
- * Small tag (category, star rating, location): 4px corners like the buttons, a pale tint of its
- * secondary colour behind text in a deep shade of the same colour.
+ * Small tag (category, star rating, location), kept quiet and editorial: a small uppercase,
+ * letter-spaced label in a hairline outline, in one neutral ink whatever its subject. On photos
+ * and dark surfaces (`light`) it sits on frosted white instead. `accent` is accepted for older
+ * call sites but no longer colours the chip; the palette stays calm.
  */
-export function Chip({ children, accent, tone = "soft", className }: ChipProps) {
-  const tint = accent ?? accentFor(typeof children === "string" ? children : undefined);
+export function Chip({ children, tone = "soft", className }: ChipProps) {
   return (
     <span
       className={cn(
-        "inline-flex w-fit items-center gap-1.5 rounded-md px-2.5 py-1.5 text-body-xs leading-none font-medium whitespace-nowrap",
-        accentClasses[tint].ink,
-        tone === "light" ? "bg-white/90 backdrop-blur-sm" : accentClasses[tint].tint,
+        "inline-flex w-fit items-center gap-1.5 rounded-md px-2.5 py-[0.3125rem] text-[0.6875rem] leading-none font-semibold tracking-[0.12em] whitespace-nowrap uppercase",
+        tone === "light"
+          ? "bg-white/90 text-ink backdrop-blur-sm"
+          : "border border-ink/15 text-ink/75",
         className,
       )}
     >

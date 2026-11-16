@@ -53,6 +53,8 @@ export function HeroSequence({ media, steps }: HeroSequenceProps) {
       ref={ref}
       aria-labelledby="page-title"
       data-theme-surface="dark"
+      // A single-step hero isn't pinned, so it can hold while the content scrolls over it.
+      data-sticky-hero={steps.length === 1 ? "" : undefined}
       className="relative isolate h-svh min-h-[40rem] overflow-hidden bg-abyss text-white motion-reduce:h-auto"
     >
       <Media

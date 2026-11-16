@@ -70,7 +70,12 @@ export function PackagesGrid({
   return (
     // The whole row triggers the entrance (cards past the right edge are never "in view" alone,
     // so watching each card would leave them hidden).
-    <m.div initial="hidden" whileInView="shown" viewport={{ once: true, amount: 0.25 }}>
+    <m.div
+      initial="hidden"
+      whileInView="shown"
+      viewport={{ once: true, amount: 0.25 }}
+      data-no-motion=""
+    >
       <DragRow label={label} tone="dark" className="mt-10 lg:mt-12">
         {packages.map((pack, index) => {
           const external = isExternal(pack.href);
@@ -158,11 +163,13 @@ function Card({
   title,
   onOpen,
   children,
+  className = cardClass,
 }: {
   href?: string;
   title: string;
   onOpen: () => void;
   children: ReactNode;
+  className?: string;
 }) {
   return href ? (
     <a
@@ -170,13 +177,13 @@ function Card({
       target="_blank"
       rel="noopener noreferrer"
       draggable={false}
-      className={cardClass}
+      className={className}
     >
       <span className="sr-only"> (opens in a new tab)</span>
       {children}
     </a>
   ) : (
-    <button type="button" onClick={onOpen} aria-label={`${title}: details`} className={cardClass}>
+    <button type="button" onClick={onOpen} aria-label={`${title}: details`} className={className}>
       {children}
     </button>
   );

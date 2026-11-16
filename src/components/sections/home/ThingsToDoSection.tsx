@@ -269,7 +269,7 @@ export function ThingsToDoSection() {
                     aria-hidden
                     className="absolute right-6 bottom-6 grid size-11 scale-75 place-items-center rounded-full bg-turquoise text-white opacity-0 transition-[opacity,scale] duration-700 ease-out-expo group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100"
                   >
-                    <Icon name="arrow-chip" strokeWidth={1.8} className="size-6" />
+                    <Icon name="arrow-chip" strokeWidth={1.4} className="size-6" />
                   </span>
                 )}
               </m.span>
@@ -309,7 +309,7 @@ export function ThingsToDoSection() {
           <button
             type="button"
             onClick={() => step(1)}
-            className="wave grid size-12 place-items-center rounded-md bg-ink text-white transition-colors duration-500"
+            className="wave grid size-12 place-items-center rounded-md border border-ink/15 text-ink transition-colors duration-500 hover:border-turquoise hover:text-white"
           >
             <span className="sr-only">Next activity</span>
             <Icon name="arrow-right" className="size-5" />

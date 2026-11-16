@@ -21,7 +21,7 @@ export type ButtonVariant =
 export type ButtonSize = "lg" | "md" | "sm";
 
 const base =
-  "group/button wave inline-flex items-center justify-center gap-2.5 rounded-md border whitespace-nowrap font-sans font-medium uppercase transition-[color,border-color] duration-500 ease-out-quart delay-75 disabled:pointer-events-none disabled:opacity-50";
+  "group/button wave inline-flex items-center justify-center gap-2.5 rounded-md border whitespace-nowrap font-sans font-medium uppercase transition-[color,border-color,scale] duration-500 ease-out-quart delay-75 active:scale-[0.97] active:delay-0 active:duration-150 disabled:pointer-events-none disabled:opacity-50";
 
 /**
  * Each type pairs its resting look with the colour of the wave that rises through it on hover or

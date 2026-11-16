@@ -7,6 +7,7 @@ import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
+import { PostBadge } from "@/components/ui/PostBadge";
 import { SmartLink } from "@/components/ui/SmartLink";
 
 const date = new Intl.DateTimeFormat("en-GB", {
@@ -48,16 +49,16 @@ export function JournalSection() {
                     fill
                     className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                   />
+                  <PostBadge category={article.category} />
                 </span>
                 <span className="flex flex-col gap-4">
                   <span className="flex items-center gap-3 text-body-sm text-slate">
-                    <span className="eyebrow text-turquoise">{article.category}</span>
                     <span>{date.format(new Date(article.date))}</span>
                     <span aria-hidden>·</span>
                     <span>{article.readingMinutes} min read</span>
                   </span>
-                  <span className="font-serif text-heading-5">{article.title}</span>
-                  <span className="inline-flex items-center gap-2 text-body-xs font-semibold tracking-label uppercase">
+                  <span className="font-serif text-heading-6 leading-[1.25]">{article.title}</span>
+                  <span className="inline-flex items-center gap-2 text-body-xs font-semibold tracking-label text-turquoise uppercase">
                     {journalIntro.itemCtaLabel}
                     <Icon
                       name="arrow-right"

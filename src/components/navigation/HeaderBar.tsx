@@ -24,17 +24,19 @@ const WeatherDialog = dynamic(() =>
 );
 
 /** Menu icon lines: the Figma "menu-03" bars, and the X they fold into when the menu is open. */
+// Drawn 1:1 in pixels (42 × 22) with each line on the same sub-pixel offset, so all three
+// render with exactly the same weight.
 const MENU_LINES = [
   {
-    closed: "M23.75 6.25L47.5 6.25",
-    open: "M24.5 6L42.5 24",
-    hover: "group-hover:-translate-x-[14.25px]",
+    closed: "M17.5 5L35 5",
+    open: "M18 4.5L31 17.5",
+    hover: "group-hover:-translate-x-[10.5px]",
   },
-  { closed: "M9.5 15L47.5 15", open: "M33.5 15L33.5 15", hover: "" },
+  { closed: "M7 11L35 11", open: "M24.5 11L24.5 11", hover: "" },
   {
-    closed: "M9.5 23.75L33.25 23.75",
-    open: "M24.5 24L42.5 6",
-    hover: "group-hover:translate-x-[14.25px]",
+    closed: "M7 17L24.5 17",
+    open: "M18 17.5L31 4.5",
+    hover: "group-hover:translate-x-[10.5px]",
   },
 ];
 
@@ -111,6 +113,8 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
   // The tabs row folds away once the page scrolls (the bar condenses) and under the open menu.
   const showTabs = !scrolled && !menuOpen;
   const hidden = atFooter && !menuOpen && !searchOpen;
+  // Past the top the bar tightens on desktop: 4rem tall with a smaller logo, on solid white.
+  const compact = solid && !menuOpen;
 
   return (
     <>
@@ -122,7 +126,11 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
         aria-hidden
         className={cn(
           "pointer-events-none fixed inset-x-0 top-0 z-[29] transition-[transform,height] duration-500 ease-in-out",
-          scrolled ? "h-(--header-bar)" : "h-(--header-height)",
+          scrolled
+            ? "h-(--header-bar) lg:h-16"
+            : compact
+              ? "h-(--header-height) lg:h-[calc(4rem+var(--header-tabs))]"
+              : "h-(--header-height)",
           hidden && "-translate-y-full",
         )}
       >
@@ -139,8 +147,13 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
             their full contrast. */}
         <div
           className={cn(
-            "absolute inset-0 shadow-[0_10px_32px_-14px_rgb(18_58_70/0.1)] backdrop-blur-lg backdrop-saturate-150 transition-[opacity,background-color] duration-500 ease-in-out",
-            megaOpen ? "bg-white" : "bg-white/75",
+            "absolute inset-0 backdrop-blur-lg transition-[opacity,background-color,box-shadow] duration-500 ease-in-out",
+            // Past the top: near-solid white with a crisp hairline, so the bar reads cleanly over
+            // dark and photo sections alike. At the top of light pages it is transparent.
+            megaOpen || compact
+              ? "bg-white/[0.97] shadow-[0_1px_0_rgb(18_58_70/0.06),0_4px_10px_-6px_rgb(18_58_70/0.09)]"
+              : // At the top of light pages: fully transparent, on the page's own colour.
+                "bg-transparent shadow-none backdrop-blur-none",
             backdropOverHero ? "opacity-0" : "opacity-100",
           )}
         />
@@ -154,7 +167,12 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
       >
         {/* Logo bar: menu and search on the left, the logo centred, weather, language and the
             hotline on the right. */}
-        <div className="mx-auto grid h-(--header-bar) max-w-site grid-cols-[1fr_auto_1fr] items-center gap-6 px-gutter text-body-xs font-semibold">
+        <div
+          className={cn(
+            "mx-auto grid h-(--header-bar) max-w-site grid-cols-[1fr_auto_1fr] items-center gap-6 px-gutter text-body-xs font-semibold transition-[height] duration-500 ease-in-out",
+            compact && "lg:h-16",
+          )}
+        >
           <div className="flex items-center gap-5 lg:gap-6">
             <button
               ref={menuButton}
@@ -164,17 +182,23 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
               aria-controls="site-menu"
               className={cn(
                 "group relative z-10 flex shrink-0 items-center gap-3 transition-colors duration-500",
-                menuOpen && "hover:text-sun focus-visible:text-sun",
+                // The menu button carries the brand accent: turquoise on the white bar, sun
+                // yellow while the bar is transparent over a hero. White once the menu is open.
+                menuOpen
+                  ? "hover:text-sun focus-visible:text-sun"
+                  : overHero
+                    ? "text-sun"
+                    : "text-turquoise",
               )}
             >
               {/* Figma "menu-03": staggered lines that swap sides on hover, folding into an X that
                   draws in slightly on hover. */}
               <svg
                 aria-hidden
-                viewBox="0 0 57 30"
+                viewBox="0 0 42 22"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="1.5"
+                strokeWidth="1.25"
                 strokeLinecap="round"
                 className="h-[1.375rem] w-[2.625rem] overflow-visible"
               >
@@ -192,7 +216,7 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
                       !menuOpen && line.hover,
                       menuOpen && "group-hover:scale-[0.82] group-focus-visible:scale-[0.82]",
                     )}
-                    style={{ transformOrigin: "33.5px 15px", transformBox: "view-box" }}
+                    style={{ transformOrigin: "24.5px 11px", transformBox: "view-box" }}
                   />
                 ))}
               </svg>
@@ -213,7 +237,14 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
           </div>
 
           <Link href={routes.home} className="relative z-10 shrink-0" aria-label="Somabay — home">
-            <Logo tone={onDark ? "light" : "brand"} title="Somabay" className="w-28 lg:w-36" />
+            <Logo
+              tone={onDark ? "light" : "brand"}
+              title="Somabay"
+              className={cn(
+                "w-28 transition-[width] duration-500 ease-in-out",
+                compact ? "lg:w-28" : "lg:w-36",
+              )}
+            />
           </Link>
 
           <nav aria-label="Utility" className="flex items-center justify-end gap-5 lg:gap-6">

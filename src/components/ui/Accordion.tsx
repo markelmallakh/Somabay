@@ -85,12 +85,12 @@ export function Accordion({
                 ) : (
                   <span
                     aria-hidden
-                    className="relative grid size-9 shrink-0 place-items-center rounded-full border border-line transition-colors duration-500 group-hover:border-ink"
+                    className="relative grid size-9 shrink-0 place-items-center text-turquoise transition-colors duration-500 group-hover:text-turquoise-160"
                   >
-                    <span className="absolute h-px w-3.5 bg-current" />
+                    <span className="absolute h-[1.5px] w-4 rounded-full bg-current" />
                     <span
                       className={cn(
-                        "absolute h-3.5 w-px bg-current transition-transform duration-500 ease-out-expo",
+                        "absolute h-4 w-[1.5px] rounded-full bg-current transition-transform duration-500 ease-out-expo",
                         expanded && "scale-y-0",
                       )}
                     />

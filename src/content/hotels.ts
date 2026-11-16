@@ -32,7 +32,7 @@ const kempinskiFacilities: DirectoryItem[] = [
     title: "Jacuzzi",
     description:
       "Warm, bubbling water to ease tired muscles after a day of sun, sport, or exploring. A calm place to unwind, alone or together, as the day slows down.",
-    images: [image("/images/library/watersports/img-1004.webp", "A heated hydrotherapy pool")],
+    images: [image("/images/library/kaktus/soma-23.webp", "Sun loungers at the edge of a pool")],
   },
   {
     id: "two-floor-spa",

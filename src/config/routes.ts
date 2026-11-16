@@ -62,6 +62,7 @@ const darkHeroPaths: readonly string[] = [
   routes.holidays,
   routes.marina,
   routes.dining,
+  routes.events,
   routes.neighborhoods,
   "/neighborhoods/",
   routes.resale,

@@ -114,7 +114,10 @@ export function EventsSection({
               <article
                 className={cn(
                   "group relative flex items-center gap-5 rounded-md border border-line bg-white transition-[border-color,box-shadow] duration-500 hover:border-transparent hover:shadow-card md:gap-8",
-                  thumbnails ? "p-3 pr-4 md:p-4 md:pr-6" : "px-4 py-6 md:px-6 md:py-8",
+                  thumbnails
+                    ? // Hover: the row lifts onto a turquoise wash, its title turns turquoise.
+                      "p-3 pr-4 transition-[border-color,box-shadow,background-color,translate] hover:-translate-y-0.5 hover:bg-turquoise-5 md:p-4 md:pr-6"
+                    : "px-4 py-6 md:px-6 md:py-8",
                 )}
               >
                 {thumbnails ? (
@@ -133,18 +136,18 @@ export function EventsSection({
                       <p className="text-body-xs font-semibold tracking-label text-turquoise uppercase">
                         <EventDateLine event={event} />
                       </p>
-                      <h3 className="font-serif text-heading-6 leading-[1.2] md:text-heading-5">
+                      <h3 className="font-serif text-heading-6 leading-[1.2] transition-colors duration-500 group-hover:text-turquoise-160 md:text-heading-5">
                         {event.title}
                       </h3>
                     </div>
                     <Link
                       href={routes.event(event.slug)}
                       aria-label={`${eventsIntro.itemCtaLabel}: ${event.title}`}
-                      className="grid size-11 shrink-0 place-items-center rounded-full bg-turquoise text-white transition-colors duration-500 group-hover:bg-turquoise-160 after:absolute after:inset-0 after:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turquoise"
+                      className="grid size-11 shrink-0 place-items-center rounded-full bg-turquoise text-white transition-[background-color,scale] duration-500 ease-out-expo group-hover:scale-110 group-hover:bg-turquoise-160 after:absolute after:inset-0 after:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turquoise"
                     >
                       <Icon
                         name="arrow-right"
-                        className="size-4.5 transition-transform duration-700 ease-out-expo group-hover:translate-x-0.5"
+                        className="size-4.5 transition-transform duration-700 ease-out-expo group-hover:translate-x-1"
                       />
                     </Link>
                   </>

@@ -13,8 +13,10 @@ export function NeighborhoodsSection() {
   return (
     <section
       aria-labelledby="neighborhoods-title"
-      data-theme-surface="light"
-      className="relative overflow-hidden bg-sand-100 py-section text-ink"
+      data-theme-surface="dark"
+      // Deep turquoise ground: the photo cards glow against it. The text and line tokens are
+      // re-pointed to white for everything inside, so the carousel needs no dark variant.
+      className="relative overflow-hidden bg-turquoise-160 py-section text-white [--color-ink:#fff] [--color-line:rgb(255_255_255/0.22)] [--color-slate:rgb(255_255_255/0.72)]"
     >
       <NeighborhoodsCarousel
         neighborhoods={neighborhoods}
@@ -24,12 +26,18 @@ export function NeighborhoodsSection() {
         heading={
           <HeadingRow
             id="neighborhoods-title"
+            tone="light"
             eyebrow={neighborhoodsIntro.eyebrow}
             title={neighborhoodsIntro.title}
             description={neighborhoodsIntro.description}
             aside={
               <div>
-                <Button href={neighborhoodsIntro.cta.href} variant="primary" icon="arrow-right">
+                <Button
+                  href={neighborhoodsIntro.cta.href}
+                  variant="solid-light"
+                  icon="arrow-right"
+                  className="[--color-ink:#2c2c2c]"
+                >
                   {neighborhoodsIntro.cta.label}
                 </Button>
               </div>

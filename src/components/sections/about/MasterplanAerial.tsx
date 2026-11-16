@@ -178,22 +178,26 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
             </div>
 
             <div className="flex flex-1 flex-col gap-5 p-6 md:p-10">
-              <ul data-drawer-item style={stagger(0)} className="flex flex-wrap gap-2">
-                {open.badges?.stars ? (
-                  <li>
-                    <StarChip count={open.badges.stars} />
-                  </li>
-                ) : null}
+              {/* The name (with a hotel's star rating beside it), then its tags under it. */}
+              <div data-drawer-item style={stagger(0)} className="flex flex-col gap-1.5">
+                <h2 className="font-serif text-heading-3 leading-[1.2]">
+                  {open.name}
+                  {open.badges?.stars ? (
+                    <StarChip
+                      count={open.badges.stars}
+                      className="relative -top-[0.2em] ml-3 align-middle"
+                    />
+                  ) : null}
+                </h2>
+                {open.kicker ? <p className="text-body-md text-slate">{open.kicker}</p> : null}
+              </div>
+              <ul data-drawer-item style={stagger(1)} className="flex flex-wrap gap-2">
                 {(open.badges?.tags ?? [categoryLabel[open.category]]).map((tag) => (
                   <li key={tag}>
                     <Chip>{tag}</Chip>
                   </li>
                 ))}
               </ul>
-              <div data-drawer-item style={stagger(1)} className="flex flex-col gap-1.5">
-                <h2 className="font-serif text-heading-3 leading-[1.2]">{open.name}</h2>
-                {open.kicker ? <p className="text-body-md text-slate">{open.kicker}</p> : null}
-              </div>
               {open.description ? (
                 <p data-drawer-item style={stagger(2)} className="text-body-lg text-slate">
                   {open.description}

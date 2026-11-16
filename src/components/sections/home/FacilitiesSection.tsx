@@ -5,12 +5,14 @@ import { image } from "@/lib/media";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 
-// Photos of the real places, from somabay.com's Facilities & Services page. The Medical Center
-// photo leads because it is the only one wide and sharp enough for the full-width tile. There is no
-// pharmacy photo yet, so that tile shows the bay's Cosmodent clinic until one is supplied.
+// Photos of the real places, from somabay.com's Facilities & Services page; the Medical Center
+// tile (full width) uses the supplied photo of the medical team. The pharmacy
+// tile uses the supplied Natural Pharmacy shopfront.
 const medicalCenter = image(
-  "/images/facilities/medical-center.webp",
-  "A bright corridor in the Somabay Medical Center",
+  "/images/facilities/medical-team.webp",
+  "Smiling doctors and nurses in a bright clinic lobby with sea views",
+  // Keep the faces in frame in the wide tile.
+  { position: "50% 28%" },
 );
 const classroom = image(
   "/images/facilities/kompass-classroom.webp",
@@ -24,7 +26,11 @@ const homeServices = image(
   "/images/facilities/coral-home-services.webp",
   "The Coral interior design and home services studio",
 );
-const clinic = image("/images/facilities/cosmodent-clinic.webp", "A treatment room at Cosmodent");
+const pharmacy = image(
+  "/images/facilities/natural-pharmacy.webp",
+  "The Natural Pharmacy shopfront by the marina, framed by bougainvillea and palms",
+  { position: "50% 0%" },
+);
 
 /** Figma "Section / Facilities & Services — Collage" (416:17854). */
 const lead: Facility = {
@@ -59,7 +65,7 @@ const rows: [Facility, Facility][] = [
     {
       title: "Pharmacies",
       description: "Everyday medicines and essentials, open daily.",
-      image: clinic,
+      image: pharmacy,
       href: `${facilitiesIntro.cta.href}#pharmacy`,
     },
   ],

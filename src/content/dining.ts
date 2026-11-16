@@ -4,7 +4,7 @@ import type { DirectoryItem } from "@/types/content";
 export const diningHero = {
   eyebrow: "Experience Somabay",
   title: "Dining Experience",
-  description: "From casual bites to memorable evenings.",
+  description: "From casual bites by the marina to long, memorable evenings under the stars.",
   image: image("/images/library/zouni/soma-60.webp", "A beach bar terrace at dusk"),
 };
 

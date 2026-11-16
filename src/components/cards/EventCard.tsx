@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { routes } from "@/config/routes";
-import { categoryLabel } from "@/lib/event-categories";
+import { categoryLabel, colorOf } from "@/lib/event-categories";
 import { formatDayRange, formatMonthYear } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import type { EventItem } from "@/types/content";
@@ -29,7 +29,7 @@ function ViewEvent() {
   return (
     <p
       aria-hidden
-      className="mt-auto inline-flex items-center gap-2 pt-2 text-body-xs font-semibold tracking-label uppercase"
+      className="mt-auto inline-flex items-center gap-2 pt-2 text-body-xs font-semibold tracking-label text-turquoise uppercase"
     >
       <span className="link-underline pb-0.5 group-hover:[background-size:100%_1px]">
         Explore event
@@ -45,15 +45,17 @@ function ViewEvent() {
 /** Featured event: a turquoise-5 panel with the photo on one side and the details on the other. */
 function FeaturedEventCard({ event }: { event: EventItem }) {
   return (
-    <article className="group relative grid overflow-hidden rounded-md bg-turquoise-5 md:grid-cols-2">
-      <ImageReveal className="relative aspect-[3/2] md:aspect-auto md:min-h-[26rem]">
+    <article className="group relative grid overflow-hidden rounded-md bg-white md:grid-cols-2">
+      <ImageReveal className="relative aspect-[3/2] md:aspect-auto md:min-h-[36rem]">
         <div className="absolute inset-0">
           <ResponsiveImage asset={event.image} sizes="(min-width: 768px) 50vw, 100vw" fill />
         </div>
       </ImageReveal>
       <DateBadge event={event} className="absolute top-4 left-4" />
       <div className="flex flex-col gap-4 p-6 sm:p-8 lg:p-14">
-        <Chip tone="plain">{categoryLabel(event.category)}</Chip>
+        <Chip className={cn("border", colorOf(event.category).tag)}>
+          {categoryLabel(event.category)}
+        </Chip>
         <h3 className="font-serif text-heading-2">
           <Link
             href={routes.event(event.slug)}
@@ -82,11 +84,11 @@ type EventCardProps = {
   tinted?: boolean;
 };
 
-export function EventCard({ event, featured = false, tinted = false }: EventCardProps) {
+export function EventCard({ event, featured = false, tinted: _tinted = false }: EventCardProps) {
   if (featured) return <FeaturedEventCard event={event} />;
   return (
-    <article className="group relative flex h-full flex-col">
-      <div className="relative aspect-[416/277] overflow-hidden rounded-md bg-sand-200">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-md bg-white transition-shadow duration-500 hover:shadow-card">
+      <div className="relative aspect-[416/277] overflow-hidden bg-sand-200">
         <ResponsiveImage
           asset={event.image}
           sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
@@ -95,8 +97,10 @@ export function EventCard({ event, featured = false, tinted = false }: EventCard
         />
         <DateBadge event={event} className="absolute top-3 right-3" />
       </div>
-      <div className="flex flex-1 flex-col gap-3 pt-5">
-        <Chip tone={tinted ? "plain" : "soft"}>{categoryLabel(event.category)}</Chip>
+      <div className="flex flex-1 flex-col gap-3 px-5 pt-5 pb-6 md:px-6">
+        <Chip className={cn("border", colorOf(event.category).tag)}>
+          {categoryLabel(event.category)}
+        </Chip>
         <h3 className="font-serif text-heading-6">
           <Link
             href={routes.event(event.slug)}

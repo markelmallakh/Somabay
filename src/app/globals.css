@@ -60,10 +60,12 @@
   --color-slate: #75787b;
   --color-snow: #eeeeee;
   --color-mist: #989a9c;
-  --color-line: #ddddde;
+  /* Light grounds and hairlines: a pale grey with a hint of sea blue (the user preferred this to
+     the warm sand tried earlier). */
+  --color-line: #dfe5ea;
   --color-sand-50: #ffffff;
-  --color-sand-100: #f6f6f6;
-  --color-sand-200: #eeeeee;
+  --color-sand-100: #f2f5f8;
+  --color-sand-200: #e8edf1;
   --color-sand-300: #d8cfc6;
   --color-sand-400: #babbbd;
   --color-lagoon: #006b70;
@@ -220,6 +222,113 @@
 @keyframes hero-settle {
   from {
     transform: scale(1.08);
+  }
+}
+
+/* ---- Site-wide motion layer (driven by the SiteMotion component) ---- */
+
+/* Sticky heroes: the hero holds while the page's content scrolls up over it, easing back (a
+   little smaller and dimmer) as it is covered. Unlayered so it wins over the hero's own
+   `relative`; the siblings rule sits in the base layer so `fixed`/`sticky` utilities still win. */
+[data-sticky-hero] {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  transform-origin: 50% 0%;
+  scale: calc(1 - var(--hero-cover, 0) * 0.05);
+  filter: brightness(calc(1 - var(--hero-cover, 0) * 0.45));
+  will-change: scale, filter;
+}
+@layer base {
+  :where([data-sticky-hero] ~ *) {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Parallax photos: `--py` follows the scroll; `--pz` is the extra zoom they settle from the
+   first time they come into view. Registered so it can be animated. */
+@property --pz {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0.1;
+}
+img[data-px] {
+  transform: translate3d(0, var(--py, 0px), 0) scale(calc(1.12 + var(--pz)));
+  will-change: transform;
+}
+img[data-px][data-in] {
+  animation: photo-settle 1.8s var(--ease-out-expo) both;
+}
+@keyframes photo-settle {
+  from {
+    --pz: 0.1;
+  }
+  to {
+    --pz: 0;
+  }
+}
+
+/* Skeleton loading: a soft shimmer in the photo's frame until it has downloaded, then the photo
+   fades in. */
+[data-skeleton] {
+  background-color: var(--color-sand-200);
+  background-image: linear-gradient(
+    100deg,
+    transparent 25%,
+    rgb(255 255 255 / 0.65) 50%,
+    transparent 75%
+  );
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.4s linear infinite;
+}
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+img[data-loading] {
+  opacity: 0;
+}
+img[data-loaded] {
+  animation: photo-fade 0.9s ease-out both;
+}
+img[data-px][data-in][data-loaded] {
+  animation:
+    photo-settle 1.8s var(--ease-out-expo) both,
+    photo-fade 0.9s ease-out both;
+}
+@keyframes photo-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Eyebrows ease in with their letter-spacing settling. */
+.eyebrow-tag[data-eb]:not([data-in]) {
+  opacity: 0;
+}
+.eyebrow-tag[data-eb][data-in] {
+  animation: eyebrow-in 1.2s var(--ease-out-expo) both;
+}
+@keyframes eyebrow-in {
+  from {
+    opacity: 0;
+    letter-spacing: 0.32em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sticky-hero] {
+    position: relative;
+    scale: none;
+    filter: none;
+  }
+  [data-skeleton] {
+    animation: none;
   }
 }
 

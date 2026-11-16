@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Hotel } from "@/types/content";
+import { Parallax } from "@/components/animations/Parallax";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
@@ -11,17 +12,15 @@ type HotelRowProps = {
   hotel: Hotel;
   href: string;
   themeLabels: string[];
-  /** Position in the list, shown as a quiet "01" beside the name. */
-  index: number;
 };
 
 /**
  * One hotel as a full-width row in the All Hotels list: a large photo on the left, and on the
- * right its rating and themes, tagline, name, description, and the price with both actions on a
+ * right its tagline, name with star rating, themes, description, and the price with both actions on a
  * ruled foot. Each hotel gets the whole width, so it reads as a feature rather than a tile. The
  * row links to the hotel page; the buttons sit above that link.
  */
-export function HotelRow({ hotel, href, themeLabels, index }: HotelRowProps) {
+export function HotelRow({ hotel, href, themeLabels }: HotelRowProps) {
   const cover = hotel.cover ?? hotel.images[0];
 
   return (
@@ -33,38 +32,40 @@ export function HotelRow({ hotel, href, themeLabels, index }: HotelRowProps) {
         className="absolute inset-0 z-0 rounded-md focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-turquoise"
       />
 
-      <div className="pointer-events-none relative aspect-[4/3] overflow-hidden md:aspect-auto md:min-h-[21rem]">
-        <ResponsiveImage
-          asset={cover}
-          sizes="(min-width: 1024px) 32vw, (min-width: 768px) 45vw, 100vw"
-          fill
-          className="transition-transform duration-[1600ms] ease-out-expo group-focus-within:scale-[1.05] group-hover:scale-[1.05]"
-        />
+      {/* A taller photo that drifts in a clear parallax as the row passes (and still eases in a
+          little on hover). */}
+      <div className="pointer-events-none relative aspect-[4/3] overflow-hidden md:aspect-auto md:min-h-[30rem]">
+        <Parallax amount={12} className="absolute inset-0">
+          <div className="absolute inset-0">
+            <ResponsiveImage
+              asset={cover}
+              sizes="(min-width: 1024px) 40vw, (min-width: 768px) 55vw, 100vw"
+              fill
+              className="transition-transform duration-[1600ms] ease-out-expo group-focus-within:scale-[1.05] group-hover:scale-[1.05]"
+            />
+          </div>
+        </Parallax>
       </div>
 
       <div className="pointer-events-none flex flex-col p-6 md:p-8 lg:p-10">
-        <div className="flex items-start justify-between gap-4">
-          <ul className="flex flex-wrap gap-2">
-            {hotel.stars ? (
-              <li>
-                <StarChip count={hotel.stars} />
-              </li>
-            ) : null}
+        <p className="text-body-sm text-slate">{hotel.tagline}</p>
+        {/* The name with its star rating beside it, then the themes under it. */}
+        <h3 className="mt-1.5 font-serif text-heading-3 leading-[1.15] transition-colors duration-500 group-hover:text-turquoise-160">
+          {hotel.name}
+          {/* Set inline after the last word, so it follows the name when it wraps. */}
+          {hotel.stars ? (
+            <StarChip count={hotel.stars} className="relative -top-[0.2em] ml-3 align-middle" />
+          ) : null}
+        </h3>
+        {themeLabels.length ? (
+          <ul className="mt-4 flex flex-wrap gap-2">
             {themeLabels.map((label) => (
               <li key={label}>
                 <Chip>{label}</Chip>
               </li>
             ))}
           </ul>
-          <span aria-hidden className="pt-1 text-label tracking-label text-mist tabular-nums">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-        </div>
-
-        <p className="mt-6 text-body-sm text-slate">{hotel.tagline}</p>
-        <h3 className="mt-1.5 font-serif text-heading-3 leading-[1.15] transition-colors duration-500 group-hover:text-turquoise-160">
-          {hotel.name}
-        </h3>
+        ) : null}
         <p className="mt-4 mb-8 line-clamp-3 max-w-xl text-body-md text-slate">
           {hotel.description}
         </p>

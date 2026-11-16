@@ -172,6 +172,18 @@ const strokeIcons = {
   waves: (
     <path d="M3 9c2 0 2-1.5 4.5-1.5S9.5 9 12 9s2.5-1.5 4.5-1.5S19 9 21 9M3 14c2 0 2-1.5 4.5-1.5S9.5 14 12 14s2.5-1.5 4.5-1.5S19 14 21 14M3 19c2 0 2-1.5 4.5-1.5S9.5 19 12 19s2.5-1.5 4.5-1.5S19 19 21 19" />
   ),
+  // A cocktail glass (bars).
+  cocktail: <path d="M4.5 4.5h15L12 13v7.5M8 20.5h8M7 7.5h10" />,
+  // Bubbles rising from water (jacuzzi, hot tubs).
+  bubbles: (
+    <>
+      <path d="M3 18c2 0 2-1.5 4.5-1.5S9.5 18 12 18s2.5-1.5 4.5-1.5S19 18 21 18" />
+      <circle cx="8" cy="11.5" r="1.6" />
+      <circle cx="13" cy="8" r="2.1" />
+      <circle cx="16.5" cy="12.5" r="1.3" />
+      <circle cx="10.5" cy="4.5" r="1" />
+    </>
+  ),
   home: <path d="M4 10.5 12 4l8 6.5V20h-5.5v-6h-5v6H4v-9.5Z" />,
   shop: (
     <path d="M4 9.5 5.5 4h13L20 9.5M4 9.5h16M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M5.5 12v8h13v-8" />

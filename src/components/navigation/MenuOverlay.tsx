@@ -257,19 +257,6 @@ export function MenuOverlay({ open, onClose, data, origin }: MenuOverlayProps) {
                   </m.div>
                 </m.div>
               </AnimatePresence>
-              <span
-                aria-hidden
-                className="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/0.5),transparent_60%)]"
-              />
-              <m.p
-                key={`caption-${shown.label}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: easeOutExpo }}
-                className="absolute inset-x-8 bottom-6 font-serif text-heading-4"
-              >
-                {shown.label}
-              </m.p>
             </m.div>
           </div>
         </m.div>

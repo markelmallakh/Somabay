@@ -114,13 +114,12 @@ export function HotelFinder({
             >
               {mode === "list" ? (
                 <ul className="flex flex-col gap-5">
-                  {visible.map((hotel, index) => (
+                  {visible.map((hotel) => (
                     <li key={hotel.slug}>
                       <HotelRow
                         hotel={hotel}
                         href={hrefs[hotel.slug]}
                         themeLabels={hotel.themes.map(label)}
-                        index={index}
                       />
                     </li>
                   ))}

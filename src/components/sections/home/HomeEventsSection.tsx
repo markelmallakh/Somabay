@@ -179,7 +179,7 @@ export function HomeEventsSection() {
                         <Icon name="pin" className="size-4" />
                         {card.location}
                       </span>
-                      <span className="inline-flex items-center gap-2 text-body-xs font-semibold tracking-label uppercase">
+                      <span className="inline-flex items-center gap-2 text-body-xs font-semibold tracking-label text-turquoise uppercase">
                         {isPast ? "View highlights" : "Explore event"}
                         <Icon
                           name="arrow-right"

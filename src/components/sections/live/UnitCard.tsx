@@ -68,10 +68,10 @@ export function UnitCard({ unit, href }: { unit: Unit; href: string }) {
       {/* Type and neighborhood, top-left on the photo throughout. */}
       <ul className="pointer-events-none absolute top-5 left-5 z-10 flex flex-wrap gap-2 pr-5">
         <li>
-          <Chip accent="turquoise">{unit.type}</Chip>
+          <Chip tone="light">{unit.type}</Chip>
         </li>
         <li>
-          <Chip accent="twilight">{unit.neighborhood}</Chip>
+          <Chip tone="light">{unit.neighborhood}</Chip>
         </li>
       </ul>
 

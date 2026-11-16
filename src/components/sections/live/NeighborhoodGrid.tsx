@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { filterChipClass } from "@/components/ui/filterChip";
 import { neighborhoodsIntro } from "@/content/home";
 import type { MapPlace, Neighborhood, NeighborhoodStatus } from "@/types/content";
 import { useGsap } from "@/hooks/useGsap";
@@ -204,14 +205,8 @@ export function NeighborhoodGrid({
               role="radio"
               aria-checked={checked}
               onClick={() => chooseFilter(option.id)}
-              className={cn(
-                "inline-flex min-h-10 items-center rounded-md border px-4 text-[0.8125rem] transition-colors duration-500",
-                // Floating over the photos, each chip carries its own soft shadow.
-                !spread && "shadow-float",
-                checked
-                  ? "border-turquoise bg-turquoise text-white"
-                  : "border-line bg-white text-ink hover:border-turquoise/60 hover:text-turquoise-160",
-              )}
+              // Floating over the photos, each chip carries its own soft shadow.
+              className={filterChipClass(checked, !spread ? "shadow-float" : undefined)}
             >
               {option.label}
             </button>

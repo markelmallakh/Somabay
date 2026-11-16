@@ -52,7 +52,9 @@ export function ScrollExpandVideo({
       )
       .fromTo(film, { scale: 1.25 }, { scale: 1, duration: 1 }, 0)
       .fromTo(shade, { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.6)
-      .fromTo(copy, { opacity: 0, y: 48 }, { opacity: 1, y: 0, duration: 0.4 }, 0.7);
+      .fromTo(copy, { opacity: 0, y: 48 }, { opacity: 1, y: 0, duration: 0.4 }, 0.7)
+      // A brief hold once the film fills the screen, so the copy can be read before it moves on.
+      .to({}, { duration: 0.22 });
   });
 
   return (
@@ -60,7 +62,7 @@ export function ScrollExpandVideo({
       ref={ref}
       aria-labelledby={id}
       data-theme-surface="dark"
-      className="relative h-[260svh] bg-white motion-reduce:h-svh"
+      className="relative h-[290svh] bg-white motion-reduce:h-svh"
     >
       <div className="sticky top-0 h-svh overflow-hidden">
         <div data-frame className="absolute inset-0 overflow-hidden bg-abyss">

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Open_Sans } from "next/font/google";
 import { MotionProvider } from "@/components/animations/MotionProvider";
+import { SiteMotion } from "@/components/animations/SiteMotion";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -72,6 +73,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <SiteFooter />
+          <SiteMotion />
         </MotionProvider>
       </body>
     </html>

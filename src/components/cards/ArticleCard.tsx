@@ -1,19 +1,19 @@
-import { Chip } from "@/components/ui/Chip";
 import Link from "next/link";
 import { routes } from "@/config/routes";
 import { formatLongDate } from "@/lib/dates";
 import type { Article } from "@/types/content";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Icon } from "@/components/ui/Icon";
+import { PostBadge } from "@/components/ui/PostBadge";
 
 export function ArticleCard({
   article,
   showDate = false,
-  tinted = false,
+  tinted: _tinted = false,
 }: {
   article: Article;
   showDate?: boolean;
-  /** On a tinted (sand/turquoise) section the category chip turns white. */
+  /** Kept for existing call sites; the category now sits on the photo. */
   tinted?: boolean;
 }) {
   return (
@@ -25,9 +25,9 @@ export function ArticleCard({
           fill
           className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
         />
+        <PostBadge category={article.category} />
       </div>
       <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-body-sm">
-        <Chip tone={tinted ? "plain" : "soft"}>{article.category}</Chip>
         <span className="text-slate">{article.readingMinutes} min read</span>
         {showDate ? (
           <span className="flex items-center gap-1.5 text-slate">
@@ -43,7 +43,7 @@ export function ArticleCard({
       </h3>
       <p
         aria-hidden
-        className="mt-auto inline-flex items-center gap-2 pt-4 text-body-xs font-semibold tracking-label uppercase"
+        className="mt-auto inline-flex items-center gap-2 pt-4 text-body-xs font-semibold tracking-label text-turquoise uppercase"
       >
         <span className="link-underline pb-0.5 group-hover:[background-size:100%_1px]">
           Read more

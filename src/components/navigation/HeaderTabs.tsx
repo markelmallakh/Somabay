@@ -257,8 +257,8 @@ function MegaGroups({ item, onNavigate }: { item: MenuItem; onNavigate: () => vo
                     </m.li>
                   ))}
                 </ul>
-                {/* A preview is a taste of a longer list: link to all of it. */}
-                {group.preview ? (
+                {/* Every group ends with a link to its own page, listing all of it. */}
+                {nested(group) ? (
                   <m.div {...rise(order++)} className="mt-5">
                     <Link
                       href={group.href}

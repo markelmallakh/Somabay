@@ -54,7 +54,7 @@ export function CoursesStack() {
               data-course-veil
               className="pointer-events-none absolute inset-0 z-10 bg-white opacity-0"
             />
-            <div className="relative aspect-[16/10] lg:col-span-7 lg:aspect-auto">
+            <div className="relative aspect-[16/10] overflow-hidden lg:col-span-7 lg:aspect-auto">
               <ResponsiveImage
                 asset={course.image}
                 sizes="(min-width: 1440px) 760px, (min-width: 1024px) 56vw, 100vw"

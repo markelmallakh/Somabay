@@ -31,7 +31,7 @@ export function ArrowChip({
     >
       <Icon
         name="arrow-chip"
-        strokeWidth={1.8}
+        strokeWidth={1.4}
         className="size-5.5 transition-transform duration-700 ease-out-expo group-hover:rotate-45 group-focus-visible:rotate-45"
       />
     </span>

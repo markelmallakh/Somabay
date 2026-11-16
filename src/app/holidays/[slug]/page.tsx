@@ -11,6 +11,7 @@ import { Video } from "@/components/media/Video";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { GuestReviews } from "@/components/sections/holidays/GuestReviews";
 import { HotelFacilities } from "@/components/sections/holidays/HotelFacilities";
+import { HotelLocation } from "@/components/sections/holidays/HotelLocation";
 import { RoomsFinder } from "@/components/sections/holidays/RoomsFinder";
 import { StarChip } from "@/components/sections/holidays/StarChip";
 import { ContactCta } from "@/components/sections/shared/ContactCta";
@@ -19,6 +20,7 @@ import { Chip } from "@/components/ui/Chip";
 import { routes } from "@/config/routes";
 import { getHotel, hotelPrice, hotels, placeholderReviews, themeLabel } from "@/content/hotels";
 import { PriceFrom } from "@/components/ui/PriceFrom";
+import { hotelPlaces } from "@/content/places";
 import { pageMetadata } from "@/lib/metadata";
 
 export function generateStaticParams() {
@@ -46,7 +48,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
     <>
       <Section
         spacing="none"
-        className="pt-[calc(var(--header-height)+2.5rem)] pb-section"
+        className="bg-sand-100 pt-[calc(var(--header-height)+2.5rem)] pb-section"
         aria-labelledby="page-title"
       >
         <Container>
@@ -60,21 +62,22 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
           <PhotoSlider images={hotel.gallery} label={hotel.name} />
           <div className="mt-12 grid gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-6">
             <Reveal className="lg:col-span-7">
-              <ul className="flex flex-wrap gap-2">
+              <h1 id="page-title" className="text-heading-2">
+                {hotel.name}
                 {hotel.stars ? (
-                  <li>
-                    <StarChip count={hotel.stars} />
-                  </li>
+                  <StarChip
+                    count={hotel.stars}
+                    className="relative -top-[0.2em] ml-3 align-middle"
+                  />
                 ) : null}
+              </h1>
+              <ul className="mt-5 flex flex-wrap gap-2">
                 {hotel.themes.map((theme) => (
                   <li key={theme}>
                     <Chip>{themeLabel(theme)}</Chip>
                   </li>
                 ))}
               </ul>
-              <h1 id="page-title" className="mt-5 text-heading-2">
-                {hotel.name}
-              </h1>
               <p className="mt-6 text-lead text-slate">{hotel.description}</p>
               {hotel.overview ? (
                 <>
@@ -84,7 +87,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
               ) : null}
             </Reveal>
             <aside className="lg:col-span-4 lg:col-start-9">
-              <div className="flex flex-col gap-6 rounded-md bg-sand-100 p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
+              <div className="flex flex-col gap-6 rounded-md bg-white p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
                 <PriceFrom amount={hotelPrice(hotel)} size="stacked" />
                 {hotel.website ? (
                   <Button
@@ -127,6 +130,11 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
             </ImageReveal>
           </Container>
         </Section>
+      ) : null}
+
+      {/* Where the hotel sits on the peninsula, among the landmarks, with Google Maps under it. */}
+      {hotelPlaces[hotel.slug] ? (
+        <HotelLocation slug={hotel.slug} name={hotel.name} {...hotelPlaces[hotel.slug]} />
       ) : null}
 
       {hotel.rooms ? (

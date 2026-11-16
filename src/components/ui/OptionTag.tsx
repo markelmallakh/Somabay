@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { filterChipClass } from "./filterChip";
 import { Icon } from "./Icon";
 
 type OptionTagProps = {
@@ -10,8 +11,8 @@ type OptionTagProps = {
 };
 
 /**
- * Selectable filter option drawn as a soft chip (4px corners): a light fill at rest, a pale
- * turquoise wash on hover, and solid turquoise with white text and a check once chosen. A real checkbox underneath.
+ * Selectable filter option in the site's one filter chip style (see filterChip): a rounded pill,
+ * solid sun yellow with a check once chosen. A real checkbox underneath.
  */
 export function OptionTag({ id, checked, onChange, children }: OptionTagProps) {
   return (
@@ -24,11 +25,9 @@ export function OptionTag({ id, checked, onChange, children }: OptionTagProps) {
         className="peer sr-only"
       />
       <span
-        className={cn(
-          "inline-flex items-center rounded-md px-3.5 py-2.5 text-[0.8125rem] leading-none transition-[background-color,color] duration-500 ease-out-expo peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-turquoise",
-          checked
-            ? "bg-turquoise text-white"
-            : "bg-sand-100 text-ink hover:bg-turquoise-10 hover:text-turquoise-160",
+        className={filterChipClass(
+          checked,
+          "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-turquoise",
         )}
       >
         <span

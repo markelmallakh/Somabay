@@ -30,11 +30,11 @@ export default function FaqPage() {
       <JsonLd data={structuredData} />
       <PageHero
         variant="title"
+        align="center"
         eyebrow="Get answers for your inquiries"
         title="Frequently Asked Questions"
-        description="Find answers about staying, buying, living, and visiting Somabay. Filter by category to get what you need."
       />
-      <Section tone="white" className="bg-turquoise-5" aria-label="Questions">
+      <Section tone="white" spacing="none" className="pb-section" aria-label="Questions">
         <Container>
           <FaqList items={faqs} filterable />
         </Container>

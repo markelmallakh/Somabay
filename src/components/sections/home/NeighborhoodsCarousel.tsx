@@ -218,7 +218,7 @@ export function NeighborhoodsCarousel({
           <button
             type="button"
             onClick={() => step(1)}
-            className="wave grid size-12 place-items-center rounded-md bg-ink text-white transition-colors duration-500"
+            className="wave grid size-12 place-items-center rounded-md border border-ink/15 text-ink transition-colors duration-500 hover:border-turquoise hover:text-white"
           >
             <span className="sr-only">Next neighborhoods</span>
             <Icon name="arrow-right" className="size-5" />

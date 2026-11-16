@@ -16,12 +16,7 @@ export const metadata = pageMetadata({
 export default function JournalPage() {
   return (
     <>
-      <PageHero
-        variant="title"
-        eyebrow="What’s Up Soma"
-        title="Somabay Journal"
-        description="Stories, insights, and the latest from life by the Red Sea."
-      />
+      <PageHero variant="title" align="center" eyebrow="What’s Up Soma" title="Somabay Journal" />
       <Section spacing="none" className="pb-section" aria-label="Articles">
         <h2 className="sr-only">Articles</h2>
         <Container>

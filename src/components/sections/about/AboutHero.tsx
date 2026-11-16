@@ -14,6 +14,7 @@ export function AboutHero() {
     <section
       aria-labelledby="page-title"
       data-theme-surface="dark"
+      data-sticky-hero=""
       className="relative isolate flex min-h-[max(36rem,min(100svh,61.4vw))] items-end overflow-hidden bg-abyss text-white"
     >
       <ResponsiveImage

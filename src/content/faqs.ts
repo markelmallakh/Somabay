@@ -94,7 +94,7 @@ export const faqs: FaqItem[] = [
 ];
 
 export const faqCategories = [
-  { id: "all", label: "All questions" },
+  { id: "all", label: "All" },
   { id: "staying", label: "Staying" },
   { id: "buying", label: "Buying a home" },
   { id: "experience", label: "Experience Somabay" },

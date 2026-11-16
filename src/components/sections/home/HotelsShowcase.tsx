@@ -9,11 +9,10 @@ import { getLenis } from "@/components/animations/SmoothScroll";
 import { Container } from "@/components/layout/Container";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import { Icon, type IconName } from "@/components/ui/Icon";
 import { PriceFrom } from "@/components/ui/PriceFrom";
 import { CarouselArrows } from "@/components/ui/CarouselArrows";
 import { Chip } from "@/components/ui/Chip";
-import { StarChip } from "@/components/sections/holidays/StarChip";
 
 export type ShowcaseHotel = {
   slug: string;
@@ -44,6 +43,22 @@ type HotelsShowcaseProps = {
  * switcher jumps to a hotel (by scrolling to its step while pinned; without the pin it simply
  * switches). The counter arrows on the photo page through the active hotel's own gallery.
  */
+/** An icon for each amenity, picked from its name; a check mark when nothing matches. */
+const AMENITY_ICONS: [RegExp, IconName][] = [
+  [/beach/i, "umbrella"],
+  [/jacuzzi|hot tub|whirlpool/i, "bubbles"],
+  [/pool/i, "waves"],
+  [/spa|wellness|thalasso/i, "sparkle"],
+  [/bar|lounge/i, "cocktail"],
+  [/restaurant|dining/i, "utensils"],
+  [/gym|fitness/i, "dumbbell"],
+  [/golf/i, "flag"],
+  [/wifi|wi-fi/i, "wifi"],
+  [/kids|family|club/i, "family"],
+];
+const amenityIcon = (name: string): IconName =>
+  AMENITY_ICONS.find(([pattern]) => pattern.test(name))?.[1] ?? "check";
+
 export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps) {
   const [active, setActive] = useState(0);
   const trigger = useRef<ScrollTrigger | null>(null);
@@ -100,12 +115,17 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
     setPhoto({ slug: hotel.slug, index: (photoIndex + by + photos) % photos });
 
   return (
-    <div ref={ref} className="flex flex-col gap-8 py-section">
+    // Desktop: the pinned block is exactly one screen tall (below the header), so the whole
+    // showcase fits any laptop; the photo and switcher take whatever height is left.
+    <div
+      ref={ref}
+      className="flex flex-col gap-8 py-section lg:h-svh lg:min-h-[40rem] lg:pt-[calc(var(--header-bar)+1.5rem)] lg:pb-[calc(2.5rem+8svh)]"
+    >
       {intro}
-      <Container>
-        <div className="grid gap-8 lg:grid-cols-[560fr_445fr_323fr]">
+      <Container className="lg:min-h-0 lg:flex-1">
+        <div className="grid gap-8 lg:h-full lg:grid-cols-[500fr_445fr_323fr] lg:gap-x-12">
           {/* Photo */}
-          <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-gray-100">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-gray-100 lg:aspect-auto lg:h-full">
             {hotels.map((item, index) => (
               <div
                 key={item.slug}
@@ -150,21 +170,28 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
           </div>
 
           {/* Details */}
-          <div key={hotel.slug} className="flex flex-col justify-between gap-6 pb-2">
+          <div key={hotel.slug} className="flex flex-col justify-between gap-7">
             <div className="flex flex-col gap-3">
-              <ul className="flex animate-rise flex-wrap gap-2">
+              {/* The name with its star rating beside it: a small sun-yellow pill, "5 ★". */}
+              <div className="flex animate-rise items-center gap-3">
+                <h3 className="text-heading-3">{hotel.name}</h3>
                 {hotel.stars ? (
-                  <li>
-                    <StarChip count={hotel.stars} />
-                  </li>
+                  <span
+                    className="inline-flex shrink-0 items-center gap-1 rounded-full bg-sun px-2.5 py-1 text-body-xs leading-none font-semibold text-ink tabular-nums"
+                    aria-label={`${hotel.stars}-star hotel`}
+                  >
+                    {hotel.stars}
+                    <Icon name="star" className="size-3" />
+                  </span>
                 ) : null}
+              </div>
+              <ul className="flex animate-rise flex-wrap gap-2 [animation-delay:60ms]">
                 {hotel.tags.map((tag) => (
                   <li key={tag}>
                     <Chip>{tag}</Chip>
                   </li>
                 ))}
               </ul>
-              <h3 className="animate-rise text-heading-3 [animation-delay:60ms]">{hotel.name}</h3>
               <p className="animate-rise text-body-md text-slate [animation-delay:120ms]">
                 {hotel.description}
               </p>
@@ -175,14 +202,19 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
                 >
                   {hotel.amenities.map((amenity) => (
                     <li key={amenity} className="flex items-center gap-2 text-body-sm text-ink">
-                      <Icon name="check" className="size-4 shrink-0 text-turquoise" />
+                      <Icon
+                        name={amenityIcon(amenity)}
+                        strokeWidth={1.5}
+                        className="size-5 shrink-0 text-turquoise"
+                      />
                       {amenity}
                     </li>
                   ))}
                 </ul>
               ) : null}
             </div>
-            <div className="flex animate-rise flex-wrap items-center gap-x-8 gap-y-4 [animation-delay:240ms]">
+            {/* Price and the call to action together on a soft panel, so the next step is clear. */}
+            <div className="flex animate-rise flex-wrap items-center justify-between gap-x-6 gap-y-4 border-t border-line pt-5 [animation-delay:240ms]">
               <PriceFrom amount={hotel.price} />
               <Button href={hotel.href} variant="primary" icon="arrow-up-right">
                 {ctaLabel}

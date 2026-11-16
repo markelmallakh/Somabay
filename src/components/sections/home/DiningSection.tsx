@@ -1,7 +1,8 @@
 import { routes } from "@/config/routes";
 import { image, video } from "@/lib/media";
-import { Container } from "@/components/layout/Container";
+import { ImageReveal } from "@/components/animations/ImageReveal";
 import { Reveal } from "@/components/animations/Reveal";
+import { SplitHeading } from "@/components/animations/SplitHeading";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -64,43 +65,57 @@ export function DiningSection() {
       <section
         aria-labelledby="dining-title"
         data-theme-surface="light"
-        className="bg-white py-section text-ink"
+        className="bg-white text-ink"
       >
-        <Container className="flex flex-col gap-[3.75rem]">
-          <div className="grid gap-8 lg:grid-cols-[800fr_560fr]">
-            <div className="flex flex-col gap-8">
-              <Reveal className="flex max-w-[31.25rem] flex-col gap-8">
-                <div className="flex flex-col gap-4">
-                  <Eyebrow>{dining.eyebrow}</Eyebrow>
-                  <h2 id="dining-title" className="text-heading-2">
-                    {dining.title}
-                  </h2>
-                </div>
-                <p className="text-body-md text-slate">{dining.description}</p>
-              </Reveal>
-
+        {/* Split screen: the copy and list on the left in the site's margin, the photo filling the
+            right half from the top of the section to its foot and out to the screen edge. */}
+        <div className="grid lg:min-h-svh lg:grid-cols-2">
+          <div className="flex flex-col justify-center gap-8 px-gutter py-section lg:ps-site lg:pe-16">
+            <div className="flex max-w-[31.25rem] flex-col gap-8">
               <div className="flex flex-col gap-4">
-                <DiningList places={dining.places} thumb={dining.thumb} />
-                <SmartLink
-                  href={dining.cta.href}
-                  className="link-underline w-fit pb-0.5 text-body-sm text-slate transition-colors duration-500 ease-out-expo hover:text-ink"
-                >
-                  {dining.more}
-                </SmartLink>
+                <Reveal>
+                  <Eyebrow>{dining.eyebrow}</Eyebrow>
+                </Reveal>
+                {/* The title rises line by line out of its mask. */}
+                <SplitHeading id="dining-title" className="text-heading-2">
+                  {dining.title}
+                </SplitHeading>
               </div>
-
-              <Reveal>
-                <Button href={dining.cta.href} variant="primary" icon="arrow-up-right">
-                  {dining.cta.label}
-                </Button>
+              <Reveal delay={0.15}>
+                <p className="text-body-md text-slate">{dining.description}</p>
               </Reveal>
             </div>
 
-            <Reveal className="relative min-h-[28rem] overflow-hidden rounded-md lg:min-h-0">
-              <ResponsiveImage asset={dining.image} sizes="(min-width: 1024px) 37vw, 100vw" fill />
+            <div className="flex flex-col gap-4">
+              <DiningList places={dining.places} thumb={dining.thumb} />
+              <SmartLink
+                href={dining.cta.href}
+                className="link-underline w-fit pb-0.5 text-body-sm text-slate transition-colors duration-500 ease-out-expo hover:text-ink"
+              >
+                {dining.more}
+              </SmartLink>
+            </div>
+
+            <Reveal delay={0.2}>
+              <Button href={dining.cta.href} variant="primary" icon="arrow-up-right">
+                {dining.cta.label}
+              </Button>
             </Reveal>
           </div>
-        </Container>
+
+          {/* Entrance: the photo wipes open from the foot while it settles from a zoom, then drifts
+                in a clear parallax as the section scrolls. */}
+          <ImageReveal
+            from="bottom"
+            parallax={12}
+            delay={0.15}
+            className="relative min-h-[32rem] overflow-hidden lg:min-h-0"
+          >
+            <div className="absolute inset-0">
+              <ResponsiveImage asset={dining.image} sizes="(min-width: 1024px) 50vw, 100vw" fill />
+            </div>
+          </ImageReveal>
+        </div>
       </section>
       {/* The Marina: "Somabay / Marina" parted by the film, full width, then its content. */}
       <MarinaPanel {...marina} />

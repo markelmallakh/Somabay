@@ -1,12 +1,10 @@
 import { about } from "@/content/home";
-import { Container } from "@/components/layout/Container";
 import { AboutJourney } from "./AboutJourney";
 import { AboutStats } from "./AboutStats";
 
 /**
  * Figma "About Intro" + "Stats". The story rises over the pinned hero and scrolls over the
- * shoreline film (see AboutJourney); the key figures follow inline on the dune band the film
- * fades into.
+ * shoreline film (see AboutJourney); the key figures close it on the film's last frame.
  */
 export function AboutSection() {
   return (
@@ -17,12 +15,8 @@ export function AboutSection() {
         statementLead={about.statementLead}
         paragraphs={about.paragraphs}
         ambient={about.ambient}
+        outro={<AboutStats stats={about.stats} cta={about.cta} />}
       />
-      <div className="relative -mt-px bg-dune">
-        <Container className="pt-section pb-section">
-          <AboutStats stats={about.stats} cta={about.cta} />
-        </Container>
-      </div>
     </div>
   );
 }

@@ -54,7 +54,9 @@ export function DetailDrawer({ items, index, onClose, onNavigate }: DetailDrawer
                 images={item.images}
                 sizes="(min-width: 832px) 832px, 100vw"
                 label={`${item.title} photos`}
-                className="aspect-[16/10]"
+                // Shorter on wide screens, and never more than about a third of the screen, so the details
+                // below fit without scrolling where possible.
+                className="aspect-[16/10] md:aspect-auto md:h-[min(34svh,24rem)]"
               />
               <button
                 type="button"
@@ -67,13 +69,21 @@ export function DetailDrawer({ items, index, onClose, onNavigate }: DetailDrawer
             </div>
 
             <div className="flex flex-1 flex-col gap-5 p-6 md:p-10">
-              {item.badges ? (
-                <ul data-drawer-item style={stagger(0)} className="flex flex-wrap gap-2">
-                  {item.badges.stars ? (
-                    <li>
-                      <StarChip count={item.badges.stars} />
-                    </li>
+              {/* The name (with a hotel's star rating beside it), then its tags under it. */}
+              <div data-drawer-item style={stagger(0)} className="flex flex-col gap-2">
+                <h2 className="text-heading-2">
+                  {item.title}
+                  {item.badges?.stars ? (
+                    <StarChip
+                      count={item.badges.stars}
+                      className="relative -top-[0.2em] ml-3 align-middle"
+                    />
                   ) : null}
+                </h2>
+                {item.kicker ? <p className="text-body-md text-slate">{item.kicker}</p> : null}
+              </div>
+              {item.badges?.tags.length ? (
+                <ul data-drawer-item style={stagger(1)} className="flex flex-wrap gap-2">
                   {item.badges.tags.map((tag) => (
                     <li key={tag}>
                       <Chip>{tag}</Chip>
@@ -81,14 +91,10 @@ export function DetailDrawer({ items, index, onClose, onNavigate }: DetailDrawer
                   ))}
                 </ul>
               ) : item.chip ? (
-                <p data-drawer-item style={stagger(0)}>
+                <p data-drawer-item style={stagger(1)}>
                   <Chip>{item.chip}</Chip>
                 </p>
               ) : null}
-              <div data-drawer-item style={stagger(1)} className="flex flex-col gap-2">
-                <h2 className="text-heading-2">{item.title}</h2>
-                {item.kicker ? <p className="text-body-md text-slate">{item.kicker}</p> : null}
-              </div>
               {item.location ? (
                 <p
                   data-drawer-item

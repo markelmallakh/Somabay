@@ -115,6 +115,28 @@ export function ResaleSection() {
           0.82,
         )
         .to({}, { duration: 0.25 });
+
+      // Parallax: the lounge photo drifts up through its frame, uncovering its lower part (the
+      // lounge and the guest) from the moment the section
+      // arrives until it has scrolled away (the pin's length included), so it reads as depth.
+      const media = scope.querySelector<HTMLElement>("[data-centre-media]");
+      if (media) {
+        gsap.fromTo(
+          media,
+          { yPercent: 12 },
+          {
+            yPercent: -14,
+            ease: "none",
+            scrollTrigger: {
+              trigger: scope,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          },
+        );
+      }
     });
     return () => mm.revert();
   }, []);
@@ -165,7 +187,13 @@ export function ResaleSection() {
           } as CSSProperties
         }
       >
-        <ResponsiveImage asset={gallery.centre} sizes="100vw" quality={85} fill />
+        {/* Taller than its frame so it can drift in a clear parallax as the section scrolls. */}
+        <div
+          data-centre-media
+          className="absolute inset-x-0 -top-[20%] h-[140%] will-change-transform"
+        >
+          <ResponsiveImage asset={gallery.centre} sizes="100vw" quality={85} fill />
+        </div>
         <div
           data-veil
           aria-hidden
