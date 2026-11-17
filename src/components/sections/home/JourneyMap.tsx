@@ -259,6 +259,8 @@ export function JourneyMap() {
     setQuery("");
   };
 
+  const directionsHref = `https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${encodeURIComponent("Somabay, Egypt")}`;
+
   return (
     <section
       aria-labelledby="journey-title"
@@ -359,16 +361,17 @@ export function JourneyMap() {
         </span>
       </div>
 
-      <Container className="pointer-events-none relative z-[1000] flex h-full items-start pt-8 md:items-center md:pt-0">
+      <Container className="pointer-events-none relative z-[1000] flex h-full items-start pt-4 sm:pt-8 md:items-center md:pt-0">
         <div
           ref={card}
-          className="pointer-events-auto relative flex w-full max-w-[23rem] flex-col gap-6 overflow-hidden rounded-md bg-turquoise-160 p-6 text-white shadow-soft before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-sun"
+          // Phones: a compact card (tighter padding, smaller type) so the route stays in view.
+          className="pointer-events-auto relative flex w-full flex-col gap-3 overflow-hidden rounded-md bg-turquoise-160 p-4 text-white shadow-soft before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-sun sm:max-w-[23rem] sm:gap-6 sm:p-6"
         >
-          <div className="flex flex-col gap-3">
-            <h2 id="journey-title" className="text-heading-5">
+          <div className="flex flex-col gap-1.5 sm:gap-3">
+            <h2 id="journey-title" className="text-heading-6 sm:text-heading-5">
               {journeyIntro.title}
             </h2>
-            <p className="text-body-sm text-white/90">{journeyIntro.description}</p>
+            <p className="text-body-xs text-white/90 sm:text-body-sm">{journeyIntro.description}</p>
           </div>
 
           {open ? (
@@ -448,14 +451,15 @@ export function JourneyMap() {
               </ul>
             </div>
           ) : (
-            <div className="flex flex-col gap-5">
-              <div className="flex items-end justify-between gap-4 border-y border-white/30 py-5">
-                <div className="flex min-w-0 flex-col gap-1.5">
-                  <span className="truncate font-serif text-heading-6 leading-[1.2]">
+            <div className="flex flex-col gap-3 sm:gap-5">
+              {/* Phones: a hairline above only; the card ends with the route. */}
+              <div className="flex items-end justify-between gap-4 border-t border-white/30 pt-3 sm:border-y sm:py-5">
+                <div className="flex min-w-0 flex-col gap-1 sm:gap-1.5">
+                  <span className="truncate font-serif text-body-lg leading-[1.2] sm:text-heading-6">
                     {origin.name}
                   </span>
-                  <span className="flex items-center gap-1.5 text-body-md text-white/90">
-                    <Icon name={origin.mode} className="size-4.5 text-sun" />
+                  <span className="flex items-center gap-1.5 text-body-sm text-white/90 sm:text-body-md">
+                    <Icon name={origin.mode} className="size-4 text-sun sm:size-4.5" />
                     {formatDuration(origin.minutes)}
                   </span>
                 </div>
@@ -468,13 +472,18 @@ export function JourneyMap() {
                   {journeyIntro.chooseLabel}
                 </button>
               </div>
-              <GoogleMapsButton
-                href={`https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${encodeURIComponent("Somabay, Egypt")}`}
-              />
+              {/* Phones show this at the foot of the map instead (below). */}
+              <GoogleMapsButton className="hidden sm:inline-flex" href={directionsHref} />
             </div>
           )}
         </div>
       </Container>
+
+      {/* Phones: directions sit at the foot of the map, centred, clear of the card. */}
+      <GoogleMapsButton
+        href={directionsHref}
+        className="absolute bottom-5 left-1/2 z-[1000] -translate-x-1/2 shadow-float sm:hidden"
+      />
     </section>
   );
 }

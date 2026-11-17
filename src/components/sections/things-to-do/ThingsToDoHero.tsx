@@ -156,7 +156,7 @@ export function ThingsToDoHero({ eyebrow, lines, image, scatter, overview }: Thi
     <section
       ref={scope}
       aria-labelledby="page-title"
-      className="relative h-[300svh] bg-white motion-reduce:h-auto"
+      className="relative h-[220svh] bg-white motion-reduce:h-auto md:h-[300svh]"
     >
       <div className="sticky top-0 h-svh overflow-hidden motion-reduce:static motion-reduce:h-auto">
         {/* The scattered gallery around the title. */}
@@ -215,7 +215,7 @@ export function ThingsToDoHero({ eyebrow, lines, image, scatter, overview }: Thi
           <h1 id="page-title" className="font-serif text-heading-1 leading-[1.05] text-ink">
             <span data-line-top className="block">
               {/* The eyebrow travels with the top line, so it never sits over the photo. */}
-              <span data-eyebrow className="mb-5 block">
+              <span data-eyebrow className="mb-2 block lg:mb-3">
                 <Eyebrow as="span" className="mx-auto">
                   {eyebrow}
                 </Eyebrow>
@@ -236,17 +236,17 @@ export function ThingsToDoHero({ eyebrow, lines, image, scatter, overview }: Thi
         <div
           data-overview
           data-theme-surface="dark"
-          className="absolute inset-x-0 bottom-0 z-30 pb-16 text-white opacity-0 motion-reduce:opacity-100 lg:pb-20"
+          className="absolute inset-x-0 bottom-0 z-30 pb-10 text-white opacity-0 motion-reduce:opacity-100 sm:pb-16 lg:pb-20"
         >
-          <Container className="grid gap-6 lg:grid-cols-12 lg:items-end">
-            <div className="flex flex-col gap-4 lg:col-span-7">
+          <Container className="grid gap-4 sm:gap-6 lg:grid-cols-12 lg:items-end">
+            <div className="flex flex-col gap-2 lg:col-span-7 lg:gap-3">
               {overview.eyebrow ? <Eyebrow tone="dark">{overview.eyebrow}</Eyebrow> : null}
-              <h2 className="max-w-[11em] font-serif text-heading-2 text-balance">
+              <h2 className="max-w-[11em] font-serif text-heading-2 text-balance max-sm:mx-auto">
                 {overview.title}
               </h2>
             </div>
             {overview.description ? (
-              <p className="text-body-md text-white/80 lg:col-span-4 lg:col-start-9">
+              <p className="text-body-md text-white/80 max-sm:text-center lg:col-span-4 lg:col-start-9">
                 {overview.description}
               </p>
             ) : null}

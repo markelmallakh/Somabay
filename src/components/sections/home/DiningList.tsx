@@ -33,7 +33,7 @@ export function DiningList({ places, thumb }: { places: Place[]; thumb: ImageAss
                 onClick={() => setOpen(items.indexOf(venue))}
                 className="group flex w-full items-center gap-4 border-b border-line py-2 pr-2 text-left transition-colors duration-500 hover:bg-sand-100 focus-visible:bg-sand-100"
               >
-                <span className="relative size-16 shrink-0 overflow-hidden rounded-md">
+                <span className="relative size-14 shrink-0 overflow-hidden rounded-md sm:size-16">
                   {/* The venue's own photo (the first in its drawer); the shared one as fallback. */}
                   <ResponsiveImage
                     asset={venue.images[0] ?? thumb}
@@ -42,13 +42,16 @@ export function DiningList({ places, thumb }: { places: Place[]; thumb: ImageAss
                     className="transition-transform duration-1000 ease-out-expo group-hover:scale-[1.05]"
                   />
                 </span>
-                <span className="font-sans text-heading-6 whitespace-nowrap transition-transform duration-700 ease-out-expo group-hover:translate-x-1">
-                  {place.name}
-                </span>
-                <span className="ml-auto flex shrink-0 items-center gap-2 text-body-sm text-slate">
-                  <span>{place.tag}</span>
-                  <span aria-hidden className="size-1 rounded-full bg-current opacity-50" />
-                  <span>{venue.location}</span>
+                {/* Phones: the name over its cuisine and place; side by side from `sm`. */}
+                <span className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
+                  <span className="font-sans text-heading-6 transition-transform duration-700 ease-out-expo group-hover:translate-x-1 sm:whitespace-nowrap">
+                    {place.name}
+                  </span>
+                  <span className="flex items-center gap-2 text-body-sm text-slate sm:ml-auto sm:shrink-0">
+                    <span>{place.tag}</span>
+                    <span aria-hidden className="size-1 rounded-full bg-current opacity-50" />
+                    <span>{venue.location}</span>
+                  </span>
                 </span>
               </button>
             </RevealItem>

@@ -17,6 +17,10 @@ export type Facility = {
   href: string;
 };
 
+/** Phones: every card the same portrait size, about one and a half to a screen. */
+const PHONE_CARD =
+  "aspect-[4/5] w-[62vw] shrink-0 snap-start md:aspect-auto md:h-(--h) md:w-auto md:shrink";
+
 /** How far (px) the columns drift against each other while scrolling. */
 const SHIFT = 220;
 
@@ -54,15 +58,15 @@ function FacilityCard({
             aria-hidden
             className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent"
           />
-          <span className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-6">
+          <span className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-4 sm:inset-x-6 sm:bottom-6 sm:gap-6">
             <span className="flex flex-col gap-1">
               <span className="font-serif text-heading-5">{item.title}</span>
-              <span className="text-body-sm text-white/80">{item.description}</span>
+              <span className="text-body-xs text-white/80 sm:text-body-sm">{item.description}</span>
             </span>
-            <span className="wave wave-group grid size-11 shrink-0 place-items-center rounded-md bg-turquoise transition-colors duration-500 [--wave:#fff] group-hover:text-turquoise">
+            <span className="wave wave-group grid size-9 shrink-0 place-items-center rounded-md bg-turquoise transition-colors duration-500 [--wave:#fff] group-hover:text-turquoise sm:size-11">
               <Icon
                 name="arrow-up-right"
-                className="size-5 transition-transform duration-700 ease-out-expo group-hover:rotate-45"
+                className="size-4 transition-transform duration-700 ease-out-expo group-hover:rotate-45 sm:size-5"
               />
             </span>
           </span>
@@ -137,47 +141,50 @@ export function FacilitiesCollage({
   const height = (rem: number) => ({ "--h": `${rem}rem` }) as CSSProperties;
 
   return (
-    <div ref={ref} className="flex flex-col gap-[3.75rem]">
+    <div ref={ref} className="flex flex-col gap-6 md:gap-[3.75rem]">
+      {/* The lead card across the full width (from `md`; phones show it first in the row). */}
       <FacilityCard
         item={lead}
-        className="aspect-[1392/649]"
+        className="hidden aspect-[16/9] sm:block md:aspect-[1392/649]"
         sizes="(min-width: 1512px) 1392px, 100vw"
       />
-      {/* Unequal columns for a looser, collage feel; bottom padding absorbs the drift. */}
+      {/* Unequal columns for a looser, collage feel; bottom padding absorbs the drift. On phones
+          all five cards share one size in a swipe row that shows one and a half at a time. */}
       <div
         data-columns
-        className="grid gap-8 md:grid-cols-[7fr_6fr] md:items-start md:gap-x-10 md:pb-[8.75rem]"
+        className="-mx-gutter scrollbar-none flex snap-x snap-mandatory scroll-px-gutter gap-3 overflow-x-auto px-gutter md:mx-0 md:grid md:snap-none md:grid-cols-[7fr_6fr] md:items-start md:gap-x-10 md:overflow-visible md:px-0 md:pb-[8.75rem]"
       >
-        <div data-col="left" className="flex flex-col gap-8">
+        <FacilityCard item={lead} className={PHONE_CARD + " sm:hidden"} sizes="62vw" />
+        <div data-col="left" className="contents md:flex md:flex-col md:gap-8">
           <FacilityCard
             item={left[0]}
             from="large"
-            className="aspect-[4/3] md:aspect-auto md:h-(--h)"
+            className={PHONE_CARD}
             style={height(LARGE)}
-            sizes="(min-width: 768px) 46vw, 100vw"
+            sizes="(min-width: 768px) 46vw, 62vw"
           />
           <FacilityCard
             item={left[1]}
             from="small"
-            className="aspect-[4/3] md:aspect-auto md:h-(--h)"
+            className={PHONE_CARD}
             style={height(SMALL)}
-            sizes="(min-width: 768px) 46vw, 100vw"
+            sizes="(min-width: 768px) 46vw, 62vw"
           />
         </div>
-        <div data-col="right" className="flex flex-col gap-8">
+        <div data-col="right" className="contents md:flex md:flex-col md:gap-8">
           <FacilityCard
             item={right[0]}
             from="small"
-            className="aspect-[4/3] md:aspect-auto md:h-(--h)"
+            className={PHONE_CARD}
             style={height(SMALL)}
-            sizes="(min-width: 768px) 46vw, 100vw"
+            sizes="(min-width: 768px) 46vw, 62vw"
           />
           <FacilityCard
             item={right[1]}
             from="large"
-            className="aspect-[4/3] md:aspect-auto md:h-(--h)"
+            className={PHONE_CARD}
             style={height(LARGE)}
-            sizes="(min-width: 768px) 46vw, 100vw"
+            sizes="(min-width: 768px) 46vw, 62vw"
           />
         </div>
       </div>

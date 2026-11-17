@@ -15,23 +15,23 @@ import { Icon } from "@/components/ui/Icon";
 export function AboutFilmSection() {
   const [open, setOpen] = useState(false);
   return (
-    <section aria-label="Somabay film" className="bg-white pb-20">
+    <section aria-label="Somabay film" className="bg-white pb-12 sm:pb-20">
       <Container>
-        <ImageReveal className="relative aspect-[1392/760] overflow-hidden rounded-md">
+        <ImageReveal className="relative aspect-[4/3] overflow-hidden rounded-md sm:aspect-[1392/760]">
           <Video
             // The real campaign film, silent here; Play video opens it with sound.
             asset={{ ...about.film, hasAudio: false }}
             playback="in-view"
             sizes="(min-width: 1512px) 1392px, 100vw"
             showToggle
-            toggleClassName="bottom-6 right-6 left-auto"
+            toggleClassName="bottom-3 right-3 left-auto sm:bottom-6 sm:right-6"
             className="absolute inset-0 size-full"
           />
           <button
             type="button"
             onClick={() => setOpen(true)}
             aria-label={`Watch video: ${about.film.label}`}
-            className="group wave absolute bottom-6 left-6 flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-body-sm leading-none font-medium tracking-label text-turquoise uppercase shadow-float transition-[color,scale] duration-500 ease-out-expo hover:scale-105 hover:text-white"
+            className="wave absolute bottom-3 left-3 flex min-h-11 items-center gap-2 rounded-md bg-white px-4 py-2.5 text-body-sm leading-none font-medium tracking-label text-turquoise uppercase shadow-float transition-[color,scale] duration-500 ease-out-expo hover:scale-105 hover:text-white sm:bottom-6 sm:left-6 sm:min-h-0 sm:px-5"
           >
             <Icon name="play" className="size-3.5" />
             Watch video

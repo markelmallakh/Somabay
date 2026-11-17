@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Open_Sans } from "next/font/google";
 import { MotionProvider } from "@/components/animations/MotionProvider";
 import { SiteMotion } from "@/components/animations/SiteMotion";
+import { TouchHover } from "@/components/animations/TouchHover";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -69,11 +70,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <MotionProvider>
           <SmoothScroll />
           <SiteHeader />
-          <main id="main-content" tabIndex={-1} className="outline-none">
+          {/* Its own layer: nothing inside a page (map tabs, sticky bars, floating chips) can rise
+              over the header or the open menu, whatever its z-index. */}
+          <main id="main-content" tabIndex={-1} className="isolate outline-none">
             {children}
           </main>
           <SiteFooter />
           <SiteMotion />
+          <TouchHover />
         </MotionProvider>
       </body>
     </html>

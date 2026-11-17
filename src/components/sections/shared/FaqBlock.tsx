@@ -33,8 +33,8 @@ export function FaqBlock({
       aria-labelledby="faq-title"
       className={teal ? "bg-turquoise-160" : undefined}
     >
-      <Container className="grid gap-10 lg:grid-cols-12 lg:gap-6">
-        <div className="flex flex-col items-start gap-5 lg:col-span-4">
+      <Container className="grid gap-6 sm:gap-10 lg:grid-cols-12 lg:gap-6">
+        <div className="flex flex-col items-start gap-3 sm:gap-5 lg:col-span-4">
           <SplitHeading id="faq-title" className="text-heading-2 text-balance">
             {title}
           </SplitHeading>

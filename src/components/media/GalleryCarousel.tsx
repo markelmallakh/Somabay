@@ -135,10 +135,15 @@ export function GalleryCarousel({
       </div>
       {/* The site's slider controls: a progress line (the lit part is the photo on show) and
           two arrows side by side. */}
-      <Container className="mt-8 flex items-center gap-8">
+      {/* Rail, counter and arrows: tablets and up (phones just swipe). */}
+      <Container className="mt-8 hidden items-center gap-8 md:flex">
+        {/* Phones: the count alone (no rail). */}
         <div
           aria-hidden
-          className={cn("relative h-0.5 flex-1", tone === "dark" ? "bg-white/20" : "bg-line")}
+          className={cn(
+            "relative hidden h-0.5 flex-1 md:block",
+            tone === "dark" ? "bg-white/20" : "bg-line",
+          )}
         >
           <span
             className="absolute inset-y-0 bg-turquoise transition-[left] duration-700 ease-out-expo"

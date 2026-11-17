@@ -137,7 +137,9 @@ export function MarinaPanel({
           <div
             data-shade
             aria-hidden
-            className="absolute inset-0 bg-[linear-gradient(to_right,rgb(0_0_0/0.65),rgb(0_0_0/0.15)_55%,transparent),linear-gradient(to_top,rgb(0_0_0/0.55),transparent_35%)] opacity-0 motion-reduce:opacity-100"
+            // Phones: shaded from the top, where the copy sits; larger screens from the left
+            // and the foot. It fades in only once the film fills the screen.
+            className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0.55)_0%,rgb(0_0_0/0.2)_40%,transparent_60%),linear-gradient(to_top,rgb(0_0_0/0.45),transparent_25%)] opacity-0 motion-reduce:opacity-100 sm:bg-[linear-gradient(to_right,rgb(0_0_0/0.65),rgb(0_0_0/0.15)_55%,transparent),linear-gradient(to_top,rgb(0_0_0/0.55),transparent_35%)]"
           />
         </div>
 
@@ -146,7 +148,7 @@ export function MarinaPanel({
           aria-hidden
           className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center text-center motion-reduce:hidden"
         >
-          <p className="font-serif text-[clamp(3.5rem,2rem+6vw,8.5rem)] leading-[1] text-ink">
+          <p className="font-serif text-[clamp(2.75rem,2rem+6vw,8.5rem)] leading-[1] text-ink">
             {/* Each line rises out of its own mask on entry. */}
             <span data-line-top className="block overflow-hidden pb-[0.08em]">
               <span data-rise className="block">
@@ -164,11 +166,15 @@ export function MarinaPanel({
         {/* The content, rising over the full-screen film. */}
         <div
           data-theme-surface="dark"
-          className="absolute inset-0 z-30 flex flex-col justify-end pb-10 text-white lg:pb-12"
+          // Phones: the copy sits high (under the header), the amenities stay along the foot.
+          className="absolute inset-0 z-30 flex flex-col justify-end pt-[calc(var(--header-height)+2rem)] pb-8 text-white sm:pt-0 sm:pb-10 lg:pb-12"
         >
-          <Container className="flex flex-col gap-12 lg:gap-16">
+          <Container className="flex flex-1 flex-col justify-between gap-12 sm:flex-none sm:justify-start lg:gap-16">
             <div className="flex max-w-[32.5rem] flex-col gap-6">
-              <div data-copy className="flex flex-col gap-4 opacity-0 motion-reduce:opacity-100">
+              <div
+                data-copy
+                className="flex flex-col gap-2.5 opacity-0 motion-reduce:opacity-100 lg:gap-3"
+              >
                 <Eyebrow tone="dark">{eyebrow}</Eyebrow>
                 <h2 id="marina-title" className="text-heading-2">
                   {title}
@@ -195,15 +201,16 @@ export function MarinaPanel({
                 aria-hidden
                 className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-white/25 motion-reduce:scale-x-100"
               />
-              <ul className="scrollbar-none flex gap-x-8 overflow-x-auto pt-5 lg:flex-wrap lg:gap-x-10 lg:gap-y-3 lg:overflow-visible">
+              {/* Phones: small labels wrapping inside the screen, centred; one row from `lg`. */}
+              <ul className="flex flex-wrap justify-center gap-x-5 gap-y-3 pt-4 sm:justify-start sm:gap-x-8 sm:pt-5 lg:gap-x-10">
                 {categories.map((category) => (
                   <li
                     key={category.label}
                     data-chip
-                    className="flex shrink-0 items-center gap-2 text-white/80 opacity-0 transition-colors duration-500 hover:text-white motion-reduce:opacity-100"
+                    className="flex shrink-0 items-center gap-1.5 text-white/80 opacity-0 transition-colors duration-500 hover:text-white motion-reduce:opacity-100 sm:gap-2"
                   >
-                    <KitIcon name={category.icon} className="size-4" />
-                    <span className="text-body-xs font-medium tracking-label uppercase">
+                    <KitIcon name={category.icon} className="size-3.5 sm:size-4" />
+                    <span className="text-label font-medium tracking-label uppercase sm:text-body-xs">
                       {category.label}
                     </span>
                   </li>

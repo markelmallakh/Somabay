@@ -101,7 +101,7 @@ export function TimelineSection({ intro, milestones, image }: TimelineSectionPro
         className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgb(0_0_0/0.55)_0%,rgb(0_0_0/0.25)_35%,rgb(0_0_0/0.35)_60%,rgb(0_0_0/0.8)_100%)]"
       />
 
-      <Container className="flex min-h-[48rem] flex-col py-24 lg:min-h-[52rem] lg:py-28">
+      <Container className="flex min-h-[38rem] flex-col py-14 sm:min-h-[48rem] sm:py-24 lg:min-h-[52rem] lg:py-28">
         <SectionHeading
           id="timeline-title"
           align="center"
@@ -110,12 +110,12 @@ export function TimelineSection({ intro, milestones, image }: TimelineSectionPro
           title={intro.title}
         />
 
-        <div ref={stage} className="mt-auto flex flex-col gap-12 pt-16 lg:gap-16">
+        <div ref={stage} className="mt-auto flex flex-col gap-8 pt-10 sm:gap-12 sm:pt-16 lg:gap-16">
           {/* The year, rolling in letter by letter, with its story beside it. */}
-          <div className="grid items-end gap-6 lg:grid-cols-12">
+          <div className="grid items-end gap-4 sm:gap-6 lg:grid-cols-12">
             <p
               aria-live="polite"
-              className="font-serif text-[clamp(4.5rem,2.5rem+8vw,10.5rem)] leading-[0.9] lg:col-span-7"
+              className="font-serif text-[clamp(3.5rem,1.4rem+9.5vw,10.5rem)] leading-[0.9] lg:col-span-7"
             >
               <span className="sr-only">{current.year}</span>
               {/* Odometer: each position keeps its own slot and only rolls when its character
@@ -220,7 +220,8 @@ export function TimelineSection({ intro, milestones, image }: TimelineSectionPro
                         onClick={() => goTo(index)}
                         aria-current={selected ? "step" : undefined}
                         className={cn(
-                          "group flex flex-col gap-3",
+                          // The hit area reaches past the small dot, for fingers.
+                          "group relative flex flex-col gap-3 before:absolute before:-inset-x-1.5 before:-inset-y-3 before:content-['']",
                           edge === "start"
                             ? "items-start"
                             : edge === "end"
@@ -242,7 +243,11 @@ export function TimelineSection({ intro, milestones, image }: TimelineSectionPro
                         <span
                           className={cn(
                             "text-body-sm font-medium whitespace-nowrap transition-colors duration-500",
-                            selected ? "text-white" : "text-white/55 group-hover:text-white/80",
+                            // Phones: eleven years don't fit side by side, so only the current
+                            // one is labelled (the big year above names it too).
+                            selected
+                              ? "text-white"
+                              : "hidden text-white/55 group-hover:text-white/80 sm:inline",
                           )}
                         >
                           {milestone.year}

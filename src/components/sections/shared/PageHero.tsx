@@ -31,6 +31,8 @@ type MediaHeroProps = BaseProps & {
   playback?: VideoPlayback;
   /** `screen` fills the viewport; `band` is a shorter banner. */
   height?: "screen" | "band";
+  /** Phones: where the copy sits in the photo; `end` lowers it to the photo's foot. */
+  phonePlacement?: "center" | "end";
 };
 
 type TitleHeroProps = BaseProps & {
@@ -77,24 +79,25 @@ export function PageHero(props: PageHeroProps) {
         className={cn(
           props.tone === "white"
             ? // White like the header, so the two read as one band; a little taller.
-              "border-b border-line bg-white pt-[calc(var(--header-height)+6rem)] pb-20 md:pb-28"
+              "border-b border-line bg-white pt-[calc(var(--header-height)+3rem)] pb-12 sm:pt-[calc(var(--header-height)+6rem)] sm:pb-20 md:pb-28"
             : props.align === "center"
               ? // Centred title pages (journal, FAQ): the content follows closely.
-                "pt-[calc(var(--header-height)+4rem)] pb-10 md:pb-12"
-              : "pt-[calc(var(--header-height)+4rem)] pb-14 md:pb-20",
+                "pt-[calc(var(--header-height)+2.5rem)] pb-8 sm:pt-[calc(var(--header-height)+4rem)] sm:pb-10 md:pb-12"
+              : "pt-[calc(var(--header-height)+2.5rem)] pb-10 sm:pt-[calc(var(--header-height)+4rem)] sm:pb-14 md:pb-20",
           props.tone === "tint" ? "bg-sand-100" : props.tone !== "white" && "bg-sand-50",
         )}
       >
         <Container
           className={cn(
-            "flex flex-col gap-8",
+            "flex flex-col gap-5 sm:gap-8",
             props.align === "center"
               ? "items-center text-center"
-              : "lg:flex-row lg:items-end lg:justify-between",
+              : // Phones centre the title block like the rest of the layout.
+                "items-center text-center sm:items-start sm:text-left lg:flex-row lg:items-end lg:justify-between",
           )}
         >
           <div className={props.align === "center" ? "max-w-5xl" : "max-w-3xl"}>
-            {breadcrumbs ? <Breadcrumbs items={breadcrumbs} className="mb-10" /> : null}
+            {breadcrumbs ? <Breadcrumbs items={breadcrumbs} className="mb-6 sm:mb-10" /> : null}
             {eyebrow ? (
               <Reveal distance={12}>
                 <Eyebrow className={props.align === "center" ? "mx-auto" : undefined}>
@@ -109,15 +112,15 @@ export function PageHero(props: PageHeroProps) {
               className={cn(
                 // Centred titles sit on one line, a step smaller than the usual page title.
                 props.align === "center"
-                  ? "mt-5 text-[clamp(2.125rem,1.55rem+2.1vw,3.5rem)] leading-[1.08] [&_.split-line]:text-center!"
-                  : "mt-5 text-heading-1",
+                  ? "mt-2.5 text-[clamp(1.875rem,1.4rem+2.1vw,3.5rem)] leading-[1.08] lg:mt-3 [&_.split-line]:text-center!"
+                  : "mt-2.5 text-heading-1 lg:mt-3",
               )}
             />
           </div>
           {description || actions ? (
             <Reveal delay={0.25} className="max-w-md lg:pb-2">
               {description ? <p className="text-lead text-slate">{description}</p> : null}
-              {actions ? <div className="mt-7">{actions}</div> : null}
+              {actions ? <div className="mt-5 sm:mt-7">{actions}</div> : null}
             </Reveal>
           ) : null}
         </Container>
@@ -125,7 +128,7 @@ export function PageHero(props: PageHeroProps) {
     );
   }
 
-  const { media, playback = "autoplay", height = "screen" } = props;
+  const { media, playback = "autoplay", height = "screen", phonePlacement = "center" } = props;
 
   return (
     <section
@@ -151,21 +154,36 @@ export function PageHero(props: PageHeroProps) {
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgb(0_0_0/0.55)_0%,rgb(0_0_0/0.18)_16%,rgb(0_0_0/0)_32%,rgb(0_0_0/0)_48%,rgb(0_0_0/0.35)_68%,rgb(0_0_0/0.82)_100%)]"
       />
+      {/* Phones: the copy sits mid-photo, where the shade above is clear, so a black veil keeps
+          the eyebrow and title readable on bright photos. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-black/35 sm:hidden"
+      />
 
-      <Container className="flex flex-col justify-end gap-8 pt-(--header-height) pb-14 md:pb-20 lg:flex-row lg:items-end lg:justify-between">
+      {/* Phones: the copy centred in the photo, both ways (or lowered to its foot); larger
+          screens: along its foot. */}
+      <Container
+        className={cn(
+          "flex flex-col items-center gap-5 pt-(--header-height) pb-10 text-center sm:items-start sm:justify-end sm:gap-8 sm:pb-14 sm:text-left md:pb-20 lg:flex-row lg:items-end lg:justify-between",
+          phonePlacement === "end" ? "justify-end" : "justify-center",
+        )}
+      >
         <div className={typeof title === "string" ? "max-w-3xl" : "max-w-5xl"}>
-          {breadcrumbs ? <Breadcrumbs items={breadcrumbs} tone="light" className="mb-8" /> : null}
+          {breadcrumbs ? (
+            <Breadcrumbs items={breadcrumbs} tone="light" className="mb-5 sm:mb-8" />
+          ) : null}
           {eyebrow ? (
             <Reveal distance={12} delay={0.15}>
               <Eyebrow>{eyebrow}</Eyebrow>
             </Reveal>
           ) : null}
-          <Heading title={title} id={id} className="mt-5 text-heading-1" />
+          <Heading title={title} id={id} className="mt-2.5 text-heading-1 lg:mt-3" />
         </div>
         {description || actions ? (
           <Reveal delay={0.45} className="max-w-md lg:pb-3">
             {description ? <p className="text-lead text-white/80">{description}</p> : null}
-            {actions ? <div className="mt-7">{actions}</div> : null}
+            {actions ? <div className="mt-5 sm:mt-7">{actions}</div> : null}
           </Reveal>
         ) : null}
       </Container>

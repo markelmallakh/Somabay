@@ -76,7 +76,7 @@ export function FilterDropdown({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.25 }}
-            className="absolute top-full left-0 z-20 mt-2 w-72 rounded-md bg-white p-5 shadow-[0_16px_48px_rgb(18_58_70/0.16)]"
+            className="popover-sheet absolute top-full left-0 z-20 mt-2 w-72 rounded-md bg-white p-5 shadow-[0_16px_48px_rgb(18_58_70/0.16)]"
           >
             <fieldset>
               <legend className="sr-only">{label}</legend>

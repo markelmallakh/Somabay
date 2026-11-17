@@ -25,7 +25,7 @@ export function JournalSection() {
       data-theme-surface="light"
       className="bg-sand-100 py-section text-ink"
     >
-      <Container className="flex flex-col gap-12">
+      <Container className="flex flex-col gap-8 sm:gap-12">
         <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-4">
             <Eyebrow>{journalIntro.eyebrow}</Eyebrow>
@@ -33,25 +33,34 @@ export function JournalSection() {
               {journalIntro.title}
             </h2>
           </div>
-          <Button href={journalIntro.cta.href} variant="outline" icon="arrow-up-right">
+          <Button
+            href={journalIntro.cta.href}
+            variant="outline"
+            icon="arrow-up-right"
+            className="hidden md:inline-flex"
+          >
             {journalIntro.cta.label}
           </Button>
         </Reveal>
 
-        <RevealGroup as="ul" className="grid gap-6 md:grid-cols-3">
+        {/* Phones: a swipe row with the next story peeking in, the button after it. */}
+        <RevealGroup as="ul" className="max-md:swipe-row md:grid md:grid-cols-3 md:gap-6">
           {articles.slice(0, 3).map((article) => (
             <RevealItem as="li" key={article.slug}>
-              <SmartLink href={routes.article(article.slug)} className="group flex flex-col gap-6">
+              <SmartLink
+                href={routes.article(article.slug)}
+                className="group flex flex-col gap-4 sm:gap-6"
+              >
                 <span className="relative block aspect-[448/300] overflow-hidden rounded-md">
                   <ResponsiveImage
                     asset={article.image}
-                    sizes="(min-width: 768px) 30vw, 100vw"
+                    sizes="(min-width: 768px) 30vw, 85vw"
                     fill
                     className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                   />
                   <PostBadge category={article.category} />
                 </span>
-                <span className="flex flex-col gap-4">
+                <span className="flex flex-col gap-3 sm:gap-4">
                   <span className="flex items-center gap-3 text-body-sm text-slate">
                     <span>{date.format(new Date(article.date))}</span>
                     <span aria-hidden>·</span>
@@ -70,6 +79,14 @@ export function JournalSection() {
             </RevealItem>
           ))}
         </RevealGroup>
+        <Button
+          href={journalIntro.cta.href}
+          variant="outline"
+          icon="arrow-up-right"
+          className="self-center md:hidden"
+        >
+          {journalIntro.cta.label}
+        </Button>
       </Container>
     </section>
   );

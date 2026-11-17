@@ -29,18 +29,19 @@ export function MaintenanceSection() {
           title={maintenance.title}
           description={maintenance.description}
         />
-        {/* Three portrait panels a hair apart: two photos, then the card. */}
-        <div className="mt-10 grid gap-1.5 md:grid-cols-3 lg:mt-12">
+        {/* Three portrait panels a hair apart: two photos, then the card (phones: the photos
+            side by side over the card). */}
+        <div className="mt-7 grid grid-cols-2 gap-1.5 sm:mt-10 md:grid-cols-3 lg:mt-12">
           {maintenance.images.map((image, index) => (
             <ImageReveal
               key={image.src}
               from={index ? "right" : "left"}
-              className="relative aspect-[3/4] rounded-md"
+              className="relative aspect-[4/5] rounded-md md:aspect-[3/4]"
             >
               {/* A noticeable drift as the band crosses the screen, each photo a different pace. */}
               <Parallax amount={index ? 14 : 10} className="absolute inset-0 overflow-hidden">
                 <div className="absolute inset-0">
-                  <ResponsiveImage asset={image} sizes="(min-width: 768px) 33vw, 100vw" fill />
+                  <ResponsiveImage asset={image} sizes="(min-width: 768px) 33vw, 50vw" fill />
                 </div>
               </Parallax>
             </ImageReveal>
@@ -48,7 +49,7 @@ export function MaintenanceSection() {
 
           <Reveal
             delay={0.15}
-            className="flex flex-col rounded-md bg-white p-8 md:aspect-[3/4] lg:px-12 lg:py-11"
+            className="col-span-2 flex flex-col rounded-md bg-white p-5 sm:p-8 md:col-span-1 md:aspect-[3/4] lg:px-12 lg:py-11"
           >
             <h3 className="font-serif text-heading-5 whitespace-nowrap">{card.title}</h3>
             <p className="mt-2 text-body-sm text-slate">{card.description}</p>

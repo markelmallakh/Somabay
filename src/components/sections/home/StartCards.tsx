@@ -23,17 +23,19 @@ export function StartCards({ label, options }: StartCardsProps) {
         <RevealItem>
           <p
             id="start-label"
-            className="mb-2.5 text-label font-semibold tracking-label text-white/80 uppercase"
+            // Phones show the cards alone (the label stays for screen readers).
+            className="sr-only mb-2.5 text-label font-semibold tracking-label text-white/80 uppercase sm:not-sr-only"
           >
             {label}
           </p>
         </RevealItem>
+        {/* Phones: three short landscape cards side by side, title only; desktop: the hover cards. */}
         <ul className="grid grid-cols-3 gap-1.5 lg:flex">
           {options.map((option) => (
             <RevealItem as="li" key={option.href}>
               <Link
                 href={option.href}
-                className="group relative block aspect-[3/4] overflow-hidden rounded-md bg-black/30 text-white shadow-[0_12px_40px_rgb(0_0_0/0.25)] transition-[translate,width] duration-700 ease-out-expo hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:aspect-auto lg:h-[10.6667rem] lg:w-32 lg:hover:w-56 lg:focus-visible:w-56 xl:h-48 xl:w-36 xl:hover:w-60 xl:focus-visible:w-60"
+                className="group relative block aspect-[16/10] overflow-hidden rounded-md bg-black/30 text-white shadow-[0_12px_40px_rgb(0_0_0/0.25)] transition-[translate,width] duration-700 ease-out-expo hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:aspect-[3/4] lg:aspect-auto lg:h-[10.6667rem] lg:w-32 lg:hover:w-56 lg:focus-visible:w-56 xl:h-48 xl:w-36 xl:hover:w-60 xl:focus-visible:w-60"
               >
                 <ResponsiveImage
                   asset={option.image}
@@ -56,12 +58,16 @@ export function StartCards({ label, options }: StartCardsProps) {
                     className="size-3.5 -translate-x-2 translate-y-2 transition-transform delay-100 duration-500 ease-out-expo group-hover:translate-x-0 group-hover:translate-y-0 group-focus-visible:translate-x-0 group-focus-visible:translate-y-0"
                   />
                 </span>
-                <span className="absolute inset-x-2.5 bottom-2.5">
-                  <MaskRoll className="font-serif text-[0.9375rem] leading-[1.2]">
+                <span className="absolute inset-x-2 bottom-2 sm:inset-x-2.5 sm:bottom-2.5">
+                  {/* Phones: a small title that may wrap; the letter roll from `sm`. */}
+                  <span className="block font-serif text-[0.8125rem] leading-[1.15] sm:hidden">
+                    {option.title}
+                  </span>
+                  <MaskRoll className="hidden font-serif text-[0.9375rem] leading-[1.2] sm:block">
                     {option.title}
                   </MaskRoll>
                   {/* The hint opens under the title on hover (always open on touch screens). */}
-                  <span className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out-expo group-hover:grid-rows-[1fr] group-focus-visible:grid-rows-[1fr] [@media(hover:none)]:grid-rows-[1fr]">
+                  <span className="hidden grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out-expo group-hover:grid-rows-[1fr] group-focus-visible:grid-rows-[1fr] sm:grid [@media(hover:none)]:grid-rows-[1fr]">
                     <span className="overflow-hidden">
                       <span className="block pt-1 text-body-xs leading-[1.35] text-white/85 lg:w-[12rem] xl:w-[13rem]">
                         {option.description}

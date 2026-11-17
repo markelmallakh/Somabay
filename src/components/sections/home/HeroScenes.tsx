@@ -65,12 +65,14 @@ export function HeroScenes({ scenes }: HeroScenesProps) {
       <div
         role="radiogroup"
         aria-label="Scene"
-        className="absolute bottom-8 left-site z-20 grid w-48 grid-cols-2 rounded-full bg-white/15 p-1 text-body-md font-medium text-white shadow-[0_8px_32px_rgb(0_0_0/0.2)] backdrop-blur-xl backdrop-saturate-150"
+        // Phones: a small pill centred at the foot of the hero; from `sm` the full-size toggle
+        // bottom-left.
+        className="absolute bottom-5 left-1/2 z-20 grid w-32 -translate-x-1/2 grid-cols-2 rounded-full bg-white/15 p-0.5 text-body-xs font-medium text-white shadow-[0_8px_32px_rgb(0_0_0/0.2)] backdrop-blur-xl backdrop-saturate-150 sm:bottom-8 sm:left-site sm:w-48 sm:translate-x-0 sm:p-1 sm:text-body-md"
       >
         <span
           aria-hidden
           className={cn(
-            "absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-white/90 shadow-[0_2px_10px_rgb(0_0_0/0.15)] transition-transform duration-700 ease-out-expo",
+            "absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-0.125rem)] rounded-full bg-white/90 shadow-[0_2px_10px_rgb(0_0_0/0.15)] transition-transform duration-700 ease-out-expo sm:top-1 sm:bottom-1 sm:left-1 sm:w-[calc(50%-0.25rem)]",
             activeIndex === 1 && "translate-x-full",
           )}
         />
@@ -84,7 +86,7 @@ export function HeroScenes({ scenes }: HeroScenesProps) {
               aria-checked={checked}
               onClick={() => select(scene.id)}
               className={cn(
-                "relative z-10 flex h-10 items-center justify-center gap-1 rounded-full px-3 transition-colors duration-500",
+                "relative z-10 flex h-7 items-center justify-center gap-1 rounded-full px-2 transition-colors duration-500 sm:h-10 sm:px-3",
                 checked ? "text-ink" : "text-white/90 hover:text-white",
               )}
             >
@@ -98,7 +100,7 @@ export function HeroScenes({ scenes }: HeroScenesProps) {
   );
 }
 
-const glyph = "size-6 shrink-0 overflow-visible";
+const glyph = "size-4 shrink-0 overflow-visible sm:size-6";
 const fromCentre = "[transform-box:fill-box] origin-center";
 
 /** Sun: resting icon at full strength; when chosen the rays burst out, then keep slowly turning. */

@@ -17,11 +17,14 @@ export function DragRow({
   label,
   className,
   tone = "light",
+  phoneCards = "full",
 }: {
   children: ReactNode;
   label: string;
   className?: string;
   tone?: "light" | "dark";
+  /** Phones: `full` centres one card with both neighbours peeking; `half` fits about one and a half. */
+  phoneCards?: "full" | "half";
 }) {
   const ref = useRef<HTMLUListElement>(null);
   useDragScroll(ref);
@@ -65,7 +68,9 @@ export function DragRow({
           ref={ref}
           aria-label={label}
           className={cn(
+            // Phones: centred cards with both neighbours peeking (see `swipe-row`).
             "scrollbar-none flex cursor-grab snap-x gap-4 overflow-x-auto data-[dragging=true]:cursor-grabbing",
+            phoneCards === "half" ? "max-md:swipe-row-half" : "max-md:swipe-row",
             className,
           )}
         >
@@ -73,7 +78,8 @@ export function DragRow({
         </ul>
       </div>
       {overflows ? (
-        <Container className="mt-8 flex items-center gap-8">
+        // Phones: no progress rail or arrows; the peeking cards show it scrolls.
+        <Container className="mt-8 hidden items-center gap-8 md:flex">
           <div
             aria-hidden
             className={cn("relative h-0.5 flex-1", tone === "dark" ? "bg-white/20" : "bg-line")}

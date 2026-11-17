@@ -6,6 +6,7 @@ import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/animations/Reveal";
 import { GalleryCarousel } from "@/components/media/GalleryCarousel";
 import { HeadingRow } from "@/components/sections/live/HeadingRow";
+import { PhoneEndCta } from "@/components/layout/HeadingRow";
 import { AmenitiesShowcase } from "@/components/sections/live/AmenitiesShowcase";
 import { LocationExplorer } from "@/components/sections/live/LocationExplorer";
 import { NeighborhoodInterest } from "@/components/sections/live/NeighborhoodInterest";
@@ -77,6 +78,11 @@ async function NeighborhoodContent({
     (other) => other.slug !== requested.slug && other.status === item.status,
   );
 
+  const moreCta = (
+    <Button href={neighborhoodsIntro.cta.href} variant="outline" icon="arrow-up-right">
+      {neighborhoodsIntro.cta.label}
+    </Button>
+  );
   return (
     <>
       {/* The hero stays in place while the rest of the page slides over it. */}
@@ -106,7 +112,7 @@ async function NeighborhoodContent({
           <section aria-labelledby="location-title" className="bg-sand-100 py-section text-ink">
             <Container>
               <HeadingRow id="location-title" title="Location" />
-              <Reveal className="mt-10 lg:mt-12">
+              <Reveal className="mt-6 sm:mt-10 lg:mt-12">
                 <LocationExplorer origin={origin} destinations={destinations} />
               </Reveal>
             </Container>
@@ -119,7 +125,7 @@ async function NeighborhoodContent({
           <section aria-labelledby="masterplan-title" className="bg-sand-100 py-section text-ink">
             <Container>
               <HeadingRow id="masterplan-title" title="Masterplan" />
-              <Reveal className="mt-10 lg:mt-12">
+              <Reveal className="mt-6 sm:mt-10 lg:mt-12">
                 <ProjectMasterplan name={item.name} />
               </Reveal>
             </Container>
@@ -147,7 +153,7 @@ async function NeighborhoodContent({
               images={item.gallery}
               label={`${item.name} gallery`}
               tone="dark"
-              className="mt-10 lg:mt-12"
+              className="mt-6 sm:mt-10 lg:mt-12"
             />
           </section>
         ) : null}
@@ -170,22 +176,17 @@ async function NeighborhoodContent({
                 title="Explore the Neighborhoods"
                 aside={
                   // Sits on the right edge of the page padding, level with the cards below.
-                  <div className="flex lg:justify-end">
-                    <Button
-                      href={neighborhoodsIntro.cta.href}
-                      variant="outline"
-                      icon="arrow-up-right"
-                    >
-                      {neighborhoodsIntro.cta.label}
-                    </Button>
-                  </div>
+                  <div className="flex lg:justify-end">{moreCta}</div>
                 }
               />
             </Container>
-            <Reveal className="mt-10 lg:mt-12">
-              <DragRow label={`More ${statusLabel[item.status].toLowerCase()} neighborhoods`}>
+            <Reveal className="mt-6 sm:mt-10 lg:mt-12">
+              <DragRow
+                label={`More ${statusLabel[item.status].toLowerCase()} neighborhoods`}
+                className="max-md:swipe-row"
+              >
                 {others.map((other) => (
-                  <li key={other.slug} className="w-[min(72vw,20rem)] shrink-0 snap-start">
+                  <li key={other.slug} className="md:w-[min(72vw,20rem)] md:shrink-0 md:snap-start">
                     {/* The listing page's neighborhood card, at this row's size. */}
                     <PhotoCard
                       href={routes.neighborhood(other.slug)}
@@ -203,6 +204,7 @@ async function NeighborhoodContent({
                 ))}
               </DragRow>
             </Reveal>
+            <PhoneEndCta className="mt-6 px-gutter">{moreCta}</PhoneEndCta>
           </section>
         ) : null}
       </div>

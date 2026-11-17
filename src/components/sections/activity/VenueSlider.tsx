@@ -64,49 +64,69 @@ export function VenueSlider({ id, eyebrow, title, description, items }: VenueSli
 
       {/* The whole row triggers the entrance (off-screen cards are never "in view" alone). */}
       <m.div initial="hidden" whileInView="shown" viewport={{ once: true, amount: 0.25 }}>
-        <DragRow label={title} tone="dark" className="mt-10 lg:mt-12">
+        <DragRow
+          label={title}
+          tone="dark"
+          phoneCards="half"
+          // Phones: about two and a quarter cards to a screen.
+          className="mt-6 max-md:[--swipe-card:40vw] sm:mt-10 lg:mt-12"
+        >
           {items.map((item, index) => (
             <m.li
               key={item.id}
               custom={index}
               variants={card}
-              className="w-[min(80vw,20rem)] shrink-0 snap-start lg:w-[calc((100%-3rem)/4)]"
+              className="shrink-0 md:w-[min(80vw,20rem)] md:snap-start lg:w-[calc((100%-3rem)/4)]"
             >
               <button
                 type="button"
                 onClick={() => setOpen(index)}
                 aria-label={`${item.title}: details`}
+                // Phones have no hover: the name and line stay on the photo instead.
+                data-no-touch-hover
                 className="group relative block aspect-[4/5] w-full overflow-hidden rounded-md bg-white text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 {/* The photo: the whole card at rest, a frame above the panel when open. */}
                 <span
-                  className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.25rem)] ${ease} group-hover:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] group-focus-visible:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] [@media(hover:none)]:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)]`}
+                  className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.25rem)] ${ease} group-hover:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] group-focus-visible:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] max-sm:[clip-path:inset(0_0_0_0_round_0.25rem)]! [@media(hover:none)]:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)]`}
                 >
                   <span
-                    className={`absolute inset-0 transition-transform ${ease} group-hover:-translate-y-[16%] group-focus-visible:-translate-y-[16%] [@media(hover:none)]:-translate-y-[16%]`}
+                    className={`absolute inset-0 transition-transform ${ease} group-hover:-translate-y-[16%] group-focus-visible:-translate-y-[16%] max-sm:translate-y-0! [@media(hover:none)]:-translate-y-[16%]`}
                   >
                     <m.span custom={index} variants={photo} className="absolute inset-0 block">
-                      <ResponsiveImage asset={item.images[0]} sizes="20rem" fill />
+                      <ResponsiveImage
+                        asset={item.images[0]}
+                        sizes="(max-width: 639px) 40vw, 20rem"
+                        fill
+                      />
                     </m.span>
                   </span>
                   <span
                     aria-hidden
-                    className={`absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_45%,rgb(0_0_0/0.65)_100%)] transition-opacity ${ease} group-hover:opacity-0 group-focus-visible:opacity-0 [@media(hover:none)]:opacity-0`}
+                    className={`absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_45%,rgb(0_0_0/0.65)_100%)] transition-opacity max-sm:bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_30%,rgb(0_0_0/0.85)_100%)] max-sm:opacity-100! ${ease} group-hover:opacity-0 group-focus-visible:opacity-0 [@media(hover:none)]:opacity-0`}
                   />
                 </span>
 
-                {/* At rest: the name on the photo. */}
+                {/* At rest: the name on the photo. Phones (no hover) keep it there, with the short
+                    line, instead of opening the white panel. */}
                 <span
                   aria-hidden
-                  className={`absolute inset-x-5 bottom-5 font-serif text-heading-5 leading-[1.15] text-white transition-[opacity,translate] ${ease} group-hover:translate-y-3 group-hover:opacity-0 group-focus-visible:translate-y-3 group-focus-visible:opacity-0 [@media(hover:none)]:opacity-0`}
+                  className={`absolute inset-x-3 bottom-3 flex flex-col gap-1 text-white transition-[opacity,translate] max-sm:translate-y-0! max-sm:opacity-100! sm:inset-x-5 sm:bottom-5 ${ease} group-hover:translate-y-3 group-hover:opacity-0 group-focus-visible:translate-y-3 group-focus-visible:opacity-0 [@media(hover:none)]:opacity-0`}
                 >
-                  {item.title}
+                  <span className="font-serif text-body-md leading-[1.15] sm:text-heading-5">
+                    {item.title}
+                  </span>
+                  {item.description ? (
+                    <span className="line-clamp-2 text-[0.6875rem] leading-snug text-white/80 sm:hidden">
+                      {item.description}
+                    </span>
+                  ) : null}
                 </span>
 
                 {/* Open: the white panel with the category, name and a short line (no arrow: the card
                     opens details on this page, not another site). */}
                 <span
-                  className={`absolute inset-x-0 bottom-0 flex h-[40%] translate-y-4 flex-col justify-center gap-1.5 px-5 pb-1 opacity-0 transition-[opacity,translate] ${ease} group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100`}
+                  className={`absolute inset-x-0 bottom-0 flex h-[40%] translate-y-4 flex-col justify-center gap-1.5 px-5 pb-1 opacity-0 transition-[opacity,translate] max-sm:hidden ${ease} group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100`}
                 >
                   {item.chip ? (
                     <span className="text-label font-semibold tracking-label text-turquoise-160 uppercase">

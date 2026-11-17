@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/site";
 import { aerialMasterplan, type MasterplanCategory, type MasterplanHotspot } from "@/content/about";
 import { cn } from "@/lib/utils";
 import { MediaSlider } from "@/components/media/MediaSlider";
+import { PanZoom } from "@/components/media/PanZoom";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
@@ -42,6 +43,8 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
   const [filter, setFilter] = useState<Filter>("all");
   const [openId, setOpenId] = useState<string | null>(null);
   const [tour, setTour] = useState<{ url: string; title: string } | null>(null);
+  // Phones: the aerial keeps its true proportions inside a taller frame and pans sideways, so the
+  // pins stay on their places; it opens centred on the peninsula.
 
   const visible = (spot: MasterplanHotspot) => filter === "all" || spot.category === filter;
   const shown = hotspots.filter(visible);
@@ -54,18 +57,78 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
 
   return (
     <>
-      <div
-        // No parallax: the pins sit on the photo by percentage and must stay on their places.
-        data-no-motion
-        className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-md sm:aspect-[6008/3368]"
-      >
-        <ResponsiveImage
-          asset={aerialMasterplan.image}
-          sizes="(min-width: 1512px) 1392px, 100vw"
-          quality={85}
-          fill
-        />
-        <div aria-hidden className="absolute inset-0 bg-[#123a46]/10" />
+      {/* No parallax: the pins sit on the photo by percentage and must stay on their places.
+          Phones: drag, pinch and double-tap to explore the aerial (see PanZoom). */}
+      <div className="relative mx-auto w-full">
+        <PanZoom
+          aspect={6008 / 3368}
+          label="masterplan"
+          className="aspect-[4/5] w-full rounded-md sm:aspect-[6008/3368]"
+        >
+          <div className="absolute inset-0">
+            <ResponsiveImage
+              asset={aerialMasterplan.image}
+              sizes="(min-width: 1512px) 1392px, (min-width: 640px) 100vw, 230vw"
+              quality={85}
+              fill
+            />
+            <div aria-hidden className="absolute inset-0 bg-[#123a46]/10" />
+            <ul aria-label="Places on the masterplan">
+              {hotspots.map((spot) => {
+                const on = visible(spot);
+                const selected = open?.id === spot.id;
+                return (
+                  <li
+                    key={spot.id}
+                    className="pz-counter absolute origin-[0.9375rem_50%] -translate-x-[0.9375rem] -translate-y-1/2 hover:z-10"
+                    style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: selected ? 2 : 1 }}
+                  >
+                    <button
+                      type="button"
+                      aria-haspopup="dialog"
+                      tabIndex={on ? 0 : -1}
+                      aria-hidden={!on}
+                      onClick={() => setOpenId(spot.id)}
+                      className={cn(
+                        "group/pin flex items-center rounded-full p-2 transition-[background-color,box-shadow,opacity,scale] duration-500 ease-out-expo",
+                        on ? "opacity-100" : "pointer-events-none scale-75 opacity-0",
+                        selected
+                          ? "bg-turquoise shadow-float"
+                          : "bg-turquoise/25 backdrop-blur-sm hover:bg-white hover:shadow-float focus-visible:bg-white",
+                      )}
+                    >
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "size-3.5 shrink-0 rounded-full outline-3 transition-colors duration-500",
+                          selected ? "bg-white outline-white/35" : "bg-turquoise outline-white",
+                        )}
+                      />
+                      <span
+                        className={cn(
+                          "grid transition-[grid-template-columns] duration-500 ease-out-expo",
+                          selected
+                            ? "grid-cols-[1fr]"
+                            : "grid-cols-[0fr] group-hover/pin:grid-cols-[1fr] group-focus-visible/pin:grid-cols-[1fr]",
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "overflow-hidden text-body-sm font-medium whitespace-nowrap",
+                            selected ? "text-white" : "text-ink",
+                          )}
+                        >
+                          <span className="block px-2 leading-3.5">{spot.name}</span>
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </PanZoom>
+
         <SegmentedControl
           label="Masterplan category"
           value={filter}
@@ -77,60 +140,6 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
           size="sm"
           className="absolute top-4 left-4 z-20 max-w-[calc(100%-2rem)] shadow-float lg:top-6 lg:left-6"
         />
-
-        <ul aria-label="Places on the masterplan">
-          {hotspots.map((spot) => {
-            const on = visible(spot);
-            const selected = open?.id === spot.id;
-            return (
-              <li
-                key={spot.id}
-                className="absolute -translate-x-[0.9375rem] -translate-y-1/2 hover:z-10"
-                style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: selected ? 2 : 1 }}
-              >
-                <button
-                  type="button"
-                  aria-haspopup="dialog"
-                  tabIndex={on ? 0 : -1}
-                  aria-hidden={!on}
-                  onClick={() => setOpenId(spot.id)}
-                  className={cn(
-                    "group/pin flex items-center rounded-full p-2 transition-[background-color,box-shadow,opacity,scale] duration-500 ease-out-expo",
-                    on ? "opacity-100" : "pointer-events-none scale-75 opacity-0",
-                    selected
-                      ? "bg-turquoise shadow-float"
-                      : "bg-turquoise/25 backdrop-blur-sm hover:bg-white hover:shadow-float focus-visible:bg-white",
-                  )}
-                >
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "size-3.5 shrink-0 rounded-full outline-3 transition-colors duration-500",
-                      selected ? "bg-white outline-white/35" : "bg-turquoise outline-white",
-                    )}
-                  />
-                  <span
-                    className={cn(
-                      "grid transition-[grid-template-columns] duration-500 ease-out-expo",
-                      selected
-                        ? "grid-cols-[1fr]"
-                        : "grid-cols-[0fr] group-hover/pin:grid-cols-[1fr] group-focus-visible/pin:grid-cols-[1fr]",
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "overflow-hidden text-body-sm font-medium whitespace-nowrap",
-                        selected ? "text-white" : "text-ink",
-                      )}
-                    >
-                      <span className="block px-2 leading-3.5">{spot.name}</span>
-                    </span>
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
 
         <Button
           variant="glass"
@@ -181,7 +190,7 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
               </button>
             </div>
 
-            <div className="flex flex-1 flex-col gap-5 p-6 md:p-10">
+            <div className="flex flex-1 flex-col gap-5 px-gutter py-6 md:p-10">
               {/* The name (with a hotel's star rating beside it), then its tags under it. */}
               <div data-drawer-item style={stagger(0)} className="flex flex-col gap-1.5">
                 <h2 className="font-serif text-heading-3 leading-[1.2]">

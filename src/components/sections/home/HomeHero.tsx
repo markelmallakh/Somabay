@@ -23,7 +23,7 @@ export function HomeHero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/70 via-black/25 to-transparent"
       />
 
-      <Container className="pointer-events-none relative flex flex-1 flex-col justify-between gap-10 pt-[calc(var(--header-height)+clamp(3rem,12vh,8.75rem))] pb-28 lg:flex-row lg:items-end lg:justify-end lg:pb-8">
+      <Container className="pointer-events-none relative flex flex-1 flex-col justify-between gap-10 pt-[calc(var(--header-height)+clamp(3rem,12vh,8.75rem))] pb-18 sm:pb-28 lg:flex-row lg:items-end lg:justify-end lg:pb-8">
         {/* The headline sits centred in the hero; the start cards hold the bottom-right corner. */}
         <div className="pointer-events-auto text-center lg:absolute lg:inset-x-0 lg:top-1/2 lg:-translate-y-1/2">
           <Reveal delay={0.2} distance={16} className="flex justify-center">
@@ -34,7 +34,7 @@ export function HomeHero() {
             id="hero-title"
             trigger="load"
             delay={0.35}
-            className="mx-auto mt-3 max-w-[9em] text-[clamp(3.25rem,7.7vw,9.25rem)] leading-[1] text-balance"
+            className="mx-auto mt-3 max-w-[9em] text-[clamp(2.875rem,7.7vw,9.25rem)] leading-[1] text-balance"
           >
             {hero.title}
           </SplitHeading>

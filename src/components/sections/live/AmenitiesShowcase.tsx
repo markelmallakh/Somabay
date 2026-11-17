@@ -20,7 +20,7 @@ type AmenitiesShowcaseProps = {
  * "Everything Within Reach": the heading over a large photo on the left, and on the right an
  * indexed list of amenities in serif. Hovering or focusing a name makes it the active one: its
  * photo wipes up on the left and its description opens under it. On phones each row shows its own
- * photo and description.
+ * photo and description in a swipeable row, the next card peeking in.
  */
 export function AmenitiesShowcase({ id, intro, items }: AmenitiesShowcaseProps) {
   const [active, setActive] = useState(0);
@@ -28,15 +28,20 @@ export function AmenitiesShowcase({ id, intro, items }: AmenitiesShowcaseProps) 
 
   return (
     <section aria-labelledby={id} className="bg-white py-section text-ink">
-      <Container className="grid gap-12 lg:grid-cols-12 lg:gap-x-6">
+      <Container className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-12 lg:gap-x-6">
         <div className="flex flex-col lg:col-span-5">
-          <Reveal className="flex flex-col gap-5">
-            {intro.eyebrow ? <Eyebrow>{intro.eyebrow}</Eyebrow> : null}
-            <h2 id={id} className="text-heading-2 text-balance">
-              {intro.title}
-            </h2>
+          <Reveal className="flex flex-col">
+            {/* Eyebrow close to its title; the description a step further. */}
+            <div className="flex flex-col gap-2 lg:gap-3">
+              {intro.eyebrow ? <Eyebrow>{intro.eyebrow}</Eyebrow> : null}
+              <h2 id={id} className="text-heading-2 text-balance">
+                {intro.title}
+              </h2>
+            </div>
             {intro.description ? (
-              <p className="max-w-md text-body-lg text-slate">{intro.description}</p>
+              <p className="mt-3 max-w-md text-body-md text-slate sm:mt-5 sm:text-body-lg">
+                {intro.description}
+              </p>
             ) : null}
           </Reveal>
 
@@ -84,7 +89,37 @@ export function AmenitiesShowcase({ id, intro, items }: AmenitiesShowcaseProps) 
           </Reveal>
         </div>
 
-        <ul className="border-t border-line lg:col-span-6 lg:col-start-7 lg:self-end">
+        {/* Phones and tablets: every amenity as a card in a swipe row (phones: the card centred,
+            its neighbours peeking at both edges). */}
+        <Reveal delay={0.1} className="min-w-0 lg:hidden">
+          <ul
+            aria-label={intro.title}
+            className="max-md:swipe-row md:-mx-gutter md:scrollbar-none md:flex md:snap-x md:snap-mandatory md:scroll-px-gutter md:gap-3 md:overflow-x-auto md:px-gutter"
+          >
+            {items.map((item, index) => (
+              <li key={item.id} className="md:w-[45%] md:shrink-0 md:snap-start">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-sand-200">
+                  <ResponsiveImage
+                    asset={item.images[0]}
+                    sizes="(min-width: 768px) 45vw, 84vw"
+                    fill
+                  />
+                </div>
+                <p className="mt-3 flex items-baseline gap-3">
+                  <span className="text-label tracking-label text-turquoise tabular-nums">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-serif text-heading-5 leading-[1.2]">{item.title}</span>
+                </p>
+                {item.description ? (
+                  <p className="mt-2 text-body-sm text-slate">{item.description}</p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+
+        <ul className="hidden border-t border-line lg:col-span-6 lg:col-start-7 lg:block lg:self-end">
           {items.map((item, index) => {
             const on = index === active;
             return (
@@ -115,10 +150,6 @@ export function AmenitiesShowcase({ id, intro, items }: AmenitiesShowcaseProps) 
                       )}
                     >
                       {item.title}
-                    </span>
-                    {/* Phones: the row's own photo. */}
-                    <span className="relative mt-4 block aspect-[16/10] overflow-hidden rounded-md bg-sand-200 lg:hidden">
-                      <ResponsiveImage asset={item.images[0]} sizes="100vw" fill />
                     </span>
                     {item.description ? (
                       <span

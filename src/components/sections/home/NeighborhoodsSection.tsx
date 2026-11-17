@@ -1,5 +1,5 @@
 import { routes } from "@/config/routes";
-import { HeadingRow } from "@/components/layout/HeadingRow";
+import { HeadingRow, PhoneEndCta } from "@/components/layout/HeadingRow";
 import { neighborhoodsIntro } from "@/content/home";
 import { neighborhoods } from "@/content/neighborhoods";
 import { Button } from "@/components/ui/Button";
@@ -9,6 +9,16 @@ import { NeighborhoodsCarousel } from "./NeighborhoodsCarousel";
 export function NeighborhoodsSection() {
   const hrefs = Object.fromEntries(
     neighborhoods.map((item) => [item.slug, routes.neighborhood(item.slug)]),
+  );
+  const cta = (
+    <Button
+      href={neighborhoodsIntro.cta.href}
+      variant="solid-light"
+      icon="arrow-right"
+      className="[--color-ink:#2c2c2c]"
+    >
+      {neighborhoodsIntro.cta.label}
+    </Button>
   );
   return (
     <section
@@ -30,21 +40,11 @@ export function NeighborhoodsSection() {
             eyebrow={neighborhoodsIntro.eyebrow}
             title={neighborhoodsIntro.title}
             description={neighborhoodsIntro.description}
-            aside={
-              <div>
-                <Button
-                  href={neighborhoodsIntro.cta.href}
-                  variant="solid-light"
-                  icon="arrow-right"
-                  className="[--color-ink:#2c2c2c]"
-                >
-                  {neighborhoodsIntro.cta.label}
-                </Button>
-              </div>
-            }
+            aside={<div>{cta}</div>}
           />
         }
       />
+      <PhoneEndCta className="mt-6 px-gutter">{cta}</PhoneEndCta>
     </section>
   );
 }

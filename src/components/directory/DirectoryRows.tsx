@@ -36,7 +36,9 @@ export function DirectoryRows({ items, interactive = true }: DirectoryRowsProps)
                   {item.title}
                 </span>
                 {item.description ? (
-                  <span className="mt-2 line-clamp-2 block text-slate">{item.description}</span>
+                  <span className="mt-1.5 line-clamp-2 block text-body-sm text-slate sm:mt-2 sm:text-body">
+                    {item.description}
+                  </span>
                 ) : null}
               </span>
               {interactive ? (
@@ -55,12 +57,12 @@ export function DirectoryRows({ items, interactive = true }: DirectoryRowsProps)
                 <button
                   type="button"
                   onClick={() => setOpen(index)}
-                  className="group flex w-full items-center gap-5 py-6 text-left sm:gap-8"
+                  className="group flex w-full items-center gap-4 py-4 text-left sm:gap-8 sm:py-6"
                 >
                   {content}
                 </button>
               ) : (
-                <div className="group flex items-center gap-5 py-6 sm:gap-8">{content}</div>
+                <div className="group flex items-center gap-4 py-4 sm:gap-8 sm:py-6">{content}</div>
               )}
             </RevealItem>
           );

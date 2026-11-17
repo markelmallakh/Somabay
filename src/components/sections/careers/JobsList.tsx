@@ -14,17 +14,17 @@ export function JobsList() {
   return (
     <section aria-labelledby="jobs-title" className="bg-white py-section text-ink">
       <Container>
-        <Reveal className="flex flex-col gap-4">
+        <Reveal className="flex flex-col gap-2 lg:gap-3">
           <Eyebrow>Open positions</Eyebrow>
           <h2 id="jobs-title" className="text-heading-2">
             Find Your Next Opportunity
           </h2>
         </Reveal>
-        <RevealGroup as="ul" className="mt-10 border-t border-line md:mt-12">
+        <RevealGroup as="ul" className="mt-6 border-t border-line sm:mt-10 md:mt-12">
           {jobs.map((job) => (
             <RevealItem as="li" key={job.slug} className="border-b border-line">
-              <article className="group relative flex flex-col gap-5 py-7 md:flex-row md:items-center md:justify-between md:gap-10 md:py-8">
-                <div className="flex flex-col gap-2">
+              <article className="group relative flex flex-col gap-4 py-5 sm:gap-5 sm:py-7 md:flex-row md:items-center md:justify-between md:gap-10 md:py-8">
+                <div className="flex flex-col gap-1.5 sm:gap-2">
                   <h3 className="font-serif text-heading-4">
                     <Link
                       href={routes.career(job.slug)}

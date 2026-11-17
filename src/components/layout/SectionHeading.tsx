@@ -33,21 +33,27 @@ export function SectionHeading({
   return (
     <Reveal
       className={cn(
-        "flex flex-col gap-5",
-        centered && "mx-auto max-w-3xl items-center text-center",
+        // Phones always centre; larger screens follow `align`.
+        "flex flex-col items-center gap-3 text-center sm:gap-5",
+        centered ? "mx-auto max-w-3xl" : "sm:items-start sm:text-left",
         className,
       )}
     >
-      {eyebrow ? <Eyebrow tone={tone === "light" ? "dark" : undefined}>{eyebrow}</Eyebrow> : null}
-      <Heading id={id} className={size === "h1" ? "text-heading-1" : "text-heading-2"}>
-        {title}
-      </Heading>
+      {/* The eyebrow sits close over its title (one unit), the description a step further. */}
+      <div
+        className={cn("flex flex-col items-center gap-2.5 lg:gap-3", !centered && "sm:items-start")}
+      >
+        {eyebrow ? <Eyebrow tone={tone === "light" ? "dark" : undefined}>{eyebrow}</Eyebrow> : null}
+        <Heading id={id} className={size === "h1" ? "text-heading-1" : "text-heading-2"}>
+          {title}
+        </Heading>
+      </div>
       {description ? (
         <p
           className={cn(
-            "max-w-xl text-lead",
+            "mx-auto max-w-xl text-lead",
             tone === "light" ? "text-white/80" : "text-slate",
-            centered && "mx-auto",
+            !centered && "sm:mx-0",
           )}
         >
           {description}

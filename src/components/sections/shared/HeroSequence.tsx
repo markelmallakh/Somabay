@@ -95,7 +95,9 @@ export function HeroSequence({ media, steps }: HeroSequenceProps) {
                     )}
                   </div>
                   {step.description ? (
-                    <p className="max-w-lg text-lead text-white/80 lg:pb-2">{step.description}</p>
+                    <p className="max-w-lg text-lead text-white/80 max-sm:mx-auto max-sm:text-center lg:pb-2">
+                      {step.description}
+                    </p>
                   ) : null}
                 </div>
               ) : (

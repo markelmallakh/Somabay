@@ -5,9 +5,10 @@ type PriceFromProps = {
   amount: string;
   /**
    * `inline`: label over the price, for cards and drawers; `compact`: a touch smaller, to sit
-   * beside a small button; `stacked`: large, for the booking panel.
+   * beside a small button; `stacked`: large, for the booking panel; `line`: everything on one
+   * line, for slim bars.
    */
-  size?: "inline" | "compact" | "stacked";
+  size?: "inline" | "compact" | "stacked" | "line";
   /** `light` on white/sand, `dark` over photos. */
   tone?: "light" | "dark";
   className?: string;
@@ -17,6 +18,20 @@ type PriceFromProps = {
 export function PriceFrom({ amount, size = "inline", tone = "light", className }: PriceFromProps) {
   const muted = tone === "dark" ? "text-white/70" : "text-slate";
   const strong = tone === "dark" ? "text-white" : "text-ink";
+
+  if (size === "line") {
+    return (
+      <p className={cn("flex items-baseline gap-1.5 whitespace-nowrap", className)}>
+        <span className={cn("text-body-2xs font-semibold tracking-[0.12em] uppercase", muted)}>
+          From
+        </span>
+        <span className={cn("font-serif text-body-md leading-none tabular-nums", strong)}>
+          {amount}
+        </span>
+        <span className={cn("text-body-2xs", muted)}>/ night</span>
+      </p>
+    );
+  }
 
   if (size === "stacked") {
     return (

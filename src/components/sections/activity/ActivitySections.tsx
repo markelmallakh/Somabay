@@ -47,10 +47,10 @@ export function ActivitySections({
           <ScrollRevealText
             text={sections.overview ?? activity.summary}
             leadWords={12}
-            className="mt-5 max-w-3xl font-sans text-[clamp(1.125rem,1rem+0.45vw,1.375rem)] leading-[1.55]"
+            className="mt-2 max-w-3xl font-sans text-[clamp(1.125rem,1rem+0.45vw,1.375rem)] leading-[1.55] lg:mt-3"
           />
           {/* The page's call to action sits under the overview (the hero carries only the title). */}
-          <Reveal className="mt-10">
+          <Reveal className="mt-6 sm:mt-10">
             <Button href={cta?.href ?? routes.contact} variant="primary">
               {cta?.label ?? "Let’s talk"}
             </Button>
@@ -140,7 +140,7 @@ export function ActivitySections({
         <GalleryCarousel
           images={activity.gallery}
           label={`${activity.title} gallery`}
-          className="mt-12"
+          className="mt-6 sm:mt-12"
         />
       </Section>
 

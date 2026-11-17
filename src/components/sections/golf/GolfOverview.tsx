@@ -54,10 +54,10 @@ export function GolfOverview() {
         <Eyebrow as="h2" className="mx-auto">
           <span id="golf-overview-title">{title}</span>
         </Eyebrow>
-        <div className="mt-8 lg:mt-10">
+        <div className="mt-2 lg:mt-3">
           <p
             data-statement
-            className="mx-auto max-w-[66rem] text-[clamp(1.5rem,1.05rem+1.25vw,2.25rem)] leading-[1.35] text-pretty lg:sticky lg:top-[calc(var(--header-height)+14vh)]"
+            className="mx-auto max-w-[66rem] text-[clamp(1.3125rem,1.05rem+1.25vw,2.25rem)] leading-[1.35] text-pretty lg:sticky lg:top-[calc(var(--header-height)+14vh)]"
           >
             {statement}
           </p>
@@ -68,22 +68,23 @@ export function GolfOverview() {
         {/* GEO Certified®: rises to meet the statement, then both scroll on together. */}
         <div
           data-geo
-          className="relative mt-12 grid items-center gap-10 rounded-md bg-sand-100 p-8 text-left md:p-12 lg:mt-16 lg:grid-cols-12 lg:gap-6 lg:p-16"
+          className="relative mt-8 grid items-center gap-6 rounded-md bg-sand-100 p-5 text-left sm:mt-12 sm:gap-10 sm:p-8 md:p-12 lg:mt-16 lg:grid-cols-12 lg:gap-6 lg:p-16"
         >
-          <div className="flex justify-center lg:col-span-4">
+          <div className="flex justify-end lg:col-span-4 lg:justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element -- the certification mark, shown as is. */}
             <img
               data-geo-logo
               src={geo.logo}
               alt="GEO Certified®"
-              className="h-auto w-40 md:w-52 lg:w-60"
+              className="h-auto w-28 sm:w-40 md:w-52 lg:w-60"
             />
           </div>
-          <div className="lg:col-span-7 lg:col-start-6">
+          {/* Left-aligned on every screen (opts out of the phone centring). */}
+          <div data-keep-align className="lg:col-span-7 lg:col-start-6">
             <Eyebrow>{geo.eyebrow}</Eyebrow>
-            <h3 className="mt-3 text-heading-3">{geo.title}</h3>
-            <p className="mt-4 max-w-xl text-body-md text-slate">{geo.description}</p>
-            <ul className="mt-8 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+            <h3 className="mt-2 text-heading-3 lg:mt-3">{geo.title}</h3>
+            <p className="mt-3 max-w-xl text-body-md text-slate sm:mt-4">{geo.description}</p>
+            <ul className="mt-6 grid gap-x-6 gap-y-3 sm:mt-8 sm:grid-cols-2">
               {geo.points.map((point) => (
                 <li key={point} className="flex items-center gap-3 text-body-sm text-ink">
                   <Icon name="check-solid" className="size-5 shrink-0 text-turquoise" />

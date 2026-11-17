@@ -12,6 +12,7 @@ import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { HeadingRow } from "./HeadingRow";
+import { PhoneEndCta } from "@/components/layout/HeadingRow";
 
 const ease = "duration-700 ease-out-expo";
 
@@ -24,8 +25,9 @@ export function SportsRow() {
 
   // Scroll-linked slide: from the first card while the row enters the screen to the last one as
   // it leaves, tied straight to the (Lenis-smoothed) scroll.
+  // Phones swipe the row themselves (a native scroller), so the glide is tablet and up only.
   const rowScope = useGsap<HTMLDivElement>(({ scope, reducedMotion }) => {
-    if (reducedMotion) return;
+    if (reducedMotion || !window.matchMedia("(min-width: 768px)").matches) return;
     const track = scope.querySelector<HTMLElement>("[data-sports-track]");
     if (!track) return;
     gsap.to(track, {
@@ -41,6 +43,11 @@ export function SportsRow() {
     });
   });
 
+  const cta = (
+    <Button href={sportsIntro.cta.href} variant="outline" icon="arrow-up-right">
+      {sportsIntro.cta.label}
+    </Button>
+  );
   return (
     <Section tone="white" aria-labelledby="sports-title" className="overflow-hidden">
       <Container>
@@ -49,31 +56,27 @@ export function SportsRow() {
           align="top"
           title={sportsIntro.title}
           description={sportsIntro.description}
-          aside={
-            <div>
-              <Button href={sportsIntro.cta.href} variant="outline" icon="arrow-up-right">
-                {sportsIntro.cta.label}
-              </Button>
-            </div>
-          }
+          aside={<div>{cta}</div>}
         />
       </Container>
-      <Reveal className="mt-10 lg:mt-12">
+      <Reveal className="mt-6 sm:mt-10 lg:mt-12">
         {/* No arrows: the row glides sideways on its own as the page scrolls past it. */}
-        <div ref={rowScope} className="motion-reduce:overflow-x-auto">
+        <div ref={rowScope} className="motion-reduce:overflow-x-auto max-md:px-gutter">
           <ul
             data-sports-track
             aria-label="Sports at Somabay"
-            className="flex w-max gap-4 ps-site pe-gutter will-change-transform"
+            className="max-md:swipe-row-half max-md:[--swipe-card:40vw] md:flex md:w-max md:gap-4 md:ps-site md:pe-gutter md:will-change-transform"
           >
             {sports.map((sport, index) => (
-              <li key={sport.id} className="w-[min(72vw,18.5rem)] shrink-0">
+              <li key={sport.id} className="shrink-0 md:w-[min(72vw,18.5rem)]">
                 {/* At rest the sport's name sits on the photo's shaded foot; on hover the rounded
                   photo pulls up and a white panel beneath it shows the name, tagline and arrow. */}
                 <button
                   type="button"
                   onClick={() => setOpen(index)}
                   aria-label={`${sport.chip}: details`}
+                  // Phones have no hover: the name and tagline stay on the photo instead.
+                  data-no-touch-hover
                   className="group relative block aspect-[4/5] w-full overflow-hidden rounded-md bg-white text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turquoise"
                 >
                   {/* The photo keeps its rounded corners on hover, pulled up above the panel. */}
@@ -83,39 +86,52 @@ export function SportsRow() {
                     <span
                       className={`absolute inset-0 transition-transform ${ease} group-hover:-translate-y-[12%] group-focus-visible:-translate-y-[12%]`}
                     >
-                      <ResponsiveImage asset={sport.images[0]} sizes="18.5rem" fill />
+                      <ResponsiveImage
+                        asset={sport.images[0]}
+                        sizes="(max-width: 767px) 40vw, 18.5rem"
+                        fill
+                      />
                     </span>
                     <span
                       aria-hidden
-                      className={`absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_50%,rgb(0_0_0/0.6)_100%)] transition-opacity ${ease} group-hover:opacity-0 group-focus-visible:opacity-0`}
+                      className={`absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_45%,rgb(0_0_0/0.75)_100%)] transition-opacity sm:bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_50%,rgb(0_0_0/0.6)_100%)] ${ease} group-hover:opacity-0 group-focus-visible:opacity-0`}
                     />
                   </span>
 
-                  {/* At rest: the name only. */}
+                  {/* At rest: the name (and, on phones, the tagline) on the photo. */}
                   <span
                     aria-hidden
-                    className={`absolute inset-x-5 bottom-5 font-serif text-heading-5 leading-[1.15] text-white transition-[opacity,translate] ${ease} group-hover:translate-y-3 group-hover:opacity-0 group-focus-visible:translate-y-3 group-focus-visible:opacity-0`}
+                    className={`absolute inset-x-3 bottom-3 flex flex-col gap-1 text-white transition-[opacity,translate] sm:inset-x-5 sm:bottom-5 ${ease} group-hover:translate-y-3 group-hover:opacity-0 group-focus-visible:translate-y-3 group-focus-visible:opacity-0`}
                   >
-                    {sport.chip}
+                    <span className="font-serif text-body-md leading-[1.15] sm:text-heading-5">
+                      {sport.chip}
+                    </span>
+                    {sport.kicker ? (
+                      <span className="text-[0.6875rem] leading-snug text-white/80 sm:hidden">
+                        {sport.kicker}
+                      </span>
+                    ) : null}
                   </span>
 
                   {/* On hover: the white panel. */}
                   <span
-                    className={`absolute inset-x-0 bottom-0 flex h-[30%] translate-y-4 items-center justify-between gap-4 px-5 opacity-0 transition-[opacity,translate] ${ease} group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100`}
+                    className={`absolute inset-x-0 bottom-0 flex h-[30%] translate-y-4 items-center justify-between gap-2 px-3 opacity-0 transition-[opacity,translate] max-sm:hidden sm:gap-4 sm:px-5 ${ease} group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100`}
                   >
                     <span className="flex flex-col gap-1">
-                      <span className="font-serif text-heading-5 leading-[1.15] text-ink">
+                      <span className="font-serif text-body-sm leading-[1.15] text-ink sm:text-heading-5">
                         {sport.chip}
                       </span>
                       {sport.kicker ? (
-                        <span className="text-body-sm text-slate">{sport.kicker}</span>
+                        <span className="text-body-sm text-slate max-sm:hidden">
+                          {sport.kicker}
+                        </span>
                       ) : null}
                     </span>
                     <span
                       aria-hidden
-                      className="grid size-10 shrink-0 place-items-center rounded-full bg-turquoise text-white"
+                      className="grid size-7 shrink-0 place-items-center rounded-full bg-turquoise text-white sm:size-10"
                     >
-                      <Icon name="arrow-up-right" className="size-4.5" />
+                      <Icon name="arrow-up-right" className="size-3.5 sm:size-4.5" />
                     </span>
                   </span>
                 </button>
@@ -124,6 +140,7 @@ export function SportsRow() {
           </ul>
         </div>
       </Reveal>
+      <PhoneEndCta className="mt-6 px-gutter">{cta}</PhoneEndCta>
       <DetailDrawer
         items={sports}
         index={open}

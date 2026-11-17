@@ -13,10 +13,12 @@ import { SplitHeading } from "@/components/animations/SplitHeading";
 import { getLenis } from "@/components/animations/SmoothScroll";
 import { PlacesMap } from "@/components/map/PlacesMap";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
+import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { PhotoCard } from "@/components/ui/PhotoCard";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { neighborhoodImage } from "./neighborhoodImage";
+import { PhoneSheet } from "./PhoneSheet";
 
 type NeighborhoodGridProps = {
   neighborhoods: Neighborhood[];
@@ -188,13 +190,14 @@ export function NeighborhoodGrid({
     <div
       className={cn(
         "flex flex-wrap items-center gap-x-6 gap-y-4",
-        spread ? "justify-between" : "justify-center",
+        // Phones centre the chips and the switch under the centred heading.
+        spread ? "justify-center sm:justify-between" : "justify-center",
       )}
     >
       <div
         role="radiogroup"
         aria-label="Neighborhood status"
-        className={cn("flex flex-wrap", spread ? "gap-2" : "gap-1")}
+        className={cn("flex flex-wrap justify-center", spread ? "gap-2" : "gap-1")}
       >
         {filters.map((option) => {
           const checked = option.id === filter;
@@ -236,12 +239,14 @@ export function NeighborhoodGrid({
         </SplitHeading>
         {description ? (
           <Reveal delay={0.25}>
-            <p className="mx-auto mt-6 max-w-xl text-body-lg text-slate">{description}</p>
+            <p className="mx-auto mt-3 max-w-xl text-body-md text-slate sm:mt-6 sm:text-body-lg">
+              {description}
+            </p>
           </Reveal>
         ) : null}
       </div>
       <Reveal delay={0.35}>
-        <div ref={inline} className="mt-8 lg:mt-10">
+        <div ref={inline} className="mt-6 sm:mt-8 lg:mt-10">
           {controls(true)}
         </div>
       </Reveal>
@@ -251,7 +256,7 @@ export function NeighborhoodGrid({
           <div
             key={filter}
             ref={grid}
-            className="mt-6 grid gap-5 lg:grid-cols-2 lg:gap-x-6 lg:pb-8"
+            className="mt-6 grid gap-3 sm:gap-5 lg:grid-cols-2 lg:gap-x-6 lg:pb-8"
           >
             {(["left", "right"] as const).map((side) => (
               <div key={side} data-column={side} className="contents lg:block">
@@ -296,7 +301,7 @@ export function NeighborhoodGrid({
             />
             {/* The chosen neighborhood's preview, pinned to the map's corner. */}
             {preview ? (
-              <div className="relative z-[500] mx-4 -mt-16 overflow-hidden rounded-md bg-white shadow-card sm:mx-8 lg:absolute lg:top-6 lg:right-6 lg:mx-0 lg:mt-0 lg:w-80">
+              <div className="relative z-[500] mx-8 -mt-16 hidden overflow-hidden rounded-md bg-white shadow-card md:block lg:absolute lg:top-6 lg:right-6 lg:mx-0 lg:mt-0 lg:w-80">
                 <div className="relative aspect-[16/10]">
                   <ResponsiveImage asset={neighborhoodImage(preview)} sizes="20rem" fill />
                   <button
@@ -327,6 +332,33 @@ export function NeighborhoodGrid({
                 </div>
               </div>
             ) : null}
+            {/* Phones: the chosen neighborhood opens as a bottom sheet. */}
+            <PhoneSheet
+              open={Boolean(preview)}
+              onClose={() => setSelected(null)}
+              label={preview?.name ?? ""}
+            >
+              {preview ? (
+                <>
+                  <div className="relative mt-3 aspect-[16/10] overflow-hidden rounded-md">
+                    <ResponsiveImage asset={neighborhoodImage(preview)} sizes="100vw" fill />
+                  </div>
+                  <p className="mt-4 text-body-xs font-semibold tracking-label text-turquoise-160 uppercase">
+                    {statusLabel[preview.status]}
+                  </p>
+                  <p className="mt-2 font-serif text-heading-5">{preview.name}</p>
+                  <p className="mt-1 text-body-sm text-slate">{preview.tagline}</p>
+                  <Button
+                    href={hrefs[preview.slug]}
+                    variant="primary"
+                    icon="arrow-right"
+                    className="mt-5 w-full"
+                  >
+                    {neighborhoodsIntro.cardCta}
+                  </Button>
+                </>
+              ) : null}
+            </PhoneSheet>
           </div>
         )}
       </div>

@@ -29,7 +29,7 @@ export function HotelLocation({ slug, name, lat, lng }: HotelLocationProps) {
     <section aria-labelledby="location-title" className="bg-white py-section text-ink">
       <Container>
         <HeadingRow id="location-title" title="Location" />
-        <Reveal className="mt-10 lg:mt-12">
+        <Reveal className="mt-6 sm:mt-10 lg:mt-12">
           <LocationExplorer origin={origin} destinations={destinations} />
         </Reveal>
       </Container>

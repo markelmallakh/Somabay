@@ -7,10 +7,11 @@ import type { DirectoryItem, Hotel, MapPlace } from "@/types/content";
 import { easeOutExpo } from "@/components/animations/easing";
 import { DetailDrawer } from "@/components/directory/DetailDrawer";
 import { PlacesMap } from "@/components/map/PlacesMap";
-import { FilterPanel, type FilterState, matchesFilters } from "@/components/ui/FilterPanel";
+import { type FilterState, matchesFilters } from "@/components/ui/FilterPanel";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { hotelPrice } from "@/lib/price";
 import { HotelRow } from "./HotelRow";
+import { MobileFilters } from "./MobileFilters";
 
 type HotelFinderProps = {
   heading: ReactNode;
@@ -76,10 +77,12 @@ export function HotelFinder({
 
   return (
     <>
-      <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-5 sm:gap-8 md:flex-row md:items-end md:justify-between">
         {heading}
         <SegmentedControl
           label="View hotels as"
+          // Phones: centred and only as wide as its two options.
+          className="self-center md:self-auto"
           value={mode}
           onChange={setMode}
           options={[
@@ -89,20 +92,15 @@ export function HotelFinder({
         />
       </div>
 
-      <div className="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-[20rem_1fr] lg:gap-8">
+      <div className="mt-6 grid gap-4 sm:mt-10 sm:gap-6 lg:mt-12 lg:grid-cols-[20rem_1fr] lg:gap-8">
         <div className="lg:sticky lg:top-[calc(var(--header-height)+2rem)] lg:self-start">
-          <FilterPanel
-            groups={groups}
-            value={filters}
-            onChange={setFilters}
-            className="border-transparent"
-          />
+          <MobileFilters groups={groups} value={filters} onChange={setFilters} />
         </div>
         <div>
           <ResultCount
             count={visible.length}
             label={visible.length === 1 ? "stay" : "stays"}
-            className="mb-6"
+            className="mb-4 sm:mb-6"
           />
           <AnimatePresence mode="wait" initial={false}>
             <m.div
@@ -113,7 +111,7 @@ export function HotelFinder({
               transition={{ duration: 0.6, ease: easeOutExpo }}
             >
               {mode === "list" ? (
-                <ul className="flex flex-col gap-5">
+                <ul className="flex flex-col gap-4 sm:gap-5">
                   {visible.map((hotel) => (
                     <li key={hotel.slug}>
                       <HotelRow
@@ -134,7 +132,7 @@ export function HotelFinder({
                 />
               )}
               {visible.length === 0 ? (
-                <p className="rounded-md bg-white p-10 text-center text-slate">
+                <p className="rounded-md bg-white p-6 text-center text-slate sm:p-10">
                   No stays match these filters. Try clearing a few.
                 </p>
               ) : null}

@@ -24,6 +24,11 @@ type PlacesMapProps = {
   /** Extra room on the right when fitting, in px, for a panel laid over the map on large screens. */
   insetRight?: number;
   /**
+   * Phones: room (px) kept clear along the map's top for tabs laid over it; the zoom buttons then
+   * move to the bottom-left corner.
+   */
+  phoneInsetTop?: number;
+  /**
    * A popup card per place (trusted HTML built by the caller, with any outside text escaped).
    * Places with a popup open it when their pin is clicked, one at a time; while it's closed, their
    * name labels the pin.
@@ -90,6 +95,7 @@ export function PlacesMap({
   className,
   fitTight = false,
   insetRight = 0,
+  phoneInsetTop = 0,
   popups,
 }: PlacesMapProps) {
   const container = useRef<HTMLDivElement>(null);
@@ -114,11 +120,24 @@ export function PlacesMap({
       if (cancelled || map.current) return;
       const instance = L.map(element, {
         scrollWheelZoom: false,
-        zoomControl: true,
+        // Added below, so phones with tabs over the top can have it bottom-left.
+        zoomControl: false,
+        // Touch: a forgiving tap, a smooth glide after a drag and no rubber-band at the zoom limits.
+        tapTolerance: 15,
+        inertiaDeceleration: 2600,
+        bounceAtZoomLimits: false,
         attributionControl: true,
         zoomSnap: fitTight ? 0.1 : 1,
       });
       map.current = instance;
+      const tabsOnTop = phoneInsetTop > 0 && window.matchMedia("(max-width: 767px)").matches;
+      L.control.zoom({ position: tabsOnTop ? "bottomleft" : "topleft" }).addTo(instance);
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        // Phones: a small, narrow credit, so it never covers the zoom buttons in the other corner.
+        const credit = instance.attributionControl?.getContainer();
+        if (credit)
+          Object.assign(credit.style, { maxWidth: "58vw", fontSize: "8px", lineHeight: "1.3" });
+      }
       const satellite = basemap === "satellite";
       L.tileLayer(satellite ? SATELLITE_URL : TILE_URL, {
         attribution: satellite ? SATELLITE_ATTRIBUTION : ATTRIBUTION,
@@ -197,12 +216,22 @@ export function PlacesMap({
       if (view) instance.setView([view.lat, view.lng], view.zoom);
       else {
         const wide = window.matchMedia("(min-width: 1024px)").matches;
-        instance.fitBounds(L.latLngBounds(all.map((place) => [place.lat, place.lng])), {
-          paddingTopLeft: fitTight ? [40, 40] : [48, 48],
-          paddingBottomRight: fitTight
-            ? [40 + (wide ? insetRight : 0), 56]
-            : [48 + (wide ? insetRight : 0), 48],
-        });
+        const phone = window.matchMedia("(max-width: 767px)").matches;
+        const bounds = L.latLngBounds(all.map((place) => [place.lat, place.lng]));
+        if (phone && phoneInsetTop) {
+          // A little zoomed out, with every place clear of the tabs along the top.
+          instance.fitBounds(bounds, {
+            paddingTopLeft: [56, phoneInsetTop + 40],
+            paddingBottomRight: [56, 64],
+          });
+        } else {
+          instance.fitBounds(bounds, {
+            paddingTopLeft: fitTight ? [40, 40] : [48, 48],
+            paddingBottomRight: fitTight
+              ? [40 + (wide ? insetRight : 0), 56]
+              : [48 + (wide ? insetRight : 0), 48],
+          });
+        }
       }
     };
 
@@ -224,7 +253,7 @@ export function PlacesMap({
       map.current = null;
       currentMarkers.clear();
     };
-  }, [places, origin, view, basemap, fitTight, insetRight, popups]);
+  }, [places, origin, view, basemap, fitTight, insetRight, phoneInsetTop, popups]);
 
   useEffect(() => {
     let cancelled = false;

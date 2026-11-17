@@ -8,7 +8,10 @@ type HeadingRowProps = {
   eyebrow?: string;
   title: ReactNode;
   description?: ReactNode;
-  /** Shown under the description on the right (a button, arrows or filters). */
+  /**
+   * Shown under the description on the right (a button or link). Hidden on phones: render the
+   * same element in `PhoneEndCta` at the end of the section.
+   */
   aside?: ReactNode;
   as?: "h1" | "h2" | "h3";
   /** `light` on dark or photo sections. */
@@ -37,12 +40,13 @@ export function HeadingRow({
   return (
     <div
       className={cn(
-        "grid gap-6 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-0",
+        // Phones: centred, like the rest of the layout.
+        "grid gap-3 text-center sm:gap-6 sm:text-left lg:grid-cols-12 lg:gap-x-6 lg:gap-y-0",
         align === "top" ? "lg:items-start" : "lg:items-end",
         className,
       )}
     >
-      <Reveal className="flex flex-col gap-4 lg:col-span-7">
+      <Reveal className="flex flex-col items-center gap-2.5 sm:items-start lg:col-span-7 lg:gap-3">
         {eyebrow ? <Eyebrow tone={tone === "light" ? "dark" : undefined}>{eyebrow}</Eyebrow> : null}
         <Heading id={id} className="text-heading-2 text-balance">
           {title}
@@ -52,7 +56,7 @@ export function HeadingRow({
         <Reveal
           delay={0.1}
           className={cn(
-            "flex flex-col gap-6 lg:col-span-4 lg:col-start-9",
+            "flex flex-col items-center gap-5 sm:items-start sm:gap-6 lg:col-span-4 lg:col-start-9",
             align === "top" ? "lg:pt-0.5" : "lg:pb-1.5",
           )}
         >
@@ -61,9 +65,18 @@ export function HeadingRow({
               {description}
             </p>
           ) : null}
-          {aside}
+          {/* Phones: the call to action moves to the end of the section (PhoneEndCta). */}
+          {aside ? <div className="hidden sm:contents">{aside}</div> : null}
         </Reveal>
       ) : null}
     </div>
   );
+}
+
+/**
+ * Phones only: a section's call to action, centred at the end of the section after its content
+ * (the heading row's `aside` hides on phones). Pass the same element as the aside.
+ */
+export function PhoneEndCta({ children, className }: { children: ReactNode; className?: string }) {
+  return <div className={cn("mt-8 flex justify-center sm:hidden", className)}>{children}</div>;
 }

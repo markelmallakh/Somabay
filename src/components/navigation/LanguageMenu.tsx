@@ -41,13 +41,22 @@ const subscribe = (onChange: () => void) => {
  * Only English content exists so far, so the choice is remembered but the site stays in English.
  */
 type LanguageMenuProps = {
-  /** `header`: plain uppercase label; `pill`: the footer's bordered pill with a globe. */
-  variant?: "header" | "pill";
+  /**
+   * `header`: plain uppercase label; `compact`: the language code only (the phone header);
+   * `pill`: the footer's bordered pill with a flag.
+   */
+  variant?: "header" | "compact" | "pill";
+  /** `dark`: white pill on the deep turquoise menu. */
+  tone?: "light" | "dark";
   /** Open below the trigger (header) or above it (footer). */
   placement?: "below" | "above";
 };
 
-export function LanguageMenu({ variant = "header", placement = "below" }: LanguageMenuProps) {
+export function LanguageMenu({
+  variant = "header",
+  placement = "below",
+  tone = "light",
+}: LanguageMenuProps) {
   const above = placement === "above";
   const languages = siteConfig.languages;
   const [open, setOpen] = useState(false);
@@ -105,8 +114,15 @@ export function LanguageMenu({ variant = "header", placement = "below" }: Langua
         aria-controls={menuId}
         className={
           variant === "pill"
-            ? "inline-flex items-center gap-2 rounded-md border border-line px-3 py-1.5 text-body-xs text-ink transition-colors hover:border-turquoise/60"
-            : "flex items-center gap-1 uppercase transition-opacity hover:opacity-70"
+            ? cn(
+                "inline-flex min-h-10 items-center gap-2 rounded-md border px-3 py-1.5 text-body-xs transition-colors",
+                tone === "dark"
+                  ? "border-white/25 text-white hover:border-white/60"
+                  : "border-line text-ink hover:border-turquoise/60",
+              )
+            : variant === "compact"
+              ? "flex min-h-11 items-center gap-0.5 px-1.5 uppercase transition-opacity hover:opacity-70"
+              : "flex items-center gap-1 uppercase transition-opacity hover:opacity-70"
         }
       >
         {variant === "pill" ? <Flag code={active.code as FlagCode} className="size-4.5" /> : null}
@@ -116,13 +132,13 @@ export function LanguageMenu({ variant = "header", placement = "below" }: Langua
           dir={active.dir}
           className={variant === "pill" ? "font-semibold" : undefined}
         >
-          {active.label}
+          {variant === "compact" ? active.code : active.label}
         </span>
         <Icon
           name="chevron-down"
           className={cn(
             "opacity-80 transition-transform duration-500 ease-out-expo",
-            variant === "pill" ? "size-3.5" : "size-4",
+            variant === "header" ? "size-4" : "size-3.5",
             // Points toward where the menu opens; flips while it is open.
             above !== open && "rotate-180",
           )}
@@ -142,7 +158,7 @@ export function LanguageMenu({ variant = "header", placement = "below" }: Langua
             transition={{ duration: 0.45, ease: easeOutExpo }}
             style={{ transformOrigin: above ? "100% 100%" : "100% 0%" }}
             className={cn(
-              "absolute right-0 z-50 w-52 overflow-hidden rounded-md border border-line bg-white text-ink normal-case shadow-[0_18px_50px_rgb(18_58_70/0.18)]",
+              "popover-sheet absolute right-0 z-50 w-52 overflow-hidden rounded-md border border-line bg-white text-ink normal-case shadow-[0_18px_50px_rgb(18_58_70/0.18)]",
               above ? "bottom-[calc(100%+0.625rem)]" : "top-[calc(100%+0.875rem)]",
             )}
           >

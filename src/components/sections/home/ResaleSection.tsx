@@ -177,7 +177,9 @@ export function ResaleSection() {
 
       <div
         data-centre
-        className="relative aspect-[4/5] overflow-hidden md:absolute md:top-(--top) md:left-(--left) md:aspect-auto md:h-(--height) md:w-(--width) md:rounded-md"
+        // Phones: a full-width 4:5 photo, whatever the desktop animation left inline after the
+        // window was narrowed (hence the !important resets below `md`).
+        className="relative aspect-[4/5] overflow-hidden max-md:!relative max-md:!inset-auto max-md:!h-auto max-md:!w-full max-md:!rounded-none md:absolute md:top-(--top) md:left-(--left) md:aspect-auto md:h-(--height) md:w-(--width) md:rounded-md"
         style={
           {
             "--left": centre.left,
@@ -190,20 +192,20 @@ export function ResaleSection() {
         {/* Taller than its frame so it can drift in a clear parallax as the section scrolls. */}
         <div
           data-centre-media
-          className="absolute inset-x-0 -top-[20%] h-[140%] will-change-transform"
+          className="absolute inset-x-0 -top-[20%] h-[140%] will-change-transform max-md:!transform-none"
         >
           <ResponsiveImage asset={gallery.centre} sizes="100vw" quality={85} fill />
         </div>
         <div
           data-veil
           aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(to_right,rgb(0_0_0/0.55),rgb(0_0_0/0.15)_55%,transparent),linear-gradient(to_top,rgb(0_0_0/0.45),transparent_50%)] md:opacity-0"
+          className="absolute inset-0 bg-[linear-gradient(to_right,rgb(0_0_0/0.55),rgb(0_0_0/0.15)_55%,transparent),linear-gradient(to_top,rgb(0_0_0/0.45),transparent_50%)] max-md:!visible max-md:!opacity-100 md:opacity-0"
         />
       </div>
 
       <div
         data-panel
-        className="absolute inset-x-0 bottom-0 pb-[clamp(2.5rem,6vh,4rem)] text-white md:opacity-0"
+        className="absolute inset-x-0 bottom-0 pb-[clamp(2.5rem,6vh,4rem)] text-white max-md:!visible max-md:!transform-none max-md:!opacity-100 md:opacity-0"
       >
         <Container className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex max-w-[30rem] flex-col gap-6">

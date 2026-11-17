@@ -17,7 +17,7 @@ export function ExperienceGrid() {
   return (
     <Section tone="white" aria-label="Things to do">
       <Container>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-6">
           {items.map((item, index) => (
             <li key={item.slug}>
               <Reveal delay={(index % 3) * 0.1} className="h-full">
@@ -28,7 +28,7 @@ export function ExperienceGrid() {
                   title={item.title}
                   summary={item.summary}
                   action={neighborhoodsIntro.cardCta}
-                  className="aspect-[4/5] h-full"
+                  className="aspect-square h-full sm:aspect-[4/5]"
                 />
               </Reveal>
             </li>

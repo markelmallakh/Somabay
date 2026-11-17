@@ -70,8 +70,8 @@ export function DiningSection() {
         {/* Split screen: the copy and list on the left in the site's margin, the photo filling the
             right half from the top of the section to its foot and out to the screen edge. */}
         <div className="grid lg:min-h-svh lg:grid-cols-2">
-          <div className="flex flex-col justify-center gap-8 px-gutter py-section lg:ps-site lg:pe-16">
-            <div className="flex max-w-[31.25rem] flex-col gap-8">
+          <div className="flex flex-col justify-center gap-6 px-gutter py-section sm:gap-8 lg:ps-site lg:pe-16">
+            <div className="flex max-w-[31.25rem] flex-col gap-4 sm:gap-8">
               <div className="flex flex-col gap-4">
                 <Reveal>
                   <Eyebrow>{dining.eyebrow}</Eyebrow>
@@ -109,7 +109,8 @@ export function DiningSection() {
             from="bottom"
             parallax={12}
             delay={0.15}
-            className="relative min-h-[32rem] overflow-hidden lg:min-h-0"
+            // Phones: the photo leads the section, a wide 16:10 so the list follows on screen.
+            className="relative order-first aspect-[16/10] overflow-hidden lg:order-none lg:aspect-auto lg:min-h-0"
           >
             <div className="absolute inset-0">
               <ResponsiveImage asset={dining.image} sizes="(min-width: 1024px) 50vw, 100vw" fill />

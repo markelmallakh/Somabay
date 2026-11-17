@@ -1,5 +1,5 @@
 import { facilitiesIntro } from "@/content/home";
-import { HeadingRow } from "@/components/layout/HeadingRow";
+import { HeadingRow, PhoneEndCta } from "@/components/layout/HeadingRow";
 import { FacilitiesCollage, type Facility } from "./FacilitiesCollage";
 import { image } from "@/lib/media";
 import { Container } from "@/components/layout/Container";
@@ -72,25 +72,24 @@ const rows: [Facility, Facility][] = [
 ];
 
 export function FacilitiesSection() {
+  const cta = (
+    <Button href={facilitiesIntro.cta.href} variant="primary" icon="arrow-up-right">
+      {facilitiesIntro.cta.label}
+    </Button>
+  );
   return (
     <section
       aria-labelledby="facilities-title"
       data-theme-surface="light"
       className="bg-turquoise-5 py-section text-ink"
     >
-      <Container className="flex flex-col gap-[3.75rem]">
+      <Container className="flex flex-col gap-8 md:gap-[3.75rem]">
         <HeadingRow
           id="facilities-title"
           eyebrow={facilitiesIntro.eyebrow}
           title={facilitiesIntro.title}
           description={facilitiesIntro.description}
-          aside={
-            <div>
-              <Button href={facilitiesIntro.cta.href} variant="primary" icon="arrow-up-right">
-                {facilitiesIntro.cta.label}
-              </Button>
-            </div>
-          }
+          aside={<div>{cta}</div>}
         />
 
         <FacilitiesCollage
@@ -98,6 +97,7 @@ export function FacilitiesSection() {
           left={[rows[0][0], rows[1][0]]}
           right={[rows[0][1], rows[1][1]]}
         />
+        <PhoneEndCta className="mt-0">{cta}</PhoneEndCta>
       </Container>
     </section>
   );

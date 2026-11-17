@@ -32,13 +32,13 @@ export function ContactCta() {
         aria-hidden
         className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgb(18_58_70/0.9),rgb(18_58_70/0))]"
       />
-      <Container className="flex min-h-[clamp(30rem,49vw,46.25rem)] flex-col items-center justify-center py-20 text-center">
-        <Reveal className="flex max-w-[43.75rem] flex-col items-center gap-8">
-          <div className="flex flex-col items-center gap-6">
+      <Container className="flex min-h-[clamp(26rem,49vw,46.25rem)] flex-col items-center justify-center py-14 text-center sm:py-20">
+        <Reveal className="flex max-w-[43.75rem] flex-col items-center gap-6 sm:gap-8">
+          <div className="flex flex-col items-center gap-4 sm:gap-6">
             <h2 id="cta-title" className="text-heading-1">
               {contactCta.title}
             </h2>
-            <p className="text-body-lg text-white/90">{contactCta.description}</p>
+            <p className="text-body-md text-white/90 sm:text-body-lg">{contactCta.description}</p>
           </div>
           <Button href={contactCta.cta.href} variant="primary" size="lg" icon="arrow-right">
             {contactCta.cta.label}

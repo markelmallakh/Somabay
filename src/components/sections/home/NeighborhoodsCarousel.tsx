@@ -118,8 +118,8 @@ export function NeighborhoodsCarousel({
   };
 
   return (
-    <div className="flex flex-col gap-8">
-      <Container className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6 sm:gap-8">
+      <Container className="flex flex-col gap-6 sm:gap-8">
         {heading}
         <div
           role="tablist"
@@ -163,7 +163,7 @@ export function NeighborhoodsCarousel({
         id={PANEL_ID}
         role="tabpanel"
         aria-labelledby={`${PANEL_ID}-tab-${status}`}
-        className="scrollbar-none cursor-grab snap-x snap-proximity scroll-ps-site overflow-x-auto data-[dragging=true]:cursor-grabbing data-[dragging=true]:snap-none"
+        className="scrollbar-none cursor-grab snap-x snap-proximity scroll-ps-site overflow-x-auto data-[dragging=true]:cursor-grabbing data-[dragging=true]:snap-none max-sm:snap-mandatory max-sm:scroll-px-[10vw]"
       >
         <AnimatePresence mode="wait" initial={false}>
           <m.ul
@@ -172,13 +172,14 @@ export function NeighborhoodsCarousel({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -24 }}
             transition={{ duration: 0.6, ease: easeOutExpo }}
-            className="flex w-max gap-4 ps-site pe-gutter"
+            // Phones: the card centred with its neighbours peeking at both edges.
+            className="flex w-max gap-4 ps-site pe-gutter max-sm:px-[10vw]"
           >
             {looped.map((item, index) => (
               <li
                 key={`${item.slug}-${index}`}
                 aria-hidden={index < items.length || index >= items.length * 2 ? true : undefined}
-                className="w-[min(25rem,80vw)] snap-start"
+                className="w-[80vw] snap-center sm:w-[min(25rem,80vw)] sm:snap-start"
               >
                 <PhotoCard
                   href={hrefs[item.slug]}
@@ -191,7 +192,7 @@ export function NeighborhoodsCarousel({
                   title={item.name}
                   summary={item.summary}
                   action={ctaLabel}
-                  className="aspect-[400/520]"
+                  className="aspect-[4/5] sm:aspect-[400/520]"
                 />
               </li>
             ))}
@@ -199,14 +200,15 @@ export function NeighborhoodsCarousel({
         </AnimatePresence>
       </div>
 
-      <Container className="flex items-center gap-8">
+      {/* Phones: no rail or arrows; the peeking cards show the row scrolls. */}
+      <Container className="hidden items-center gap-8 md:flex">
         <div className="relative h-0.5 flex-1 bg-line" aria-hidden>
           <span
             className="absolute inset-y-0 bg-turquoise transition-[width] duration-700 ease-out-expo"
             style={{ left: `${progress.start * 100}%`, width: `${progress.size * 100}%` }}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="hidden gap-2 md:flex">
           <button
             type="button"
             onClick={() => step(-1)}

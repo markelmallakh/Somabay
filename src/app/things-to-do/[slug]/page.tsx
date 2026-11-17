@@ -50,6 +50,7 @@ async function ActivityContent({
         media={activity.hero}
         // A shorter band than the section landing heroes, so it reads as a sub-page.
         height="band"
+        phonePlacement="end"
       />
       {/* One template for every activity, Spa & Thalasso included. */}
       <ActivitySections activity={activity} sections={getActivitySections(activity.slug)} />

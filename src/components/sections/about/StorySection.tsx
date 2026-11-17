@@ -12,7 +12,7 @@ import { StoryFan } from "./StoryFan";
 export function StorySection() {
   return (
     <section aria-labelledby="story-title" className="bg-white text-ink">
-      <Container className="pt-28 pb-16 lg:pt-32 lg:pb-24">
+      <Container className="pt-14 pb-10 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-24">
         <StoryFan
           title={aboutStory.eyebrow}
           paragraph={aboutStory.paragraph}
@@ -20,14 +20,21 @@ export function StorySection() {
         >
           <RevealGroup
             as="ul"
-            className="mx-auto grid max-w-[61rem] gap-10 py-15 sm:grid-cols-3 sm:gap-6 lg:gap-25"
+            className="mx-auto grid max-w-[61rem] divide-y divide-line border-y border-line sm:grid-cols-3 sm:gap-6 sm:divide-y-0 sm:border-y-0 sm:py-15 lg:gap-25"
           >
             {about.stats.map((stat) => (
-              <RevealItem as="li" key={stat.value} className="flex flex-col gap-3">
-                <p className="font-serif text-heading-2 whitespace-nowrap text-turquoise">
+              // Phones: one hairline row per figure, the number left and its label right.
+              <RevealItem
+                as="li"
+                key={stat.value}
+                className="flex items-center justify-between gap-6 py-4 sm:flex-col sm:items-start sm:justify-start sm:gap-3 sm:py-0"
+              >
+                <p className="font-serif text-heading-3 whitespace-nowrap text-turquoise sm:text-heading-2">
                   <CountUp value={stat.value} />
                 </p>
-                <p className="text-body-md text-slate">{stat.label}</p>
+                <p className="max-w-[11rem] text-right text-body-sm text-slate sm:max-w-none sm:text-left sm:text-body-md">
+                  {stat.label}
+                </p>
               </RevealItem>
             ))}
           </RevealGroup>

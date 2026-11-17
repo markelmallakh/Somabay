@@ -2,7 +2,7 @@
 
 import { m, useInView } from "framer-motion";
 import Link from "next/link";
-import { useCallback, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { routes } from "@/config/routes";
 import { thingsToDoIntro } from "@/content/home";
 import { image } from "@/lib/media";
@@ -73,7 +73,11 @@ const slides = [
   },
 ];
 
-/** Card size steps outward from the active slide (Figma 400×480 / 220 × 240·300·340, scaled to fit under the header). */
+/**
+ * Card size steps outward from the active slide (Figma 400×480 / 220 × 240·300·340, scaled to fit
+ * under the header), in units of `--u`: 1rem on desktop, smaller on phones and tablets so the
+ * active card fits the screen with its neighbours peeking in at the edges.
+ */
 const SIZES = [
   { w: 30, h: 26 },
   { w: 12, h: 13 },
@@ -152,6 +156,7 @@ export function ThingsToDoSection() {
   const { position, previous } = state;
   const ref = useRef<HTMLElement>(null);
   const shown = useInView(ref, { once: true, amount: 0.35 });
+  const row = useRef<HTMLDivElement>(null);
 
   const step = useCallback(
     (by: number) =>
@@ -159,33 +164,88 @@ export function ThingsToDoSection() {
     [],
   );
 
+  // Swipe (finger) or drag (mouse) sideways to turn the row; a swipe never also opens the card it
+  // started on.
+  useEffect(() => {
+    const element = row.current;
+    if (!element) return;
+    let from: number | null = null;
+    let dragged = false;
+    const down = (event: PointerEvent) => {
+      from = event.clientX;
+      dragged = false;
+    };
+    const up = (event: PointerEvent) => {
+      if (from === null) return;
+      const distance = event.clientX - from;
+      from = null;
+      if (Math.abs(distance) > 40) {
+        dragged = true;
+        step(distance < 0 ? 1 : -1);
+      }
+    };
+    const cancel = () => {
+      from = null;
+    };
+    const click = (event: MouseEvent) => {
+      if (!dragged) return;
+      event.preventDefault();
+      event.stopPropagation();
+      dragged = false;
+    };
+    const noDrag = (event: DragEvent) => event.preventDefault();
+    element.addEventListener("pointerdown", down);
+    element.addEventListener("pointerup", up);
+    element.addEventListener("pointercancel", cancel);
+    element.addEventListener("click", click, true);
+    element.addEventListener("dragstart", noDrag);
+    return () => {
+      element.removeEventListener("pointerdown", down);
+      element.removeEventListener("pointerup", up);
+      element.removeEventListener("pointercancel", cancel);
+      element.removeEventListener("click", click, true);
+      element.removeEventListener("dragstart", noDrag);
+    };
+  }, [step]);
+
   return (
     <section
       ref={ref}
       aria-labelledby="things-title"
       data-theme-surface="light"
-      className="relative overflow-hidden bg-sand-100 py-section text-ink"
+      // Keeps its own alignment (the split "Things … To Do" title) when phones centre the layout.
+      data-keep-align=""
+      className="relative overflow-hidden bg-sand-100 py-section text-ink [--u:0.7rem] sm:[--u:0.85rem] lg:[--u:1rem]"
     >
       <Container>
         <div className="flex flex-col gap-2">
           <m.div
+            // Phones: centred over the one-line title.
+            className="flex justify-center sm:block"
             initial={{ opacity: 0, y: 12 }}
             animate={shown ? { opacity: 1, y: 0 } : undefined}
             transition={{ duration: 0.8, ease: easeOutExpo }}
           >
             <Eyebrow>{thingsToDoIntro.eyebrow}</Eyebrow>
           </m.div>
+          {/* Phones: "Things To Do" on one centred line; from `sm` the split title (with "To Do"
+              under the slider). */}
           <h2
             id="things-title"
-            className="font-serif text-[clamp(3.25rem,8vw,7.5rem)] leading-[1.2]"
+            className="flex justify-center gap-[0.25em] font-serif text-[clamp(2.5rem,8vw,7.5rem)] leading-[1.2] sm:block"
           >
             <span className="sr-only">Things To Do</span>
             <SplitTitle text="Things" show={shown} delay={0.05} />
+            <SplitTitle text="To Do" show={shown} delay={0.2} className="sm:hidden" />
           </h2>
         </div>
       </Container>
 
-      <div className="relative -mt-[clamp(1rem,1.5vw,1.5rem)] h-[26rem]">
+      {/* Swipe or drag sideways to turn the row (phones have no arrows). */}
+      <div
+        className="relative mt-6 h-[calc(26*var(--u))] touch-pan-y sm:-mt-[clamp(0.5rem,1.5vw,1.5rem)]"
+        ref={row}
+      >
         {track.map(({ index, slide }) => {
           const offset = wrap(index - position, LOOP);
           const before = wrap(index - previous, LOOP);
@@ -208,9 +268,9 @@ export function ThingsToDoSection() {
               }}
               style={
                 {
-                  width: `${size.w}rem`,
-                  height: `${size.h}rem`,
-                  transform: `translate(calc(-50% + ${centreX(offset)}rem), -50%)`,
+                  width: `calc(${size.w} * var(--u))`,
+                  height: `calc(${size.h} * var(--u))`,
+                  transform: `translate(calc(-50% + ${centreX(offset)} * var(--u)), -50%)`,
                   zIndex: 10 - distance,
                 } as CSSProperties
               }
@@ -255,7 +315,7 @@ export function ThingsToDoSection() {
                   className={cn(
                     "absolute flex flex-col gap-1 transition-[opacity,translate] duration-700 ease-out-expo",
                     current
-                      ? "inset-x-6 bottom-6 translate-y-0 pr-14 opacity-100 delay-300"
+                      ? "inset-x-4 bottom-4 translate-y-0 pr-12 opacity-100 delay-300 sm:inset-x-6 sm:bottom-6 sm:pr-14"
                       : "inset-x-4 bottom-4 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100",
                   )}
                 >
@@ -267,7 +327,7 @@ export function ThingsToDoSection() {
                 {current && (
                   <span
                     aria-hidden
-                    className="absolute right-6 bottom-6 grid size-11 scale-75 place-items-center rounded-full bg-turquoise text-white opacity-0 transition-[opacity,scale] duration-700 ease-out-expo group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100"
+                    className="absolute right-4 bottom-4 grid size-10 scale-75 place-items-center rounded-full bg-turquoise text-white opacity-0 transition-[opacity,scale] duration-700 ease-out-expo group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100 sm:right-6 sm:bottom-6 sm:size-11"
                   >
                     <Icon name="arrow-chip" strokeWidth={1.4} className="size-6" />
                   </span>
@@ -278,9 +338,11 @@ export function ThingsToDoSection() {
         })}
       </div>
 
-      <Container className="relative -mt-[clamp(0rem,1vw,0.75rem)] grid items-end gap-8 lg:grid-cols-[1fr_auto_1fr]">
+      {/* Phones: "To Do" right under the slider, then the copy with the button and arrows sharing a
+          row. Desktop: copy, arrows and "To Do" in one row. */}
+      <Container className="relative mt-6 grid grid-cols-1 items-end gap-x-4 gap-y-5 sm:-mt-[clamp(0rem,1vw,0.75rem)] md:grid-cols-[1fr_auto] lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
         <m.div
-          className="flex max-w-[22.5rem] flex-col gap-6"
+          className="mx-auto flex max-w-[22.5rem] flex-col items-center gap-5 text-center sm:mx-0 sm:items-start sm:gap-6 sm:text-left"
           initial={{ opacity: 0, y: 30 }}
           animate={shown ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 1, ease: easeOutExpo, delay: 1.15 }}
@@ -293,7 +355,7 @@ export function ThingsToDoSection() {
           </div>
         </m.div>
         <m.div
-          className="flex gap-2 self-center lg:-translate-y-6"
+          className="hidden gap-2 self-end md:flex lg:-translate-y-6 lg:self-center"
           initial={{ opacity: 0, y: 20 }}
           animate={shown ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 1, ease: easeOutExpo, delay: 1.25 }}
@@ -301,7 +363,7 @@ export function ThingsToDoSection() {
           <button
             type="button"
             onClick={() => step(-1)}
-            className="wave grid size-12 place-items-center rounded-md border border-ink/15 transition-colors duration-500 hover:border-turquoise hover:text-white"
+            className="wave grid size-11 place-items-center rounded-md border border-ink/15 transition-colors duration-500 hover:border-turquoise hover:text-white sm:size-12"
           >
             <span className="sr-only">Previous activity</span>
             <Icon name="arrow-right" className="size-5 rotate-180" />
@@ -309,13 +371,13 @@ export function ThingsToDoSection() {
           <button
             type="button"
             onClick={() => step(1)}
-            className="wave grid size-12 place-items-center rounded-md border border-ink/15 text-ink transition-colors duration-500 hover:border-turquoise hover:text-white"
+            className="wave grid size-11 place-items-center rounded-md border border-ink/15 text-ink transition-colors duration-500 hover:border-turquoise hover:text-white sm:size-12"
           >
             <span className="sr-only">Next activity</span>
             <Icon name="arrow-right" className="size-5" />
           </button>
         </m.div>
-        <p className="font-serif text-[clamp(3.25rem,8vw,7.5rem)] leading-[1.2] lg:text-right">
+        <p className="order-first hidden text-right font-serif text-[clamp(2.75rem,8vw,7.5rem)] leading-[1.2] sm:block md:col-span-2 lg:order-none lg:col-span-1">
           <SplitTitle text="To Do" show={shown} delay={0.2} />
         </p>
       </Container>

@@ -19,7 +19,7 @@ export function PostBadge({ category, className }: { category: string; className
   return (
     <span
       className={cn(
-        "absolute top-4 left-4 z-10 inline-flex items-center rounded-md px-2.5 py-[0.3125rem] text-[0.6875rem] leading-none font-semibold tracking-[0.12em] whitespace-nowrap text-white uppercase",
+        "absolute top-3 left-3 z-10 inline-flex items-center rounded-md px-1.5 py-1 text-[0.5625rem] leading-none font-semibold tracking-[0.12em] whitespace-nowrap text-white uppercase sm:top-4 sm:left-4 sm:px-2.5 sm:py-[0.3125rem] sm:text-[0.6875rem]",
         postCategoryFill(category),
         className,
       )}

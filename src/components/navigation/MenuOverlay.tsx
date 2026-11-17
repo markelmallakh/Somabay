@@ -2,17 +2,26 @@
 
 import { AnimatePresence, m } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
+import { siteConfig } from "@/config/site";
+import type { WeatherForecast } from "@/lib/weather";
 import { cn } from "@/lib/utils";
-import type { HeaderData, MenuItem } from "@/types/navigation";
+import type { HeaderData, MenuItem, NavGroup } from "@/types/navigation";
 import { getLenis } from "@/components/animations/SmoothScroll";
 import { easeOutExpo } from "@/components/animations/easing";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { FooterWeather } from "./FooterWeather";
+import { LanguageMenu } from "./LanguageMenu";
 
 type MenuOverlayProps = {
   open: boolean;
+  /** Phones: open straight into this section's sub-menu (from a header tab). */
+  section?: string | null;
+  /** For the weather pill at the foot of the phone menu. */
+  forecast?: WeatherForecast | null;
   onClose: () => void;
   data: HeaderData;
   /** Viewport point the circle grows from (the centre of the menu button). */
@@ -40,7 +49,14 @@ const rise = (order: number) => ({
  * section under the pointer. Not a native `<dialog>`, so the header can sit above it: Esc closes,
  * the page behind is made inert and scroll is locked while open.
  */
-export function MenuOverlay({ open, onClose, data, origin }: MenuOverlayProps) {
+export function MenuOverlay({
+  open,
+  onClose,
+  data,
+  origin,
+  section = null,
+  forecast = null,
+}: MenuOverlayProps) {
   const sections = data.menu.filter((item) => item.groups);
   const singles = data.menu.filter((item) => !item.groups);
   const [shown, setShown] = useState<MenuItem>(sections[0] ?? data.menu[0]);
@@ -111,10 +127,13 @@ export function MenuOverlay({ open, onClose, data, origin }: MenuOverlayProps) {
           <div
             ref={panelRef}
             tabIndex={-1}
-            className="mx-auto flex h-full max-w-site flex-col overflow-y-auto px-gutter pt-(--header-bar) pb-8 outline-none"
+            className="mx-auto flex h-full max-w-site flex-col overflow-y-auto overscroll-contain px-gutter pt-(--header-bar) pb-8 outline-none"
           >
+            {/* Phones and tablets: one column of large rows, sections folding open in place. */}
+            <MobileMenu data={data} onNavigate={onClose} section={section} forecast={forecast} />
+
             {/* One hairline between the header and the menu. */}
-            <div className="grid gap-x-10 gap-y-10 border-t border-white/15 pt-8 lg:grid-cols-4 lg:pt-10">
+            <div className="hidden gap-x-10 gap-y-10 border-t border-white/15 pt-8 lg:grid lg:grid-cols-4 lg:pt-10">
               {/* First column: the single pages, then the two calls to action. */}
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-6">
@@ -305,5 +324,229 @@ function MenuLink({
     >
       {children}
     </Link>
+  );
+}
+
+/**
+ * The menu on phones and tablets, in two levels. The main list holds every page and section as a
+ * 56px row on a hairline, in the header's order: single pages are plain rows; sections carry a
+ * chevron and slide their own sub-menu in from the right, with a Back row to return. The page you
+ * are on is marked in sun yellow. The calls to action, the weather, the language and the hotline
+ * close the main list. A header tab opens the menu straight into its section.
+ */
+function MobileMenu({
+  data,
+  onNavigate,
+  section,
+  forecast,
+}: {
+  data: HeaderData;
+  onNavigate: () => void;
+  section: string | null;
+  forecast: WeatherForecast | null;
+}) {
+  const pathname = usePathname();
+  const isCurrent = (href: string) => href === pathname;
+  const [openLabel, setOpenLabel] = useState<string | null>(section);
+  // Which way the panels slide: into a section (1) or back to the main list (-1).
+  const [direction, setDirection] = useState(1);
+  const lastSection = data.menu.filter((item) => item.groups).at(-1);
+  const opened = data.menu.find((item) => item.label === openLabel && item.groups);
+
+  const enter = (label: string) => {
+    setDirection(1);
+    setOpenLabel(label);
+  };
+  const back = () => {
+    setDirection(-1);
+    setOpenLabel(null);
+  };
+
+  const row =
+    "flex min-h-14 w-full items-center justify-between gap-4 py-3 text-left font-serif text-[1.375rem] leading-[1.2] transition-colors active:text-sun";
+  const slide = {
+    initial: (dir: number) => ({ x: dir > 0 ? "100%" : "-30%", opacity: 0 }),
+    animate: { x: "0%", opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? "-30%" : "100%", opacity: 0 }),
+  };
+
+  return (
+    <div className="relative flex min-h-full flex-col overflow-x-clip lg:hidden">
+      <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+        {opened?.groups ? (
+          <m.nav
+            key={opened.label}
+            aria-label={opened.label}
+            custom={direction}
+            variants={slide}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.55, ease: easeOutExpo }}
+            className="flex flex-col"
+          >
+            <button
+              type="button"
+              onClick={back}
+              className="flex min-h-12 items-center gap-2 border-t border-white/15 text-body-xs font-semibold tracking-[0.12em] text-white/75 uppercase transition-colors active:text-sun"
+            >
+              <Icon name="arrow-right" className="size-4 rotate-180" />
+              Main menu
+            </button>
+            <p className="border-t border-white/15 pt-5 pb-3 font-serif text-heading-4 text-sun">
+              {opened.label}
+            </p>
+            <ul>
+              {[...opened.groups, ...(opened === lastSection ? data.utilityLinks : [])].map(
+                (group: NavGroup, index) => (
+                  <m.li
+                    key={group.href + group.label}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: easeOutExpo, delay: 0.12 + index * 0.04 }}
+                    className="border-b border-white/15"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <Link
+                        href={group.href}
+                        onClick={onNavigate}
+                        aria-current={isCurrent(group.href) ? "page" : undefined}
+                        className={cn(
+                          "flex min-h-13 items-center gap-2 text-body-md tracking-[0.04em] text-white/90 uppercase transition-colors active:text-sun",
+                          isCurrent(group.href) && "text-sun",
+                        )}
+                      >
+                        {isCurrent(group.href) ? (
+                          <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-sun" />
+                        ) : null}
+                        {group.label}
+                      </Link>
+                      {/* A group with its own pages (Things To Do) links to its overview. */}
+                      {group.children ? (
+                        <Link
+                          href={group.href}
+                          onClick={onNavigate}
+                          aria-label={`View all ${group.label}`}
+                          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 text-body-xs font-semibold tracking-[0.08em] text-white/85 uppercase transition-colors active:text-sun"
+                        >
+                          View all
+                          <Icon name="arrow-right" className="size-3.5" />
+                        </Link>
+                      ) : null}
+                    </div>
+                    {group.children ? (
+                      // Nested pages (the activities) as a compact two-column list.
+                      <ul className="mb-3 grid grid-cols-2 gap-x-4 border-l border-white/15 pl-4">
+                        {group.children.map((child) => (
+                          <li key={child.href}>
+                            <Link
+                              href={child.href}
+                              onClick={onNavigate}
+                              aria-current={isCurrent(child.href) ? "page" : undefined}
+                              className={cn(
+                                "flex min-h-10 items-center text-body-xs tracking-[0.04em] text-white/65 uppercase transition-colors active:text-sun",
+                                isCurrent(child.href) && "text-sun",
+                              )}
+                            >
+                              {child.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </m.li>
+                ),
+              )}
+            </ul>
+            {opened.footerLink ? (
+              <Link
+                href={opened.footerLink.href}
+                onClick={onNavigate}
+                className="eyebrow mt-4 inline-flex min-h-11 items-center gap-2 self-start text-sun"
+              >
+                {opened.footerLink.label}
+                <Icon name="arrow-right" className="size-4" />
+              </Link>
+            ) : null}
+          </m.nav>
+        ) : (
+          <m.div
+            key="main"
+            custom={direction}
+            variants={slide}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.55, ease: easeOutExpo }}
+            className="flex min-h-full flex-1 flex-col"
+          >
+            <nav aria-label="Site menu" className="border-t border-white/15">
+              <ul>
+                {data.menu.map((item, index) => (
+                  <m.li key={item.label} {...rise(index)} className="border-b border-white/15">
+                    {item.groups ? (
+                      <button
+                        type="button"
+                        aria-haspopup="true"
+                        onClick={() => enter(item.label)}
+                        className={row}
+                      >
+                        {item.label}
+                        <Icon name="chevron-right" className="size-5 shrink-0 opacity-70" />
+                      </button>
+                    ) : (
+                      // A page with no sub-pages: a plain row, no arrow.
+                      <Link
+                        href={item.href}
+                        onClick={onNavigate}
+                        aria-current={isCurrent(item.href) ? "page" : undefined}
+                        className={cn(row, isCurrent(item.href) && "text-sun")}
+                      >
+                        {item.label}
+                      </Link>
+                    )}
+                  </m.li>
+                ))}
+              </ul>
+            </nav>
+
+            <m.div {...rise(data.menu.length)} className="mt-auto grid gap-4 pt-8">
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  href={data.actions.contact.href}
+                  variant="light"
+                  onClick={onNavigate}
+                  className="w-full"
+                >
+                  {data.actions.contact.label}
+                </Button>
+                <Button
+                  href={data.actions.virtualTour.href}
+                  external
+                  variant="outline-light"
+                  icon="cube"
+                  iconPosition="start"
+                  className="w-full"
+                >
+                  {data.actions.virtualTour.label}
+                </Button>
+              </div>
+              {/* The weather and the language, as in the header on desktop. */}
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {forecast ? <FooterWeather forecast={forecast} tone="dark" /> : null}
+                <LanguageMenu variant="pill" placement="above" tone="dark" />
+              </div>
+              <a
+                href={siteConfig.contact.hotlineHref}
+                className="flex min-h-11 items-center justify-center gap-2 text-body-sm tracking-[0.08em] text-white/80 uppercase"
+              >
+                <Icon name="phone" className="size-4 text-sun" />
+                Hotline {siteConfig.contact.hotline}
+              </a>
+            </m.div>
+          </m.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

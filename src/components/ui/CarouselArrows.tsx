@@ -69,7 +69,8 @@ export function CarouselArrows({
       : "border-white/40 text-white [--wave:#fff] hover:border-white hover:text-ink",
   );
   return (
-    <div className={cn("flex gap-3", className)}>
+    // Phones swipe (the next card peeks in), so the arrows only show from `md`.
+    <div className={cn("hidden gap-3 md:flex", className)}>
       <button
         type="button"
         className={button}

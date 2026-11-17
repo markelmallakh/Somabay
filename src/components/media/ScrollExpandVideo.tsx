@@ -39,6 +39,12 @@ export function ScrollExpandVideo({
     const shade = scope.querySelector<HTMLElement>("[data-shade]");
     if (!frame || !film || !copy || !shade || reducedMotion) return;
 
+    // On a tall phone screen equal insets would start the film as a narrow portrait strip; there
+    // it starts as a wide frame across the content width instead.
+    const start =
+      window.innerWidth < 640
+        ? "inset(30% 4% 30% 4% round 0.25rem)"
+        : "inset(22% 24% 22% 24% round 0.25rem)";
     const timeline = gsap.timeline({
       defaults: { ease: "none" },
       scrollTrigger: { trigger: scope, start: "top top", end: "bottom bottom", scrub: 0.8 },
@@ -46,7 +52,7 @@ export function ScrollExpandVideo({
     timeline
       .fromTo(
         frame,
-        { clipPath: "inset(22% 24% 22% 24% round 0.25rem)" },
+        { clipPath: start },
         { clipPath: "inset(0% 0% 0% 0% round 0rem)", duration: 1 },
         0,
       )
@@ -62,7 +68,7 @@ export function ScrollExpandVideo({
       ref={ref}
       aria-labelledby={id}
       data-theme-surface="dark"
-      className="relative h-[290svh] bg-white motion-reduce:h-svh"
+      className="relative h-[220svh] bg-white motion-reduce:h-svh sm:h-[290svh]"
     >
       <div className="sticky top-0 h-svh overflow-hidden">
         <div data-frame className="absolute inset-0 overflow-hidden bg-abyss">

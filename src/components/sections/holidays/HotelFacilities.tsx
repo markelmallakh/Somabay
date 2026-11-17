@@ -92,36 +92,40 @@ export function HotelFacilities({ items, label }: { items: DirectoryItem[]; labe
           </h2>
         </Reveal>
       </Container>
-      <ul
-        ref={row}
-        aria-label={label}
-        className="mt-10 scrollbar-none flex cursor-grab gap-4 overflow-x-auto ps-site pe-gutter data-[dragging=true]:cursor-grabbing md:mt-12 lg:cursor-auto"
-      >
-        {items.map((item, index) => (
-          <li key={item.id} className="w-[min(70vw,17.5rem)] shrink-0">
-            <button
-              type="button"
-              onClick={() => setOpen(index)}
-              className="group block w-full rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turquoise"
-            >
-              <span className="relative block aspect-[2/3] overflow-hidden rounded-md bg-sand-200">
-                {/* Wider than its frame so the sideways drift never shows an edge. */}
-                <span data-facility-media className="absolute -inset-x-[12%] inset-y-0 block">
-                  <ResponsiveImage
-                    asset={item.images[0]}
-                    sizes="22rem"
-                    fill
-                    className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
-                  />
+      {/* Phones: a swipe row of small portrait cards, about two and a half to a screen, starting
+          in line with the heading (the wrapper gives the row its gutter to bleed from). */}
+      <div className="max-md:px-gutter">
+        <ul
+          ref={row}
+          aria-label={label}
+          className="mt-6 scrollbar-none data-[dragging=true]:cursor-grabbing max-md:swipe-row-half max-md:gap-2.5 max-md:[--swipe-card:38vw] sm:mt-10 md:mt-12 md:flex md:cursor-grab md:gap-4 md:overflow-x-auto md:ps-site md:pe-gutter lg:cursor-auto"
+        >
+          {items.map((item, index) => (
+            <li key={item.id} className="md:w-[min(70vw,17.5rem)] md:shrink-0">
+              <button
+                type="button"
+                onClick={() => setOpen(index)}
+                className="group block w-full rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turquoise"
+              >
+                <span className="relative block aspect-[3/4] overflow-hidden rounded-md bg-sand-200 md:aspect-[2/3]">
+                  {/* Wider than its frame so the sideways drift never shows an edge. */}
+                  <span data-facility-media className="absolute -inset-x-[12%] inset-y-0 block">
+                    <ResponsiveImage
+                      asset={item.images[0]}
+                      sizes="22rem"
+                      fill
+                      className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
+                    />
+                  </span>
                 </span>
-              </span>
-              <span className="mt-4 block font-serif text-heading-6 transition-colors duration-500 group-hover:text-lagoon">
-                {item.title}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
+                <span className="mt-2 block font-serif text-body-md leading-snug transition-colors duration-500 group-hover:text-lagoon sm:mt-4 sm:text-heading-6">
+                  {item.title}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
       <DetailDrawer items={items} index={open} onClose={() => setOpen(null)} onNavigate={setOpen} />
     </section>
   );

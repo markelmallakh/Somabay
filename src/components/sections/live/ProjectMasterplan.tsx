@@ -6,9 +6,13 @@ import { cn } from "@/lib/utils";
 import { image } from "@/lib/media";
 import type { ImageAsset } from "@/types/media";
 import { easeOutExpo } from "@/components/animations/easing";
+import { PanZoom } from "@/components/media/PanZoom";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
+import { Button } from "@/components/ui/Button";
+import { filterChipClass } from "@/components/ui/filterChip";
 import { Icon } from "@/components/ui/Icon";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
+import { PhoneSheet } from "./PhoneSheet";
 
 type Category = "residences" | "amenities" | "leisure";
 type Filter = "all" | Category;
@@ -141,56 +145,85 @@ export function ProjectMasterplan({ name }: { name: string }) {
   const visible = hotspots.filter((spot) => filter === "all" || spot.category === filter);
   const active = visible.find((spot) => spot.id === open) ?? null;
 
+  const choose = (next: Filter) => {
+    setFilter(next);
+    setOpen(null);
+  };
+
   return (
     <div className="relative">
+      {/* Phones: the categories as a row of chips above the plan, so none is cut off. */}
       <div
-        // No parallax: the pins sit on the photo by percentage and must stay on their places.
-        data-no-motion
-        className="relative aspect-[4/5] overflow-hidden rounded-md bg-sand-200 sm:aspect-[708/432]"
+        role="radiogroup"
+        aria-label={`${name} masterplan category`}
+        className="-mx-gutter mb-3 scrollbar-none flex justify-center-safe gap-1.5 overflow-x-auto px-gutter md:hidden"
       >
-        <ResponsiveImage
-          asset={plan}
-          sizes="(min-width: 1512px) 1392px, 100vw"
-          fill
-          priority={false}
-        />
+        {filters.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            role="radio"
+            aria-checked={option.id === filter}
+            onClick={() => choose(option.id)}
+            className={filterChipClass(option.id === filter, "shrink-0")}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+      {/* No parallax: the pins sit on the plan by percentage and must stay on their places.
+          Phones: the plan keeps its proportions and can be dragged, pinched and double-tapped. */}
+      <div data-no-motion className="relative">
+        <PanZoom
+          aspect={708 / 432}
+          label="masterplan"
+          className="aspect-[4/5] rounded-md bg-sand-200 sm:aspect-[708/432]"
+        >
+          <ResponsiveImage
+            asset={plan}
+            sizes="(min-width: 1512px) 1392px, 230vw"
+            fill
+            priority={false}
+          />
 
-        {visible.map((spot, index) => {
-          const on = spot.id === open;
-          return (
-            <m.button
-              key={spot.id}
-              type="button"
-              onClick={() => setOpen(on ? null : spot.id)}
-              aria-expanded={on}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.6, ease: easeOutExpo, delay: index * 0.04 }}
-              style={{ left: `${spot.x}%`, top: `${spot.y}%` }}
-              className="group absolute z-10 -translate-x-1/2 -translate-y-1/2"
-            >
-              <span className="sr-only">{spot.title}</span>
-              <span
-                aria-hidden
-                className={cn(
-                  "absolute inset-0 rounded-full",
-                  on
-                    ? "bg-deep-orange/30"
-                    : "animate-ping bg-turquoise/35 [animation-duration:2.4s]",
-                )}
-              />
-              <span
-                aria-hidden
-                className={cn(
-                  "relative grid size-8 place-items-center rounded-full border-2 border-white shadow-float transition-[background-color,transform] duration-500 group-hover:scale-110",
-                  on ? "bg-deep-orange" : "bg-turquoise",
-                )}
+          {visible.map((spot, index) => {
+            const on = spot.id === open;
+            return (
+              <m.button
+                key={spot.id}
+                type="button"
+                onClick={() => setOpen(on ? null : spot.id)}
+                aria-expanded={on}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, ease: easeOutExpo, delay: index * 0.04 }}
+                style={{ left: `${spot.x}%`, top: `${spot.y}%` }}
+                // The 32px pin sits in a 44px tap area.
+                className="group pz-counter absolute z-10 -translate-x-1/2 -translate-y-1/2 p-1.5"
               >
-                <Icon name={on ? "close" : "plus"} className="size-3.5 text-white" />
-              </span>
-            </m.button>
-          );
-        })}
+                <span className="sr-only">{spot.title}</span>
+                <span
+                  aria-hidden
+                  className={cn(
+                    "absolute inset-1.5 rounded-full",
+                    on
+                      ? "bg-deep-orange/30"
+                      : "animate-ping bg-turquoise/35 [animation-duration:2.4s]",
+                  )}
+                />
+                <span
+                  aria-hidden
+                  className={cn(
+                    "relative grid size-8 place-items-center rounded-full border-2 border-white shadow-float transition-[background-color,transform] duration-500 group-hover:scale-110",
+                    on ? "bg-deep-orange" : "bg-turquoise",
+                  )}
+                >
+                  <Icon name={on ? "close" : "plus"} className="size-3.5 text-white" />
+                </span>
+              </m.button>
+            );
+          })}
+        </PanZoom>
 
         {/* The facility card, opening beside its hotspot (to the left on the right half). */}
         <AnimatePresence>
@@ -208,7 +241,7 @@ export function ProjectMasterplan({ name }: { name: string }) {
                 right: active.x >= 55 ? `calc(${100 - active.x}% + 1.75rem)` : undefined,
                 top: `clamp(1rem, calc(${active.y}% - 9rem), calc(100% - 22rem))`,
               }}
-              className="absolute z-20 hidden w-72 overflow-hidden rounded-md bg-white text-ink shadow-card sm:block"
+              className="absolute z-20 hidden w-72 overflow-hidden rounded-md bg-white text-ink shadow-card md:block"
             >
               {active.image ? (
                 <div className="relative aspect-[16/10]">
@@ -240,42 +273,41 @@ export function ProjectMasterplan({ name }: { name: string }) {
           ) : null}
         </AnimatePresence>
 
-        <div className="absolute top-4 left-4 z-20 max-w-[calc(100%-2rem)] shadow-float">
+        <div className="absolute top-4 left-4 z-20 hidden max-w-[calc(100%-2rem)] shadow-float md:block">
           <SegmentedControl
             label={`${name} masterplan category`}
             value={filter}
-            onChange={(next) => {
-              setFilter(next);
-              setOpen(null);
-            }}
+            onChange={choose}
             options={filters}
           />
         </div>
       </div>
 
-      {/* Phones: the open facility under the plan. */}
-      {active ? (
-        <div className="mt-4 overflow-hidden rounded-md bg-white shadow-card sm:hidden">
-          {active.image ? (
-            <div className="relative aspect-[16/10]">
-              <ResponsiveImage asset={active.image} sizes="100vw" fill />
-            </div>
-          ) : null}
-          <div className="p-5">
-            <p className="text-label tracking-label text-turquoise-160 uppercase">
+      {/* Phones: the tapped facility opens as a bottom sheet. */}
+      <PhoneSheet open={Boolean(active)} onClose={() => setOpen(null)} label={active?.title ?? ""}>
+        {active ? (
+          <>
+            {active.image ? (
+              <div className="relative mt-3 aspect-[16/10] overflow-hidden rounded-md">
+                <ResponsiveImage asset={active.image} sizes="100vw" fill />
+              </div>
+            ) : null}
+            <p className="mt-4 text-label tracking-label text-turquoise-160 uppercase">
               {categoryLabel[active.category]}
             </p>
-            <p className="mt-2 font-serif text-heading-6">{active.title}</p>
-            <p className="mt-2 text-body-sm text-slate">{active.description}</p>
-            <a
+            <p className="mt-2 font-serif text-heading-5">{active.title}</p>
+            <p className="mt-2 text-body-md text-slate">{active.description}</p>
+            <Button
               href="#register-interest"
-              className="mt-4 inline-block text-body-xs font-semibold tracking-label text-turquoise uppercase transition-colors hover:text-turquoise-160"
+              variant="primary"
+              className="mt-5 w-full"
+              onClick={() => setOpen(null)}
             >
               Request interest
-            </a>
-          </div>
-        </div>
-      ) : null}
+            </Button>
+          </>
+        ) : null}
+      </PhoneSheet>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useCallback, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useGsap } from "@/hooks/useGsap";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
@@ -25,8 +25,8 @@ export type ShowcaseHotel = {
   gallery: ImageAsset[];
   href: string;
   tags: string[];
-  /** "Starting from" nightly price. */
-  price: string;
+  /** "Starting from" nightly price, once a real rate is connected. */
+  price?: string;
   /** A few of the hotel's facilities, listed compactly under the description. */
   amenities: string[];
 };
@@ -35,6 +35,8 @@ type HotelsShowcaseProps = {
   hotels: ShowcaseHotel[];
   ctaLabel: string;
   intro: ReactNode;
+  /** After the hotels (phones show the section's call to action here). */
+  outro?: ReactNode;
 };
 
 /**
@@ -55,11 +57,16 @@ const AMENITY_ICONS: [RegExp, IconName][] = [
   [/golf/i, "flag"],
   [/wifi|wi-fi/i, "wifi"],
   [/kids|family|club/i, "family"],
+  [/tennis|sport|padel/i, "dumbbell"],
+  [/div|kite|water|aqua/i, "waves"],
+  [/yoga/i, "sparkle"],
+  [/room service|butler/i, "key"],
+  [/parking|shuttle|transfer/i, "car"],
 ];
 const amenityIcon = (name: string): IconName =>
   AMENITY_ICONS.find(([pattern]) => pattern.test(name))?.[1] ?? "check";
 
-export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps) {
+export function HotelsShowcase({ hotels, ctaLabel, intro, outro }: HotelsShowcaseProps) {
   const [active, setActive] = useState(0);
   const trigger = useRef<ScrollTrigger | null>(null);
   const count = hotels.length;
@@ -107,8 +114,22 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
 
   const hotel = hotels[active];
 
+  // Phones and tablets: keep the active hotel's chip in view in the swipe row.
+  const switcher = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    const row = switcher.current;
+    const chip = row?.children[active] as HTMLElement | undefined;
+    if (!row || !chip || row.scrollWidth <= row.clientWidth) return;
+    row.scrollTo({
+      left: chip.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2,
+      behavior: "smooth",
+    });
+  }, [active]);
+
   // Gallery position, remembered per hotel and reset when another hotel becomes active.
   const [photo, setPhoto] = useState({ slug: hotel.slug, index: 0 });
+  /** Where a finger came down on the photo, to read a sideways swipe. */
+  const swipeFrom = useRef<number | null>(null);
   const photoIndex = photo.slug === hotel.slug ? photo.index : 0;
   const photos = hotel.gallery.length;
   const step = (by: number) =>
@@ -122,10 +143,26 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
       className="flex flex-col gap-8 py-section lg:h-svh lg:min-h-[40rem] lg:pt-[calc(var(--header-bar)+1.5rem)] lg:pb-[calc(2.5rem+8svh)]"
     >
       {intro}
-      <Container className="lg:min-h-0 lg:flex-1">
-        <div className="grid gap-8 lg:h-full lg:grid-cols-[500fr_445fr_323fr] lg:gap-x-12">
+      {/* Phones and tablets: the hotels slide across as the page scrolls (see HotelTrack). */}
+      <HotelTrack hotels={hotels} ctaLabel={ctaLabel} />
+      {outro}
+      <Container className="hidden lg:block lg:min-h-0 lg:flex-1">
+        <div className="grid gap-5 sm:gap-8 lg:h-full lg:grid-cols-[500fr_445fr_323fr] lg:gap-x-12">
           {/* Photo */}
-          <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-gray-100 lg:aspect-auto lg:h-full">
+          {/* Phones: a shorter 4:3 photo so the hotel's details show with it; swipe to change. */}
+          <div
+            className="relative aspect-[4/3] touch-pan-y overflow-hidden rounded-md bg-gray-100 sm:aspect-[4/5] lg:aspect-auto lg:h-full"
+            onTouchStart={(event) => {
+              swipeFrom.current = event.touches[0].clientX;
+            }}
+            onTouchEnd={(event) => {
+              const from = swipeFrom.current;
+              swipeFrom.current = null;
+              if (from === null) return;
+              const distance = event.changedTouches[0].clientX - from;
+              if (Math.abs(distance) > 40) step(distance < 0 ? 1 : -1);
+            }}
+          >
             {hotels.map((item, index) => (
               <div
                 key={item.slug}
@@ -215,7 +252,7 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
             </div>
             {/* Price and the call to action together on a soft panel, so the next step is clear. */}
             <div className="flex animate-rise flex-wrap items-center justify-between gap-x-6 gap-y-4 border-t border-line pt-5 [animation-delay:240ms]">
-              <PriceFrom amount={hotel.price} />
+              {hotel.price ? <PriceFrom amount={hotel.price} /> : null}
               <Button href={hotel.href} variant="primary" icon="arrow-up-right">
                 {ctaLabel}
                 <span className="sr-only">: {hotel.name}</span>
@@ -223,32 +260,41 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
             </div>
           </div>
 
-          {/* Switcher */}
-          <ul aria-label="Hotels" className="flex flex-col">
+          {/* Switcher. Phones and tablets: every hotel as a compact chip in one swipeable row
+              above the photo, the active one scrolled into view, so all five are seen at once.
+              Desktop: the ruled list beside the details. */}
+          <ul
+            ref={switcher}
+            aria-label="Hotels"
+            className="order-first -mx-gutter scrollbar-none flex snap-x scroll-px-gutter gap-2 overflow-x-auto px-gutter lg:order-none lg:mx-0 lg:flex-col lg:gap-0 lg:overflow-visible lg:px-0"
+          >
             {hotels.map((item, index) => {
               const current = index === active;
               return (
-                <li key={item.slug} className="flex-1">
+                <li key={item.slug} className="shrink-0 snap-start lg:flex-1">
                   <button
                     type="button"
                     aria-current={current ? "true" : undefined}
                     onClick={() => goTo(index)}
                     // The active hotel sits on a soft turquoise wash beside its rule.
                     className={cn(
-                      "group relative flex h-full w-full items-center gap-3.5 rounded-r-md border-l border-ink/15 py-2 pr-4 pl-4.5 text-left transition-colors duration-500",
-                      current ? "bg-turquoise-5" : "hover:bg-sand-100",
+                      "group relative flex h-full w-full items-center gap-2 rounded-full border py-1 pr-4 pl-1 text-left transition-colors duration-500",
+                      "lg:gap-3.5 lg:rounded-none lg:rounded-r-md lg:border-0 lg:border-l lg:border-ink/15 lg:py-2 lg:pr-4 lg:pl-4.5",
+                      current
+                        ? "border-turquoise bg-turquoise-5"
+                        : "border-line bg-white hover:bg-sand-100 lg:bg-transparent",
                     )}
                   >
                     <span
                       aria-hidden
                       className={cn(
-                        "absolute top-0 -left-px h-full w-0.5 origin-top bg-turquoise transition-transform duration-700 ease-out-expo",
+                        "absolute top-0 -left-px hidden h-full w-0.5 origin-top bg-turquoise transition-transform duration-700 ease-out-expo lg:block",
                         current ? "scale-y-100" : "scale-y-0",
                       )}
                     />
                     <span
                       className={cn(
-                        "relative size-13 shrink-0 overflow-hidden rounded-full transition-opacity duration-500",
+                        "relative size-9 shrink-0 overflow-hidden rounded-full transition-opacity duration-500 lg:size-13",
                         current ? "opacity-100" : "opacity-55 group-hover:opacity-80",
                       )}
                     >
@@ -257,13 +303,15 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
                     <span className="flex min-w-0 flex-col gap-0.5">
                       <span
                         className={cn(
-                          "truncate text-body-md font-semibold transition-colors duration-500",
+                          "text-body-sm font-semibold whitespace-nowrap transition-colors duration-500 lg:truncate lg:text-body-md",
                           current ? "text-ink" : "text-slate group-hover:text-ink",
                         )}
                       >
                         {item.name}
                       </span>
-                      <span className="truncate text-body-xs text-slate">{item.tagline}</span>
+                      <span className="hidden truncate text-body-xs text-slate lg:block">
+                        {item.tagline}
+                      </span>
                     </span>
                   </button>
                 </li>
@@ -272,6 +320,127 @@ export function HotelsShowcase({ hotels, ctaLabel, intro }: HotelsShowcaseProps)
           </ul>
         </div>
       </Container>
+    </div>
+  );
+}
+
+/**
+ * Phones and tablets: the hotels as one horizontal track that moves with the page. The track pins
+ * in the middle of the screen and, as you scroll down, slides across one hotel at a time (photo,
+ * name and rating, tags, a short description, price and the call to action); after the last hotel
+ * the page carries on. With reduced motion it is a plain swipe row.
+ */
+function HotelTrack({ hotels, ctaLabel }: { hotels: ShowcaseHotel[]; ctaLabel: string }) {
+  const ref = useGsap<HTMLDivElement>(({ scope, reducedMotion }) => {
+    if (reducedMotion) return;
+    const viewport = scope.querySelector<HTMLElement>("[data-track-viewport]");
+    const track = scope.querySelector<HTMLElement>("[data-track]");
+    if (!viewport || !track) return;
+    const mm = gsap.matchMedia();
+    mm.add("(max-width: 1023px)", () => {
+      viewport.style.overflow = "hidden";
+      const distance = () => track.scrollWidth - viewport.clientWidth;
+      const tween = gsap.to(track, {
+        x: () => -distance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: scope,
+          start: "center center",
+          end: () => `+=${distance()}`,
+          pin: true,
+          // The parent is a flex column, where GSAP leaves the spacing off by default; the page
+          // needs it so the next section waits until the last hotel has slid in.
+          pinSpacing: true,
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+        },
+      });
+      return () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+        gsap.set(track, { clearProps: "transform" });
+        viewport.style.overflow = "";
+      };
+    });
+    return () => mm.revert();
+  }, []);
+
+  return (
+    <div ref={ref} className="lg:hidden">
+      <div
+        data-track-viewport
+        // Without the pinned motion (reduced motion), a swipe row.
+        className="scrollbar-none snap-x snap-mandatory overflow-x-auto"
+      >
+        <ul
+          data-track
+          aria-label="Hotels"
+          className="flex w-max gap-6 px-gutter will-change-transform"
+        >
+          {hotels.map((hotel) => (
+            <li key={hotel.slug} className="flex w-[80vw] max-w-[26rem] snap-center flex-col gap-3">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-gray-100">
+                <ResponsiveImage asset={hotel.image} sizes="(min-width: 640px) 416px, 82vw" fill />
+              </div>
+              <div className="flex items-center gap-2.5">
+                <h3 className="text-heading-5">{hotel.name}</h3>
+                {hotel.stars ? (
+                  <span
+                    className="inline-flex shrink-0 items-center gap-1 rounded-full bg-sun px-2 py-0.5 text-body-xs leading-none font-semibold text-ink tabular-nums"
+                    aria-label={`${hotel.stars}-star hotel`}
+                  >
+                    {hotel.stars}
+                    <Icon name="star" className="size-3" />
+                  </span>
+                ) : null}
+              </div>
+              <ul className="-mt-1 flex flex-wrap gap-1.5">
+                {hotel.tags.map((tag) => (
+                  <li key={tag}>
+                    <Chip>{tag}</Chip>
+                  </li>
+                ))}
+              </ul>
+              <p className="line-clamp-3 text-body-sm text-slate">{hotel.description}</p>
+              {/* A few of the hotel's own amenities, compact. */}
+              {hotel.amenities.length ? (
+                <ul
+                  aria-label={`${hotel.name} amenities`}
+                  className="grid grid-cols-2 gap-x-3 gap-y-1.5 border-t border-line pt-3"
+                >
+                  {hotel.amenities.slice(0, 4).map((amenity) => (
+                    <li key={amenity} className="flex items-center gap-1.5 text-body-xs text-ink">
+                      <Icon
+                        name={amenityIcon(amenity)}
+                        strokeWidth={1.5}
+                        className="size-4 shrink-0 text-turquoise"
+                      />
+                      <span className="truncate">{amenity}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <div
+                className={cn(
+                  "mt-auto flex items-center gap-4 border-t border-line pt-3",
+                  hotel.price ? "justify-between" : "justify-center",
+                )}
+              >
+                {hotel.price ? <PriceFrom amount={hotel.price} /> : null}
+                <Button
+                  href={hotel.href}
+                  variant="primary"
+                  icon="arrow-up-right"
+                  className="self-auto"
+                >
+                  {ctaLabel}
+                  <span className="sr-only">: {hotel.name}</span>
+                </Button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

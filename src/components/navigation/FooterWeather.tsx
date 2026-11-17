@@ -10,7 +10,14 @@ const WeatherDialog = dynamic(() =>
 );
 
 /** The footer's weather pill: opens the same forecast popup as the header, above the pill. */
-export function FooterWeather({ forecast }: { forecast: WeatherForecast }) {
+export function FooterWeather({
+  forecast,
+  tone = "light",
+}: {
+  forecast: WeatherForecast;
+  /** `dark`: white pill on the deep turquoise menu. */
+  tone?: "light" | "dark";
+}) {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [anchor, setAnchor] = useState<{
@@ -31,16 +38,20 @@ export function FooterWeather({ forecast }: { forecast: WeatherForecast }) {
           setLoaded(true);
           setOpen(true);
         }}
-        className="inline-flex items-center gap-2 rounded-md border border-line px-3 py-1.5 text-body-xs text-ink transition-colors hover:border-turquoise/60"
+        className={
+          tone === "dark"
+            ? "inline-flex min-h-10 items-center gap-2 rounded-md border border-white/25 px-3 py-1.5 text-body-xs text-white transition-colors hover:border-white/60"
+            : "inline-flex items-center gap-2 rounded-md border border-line px-3 py-1.5 text-body-xs text-ink transition-colors hover:border-turquoise/60"
+        }
       >
         <Icon
           name={forecast.current.isDay ? "cloud-sun" : "moon"}
-          className="size-4.5 text-turquoise"
+          className={tone === "dark" ? "size-4.5 text-sun" : "size-4.5 text-turquoise"}
         />
         <span>
           <span className="sr-only">Weather forecast. Current temperature: </span>
           <span className="font-semibold">{forecast.current.temperature}°C</span>
-          <span className="text-slate"> · Somabay now</span>
+          <span className={tone === "dark" ? "text-white/70" : "text-slate"}> · Somabay now</span>
         </span>
       </button>
       {loaded ? (

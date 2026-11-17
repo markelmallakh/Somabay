@@ -2,7 +2,8 @@
 
 import { AnimatePresence, m } from "framer-motion";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { colorOf } from "@/lib/event-categories";
 import type { EventItem } from "@/types/content";
@@ -28,6 +29,19 @@ const monthName = new Intl.DateTimeFormat("en-US", { month: "long", timeZone: "U
 
 const iso = (date: Date) => date.toISOString().slice(0, 10);
 
+/** Phones (below `md`): the event preview opens as a bottom sheet instead of a popover. */
+function usePhone() {
+  const [phone, setPhone] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const update = () => setPhone(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return phone;
+}
+
 /** Month grid with event bars; selecting an event opens a preview card. */
 export function EventsCalendar({
   events,
@@ -39,6 +53,14 @@ export function EventsCalendar({
   const [year, month] = initialMonth.split("-").map(Number);
   const [cursor, setCursor] = useState(() => new Date(Date.UTC(year, month - 1, 1)));
   const [selected, setSelected] = useState<EventItem | null>(null);
+  const phone = usePhone();
+  // The sheet closes with Esc too.
+  useEffect(() => {
+    if (!selected || !phone) return;
+    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setSelected(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected, phone]);
   // Where the preview opens: next to the chip (or list item) that was clicked.
   const panel = useRef<HTMLDivElement>(null);
   const [anchor, setAnchor] = useState({ left: 0, top: 0, originX: 0, originY: 0 });
@@ -98,6 +120,43 @@ export function EventsCalendar({
     setCursor(new Date(Date.UTC(y, mo - 1, 1)));
   };
   const dot = (event: EventItem) => colorOf(event.category).dot;
+  // The preview card's content, shared by the popover (larger screens) and the sheet (phones).
+  const preview = (event: EventItem) => (
+    <>
+      <div className="relative aspect-[16/9]">
+        <ResponsiveImage asset={event.image} sizes="(max-width: 767px) 100vw, 272px" fill />
+        <button
+          type="button"
+          onClick={() => setSelected(null)}
+          className="wave absolute top-2.5 right-2.5 grid size-8 place-items-center rounded-md bg-white text-ink shadow-float transition-colors duration-500 hover:text-white"
+          aria-label="Close preview"
+        >
+          <Icon name="close" className="size-4" />
+        </button>
+      </div>
+      <div className="flex flex-col gap-1.5 p-4">
+        <span className="flex items-center gap-1.5 text-body-2xs font-semibold tracking-label text-slate uppercase">
+          <span aria-hidden className={cn("size-1.5 rounded-full", dot(event))} />
+          {categoryLabels[event.category]}
+        </span>
+        <p className="font-serif text-body-lg leading-snug">{event.title}</p>
+        <p className="flex items-center gap-1.5 text-body-xs text-slate">
+          <Icon name="pin" className="size-3.5" />
+          {event.location}
+        </p>
+        <Link
+          href={hrefs[event.slug]}
+          className="group mt-2 inline-flex w-fit items-center gap-1.5 text-body-xs font-semibold tracking-label text-turquoise uppercase transition-colors hover:text-turquoise-160"
+        >
+          View event
+          <Icon
+            name="arrow-right"
+            className="size-3.5 transition-transform duration-500 ease-out-expo group-hover:translate-x-0.5"
+          />
+        </Link>
+      </div>
+    </>
+  );
 
   return (
     // One white panel: the month and its controls on top, the grid, and the month's events
@@ -151,9 +210,9 @@ export function EventsCalendar({
             </div>
           </div>
 
-          <div className="mt-8 grid grid-cols-7 text-body-2xs font-semibold tracking-label text-slate uppercase">
+          <div className="mt-6 grid grid-cols-7 text-body-2xs font-semibold tracking-label text-slate uppercase sm:mt-8">
             {weekdays.map((day) => (
-              <p key={day} className="px-2 pb-3">
+              <p key={day} className="px-1 pb-2 text-center sm:px-2 sm:pb-3 sm:text-left">
                 <abbr title={day} className="no-underline">
                   {day}
                 </abbr>
@@ -170,20 +229,47 @@ export function EventsCalendar({
                 <div
                   key={day}
                   className={cn(
-                    "min-h-20 border-r border-b border-line p-1.5 transition-colors duration-300 md:min-h-28 md:p-2",
+                    "relative flex min-h-13 flex-col items-center border-r border-b border-line p-1 transition-colors duration-300 sm:min-h-20 sm:items-stretch sm:p-1.5 md:min-h-28 md:p-2",
                     dayEvents.length && inMonth && "hover:bg-sand-100/60",
                   )}
                 >
                   <p
                     className={cn(
-                      "grid size-7 place-items-center rounded-full text-body-sm tabular-nums",
+                      // Above the phone day button, which it lets taps through to.
+                      "pointer-events-none relative z-[1] grid size-7 place-items-center rounded-full text-body-sm tabular-nums",
                       !inMonth && "text-mist/60",
                       isToday && "bg-turquoise font-semibold text-white",
                     )}
                   >
                     {date.getUTCDate()}
                   </p>
-                  <ul className="mt-1.5 flex flex-col gap-1">
+                  {/* Phones: a coloured dot per event, and the whole day is a button that opens the
+                      day's (first) event in the bottom sheet. */}
+                  {dayEvents.length && inMonth ? (
+                    <button
+                      type="button"
+                      onClick={(click) => open(dayEvents[0], click.currentTarget)}
+                      aria-label={`${date.getUTCDate()}: ${dayEvents.map((event) => event.title).join(", ")}`}
+                      className={cn(
+                        "absolute inset-0 transition-colors duration-300 active:bg-sand-100 sm:hidden",
+                        dayEvents.some((event) => event.slug === selected?.slug) && "bg-sand-100",
+                      )}
+                    />
+                  ) : null}
+                  {dayEvents.length && inMonth ? (
+                    <span
+                      aria-hidden
+                      className="pointer-events-none relative z-[1] mt-1 flex gap-1 sm:hidden"
+                    >
+                      {dayEvents.slice(0, 3).map((event) => (
+                        <span
+                          key={event.slug}
+                          className={cn("size-1.5 rounded-full", dot(event))}
+                        />
+                      ))}
+                    </span>
+                  ) : null}
+                  <ul className="mt-1.5 hidden flex-col gap-1 sm:flex">
                     {dayEvents.slice(0, 2).map((event) => (
                       <li key={event.slug}>
                         <button
@@ -214,8 +300,9 @@ export function EventsCalendar({
           </div>
         </div>
 
-        {/* The month's events, with their photos (large screens). */}
-        <aside className="hidden border-l border-line bg-sand-50 p-6 lg:block">
+        {/* The month's events, with their photos: beside the grid on large screens, under it on
+            phones and tablets (where it is the way into each event). */}
+        <aside className="border-t border-line bg-sand-50 p-4 sm:p-6 lg:border-t-0 lg:border-l">
           <p className="text-body-xs font-semibold tracking-label text-slate uppercase">
             This month
           </p>
@@ -226,7 +313,7 @@ export function EventsCalendar({
                   <button
                     type="button"
                     onClick={(click) => open(event, click.currentTarget)}
-                    className="group flex w-full items-center gap-3 rounded-md p-1.5 text-left transition-colors duration-300 hover:bg-sand-100"
+                    className="group flex min-h-14 w-full items-center gap-3 rounded-md p-1.5 text-left transition-colors duration-300 hover:bg-sand-100"
                   >
                     <span className="relative size-11 shrink-0 overflow-hidden rounded-md bg-sand-200">
                       <ResponsiveImage
@@ -265,9 +352,51 @@ export function EventsCalendar({
         </aside>
       </div>
 
+      {/* Phones: the preview rises as a bottom sheet over a dimmed page. */}
+      {phone && typeof document !== "undefined"
+        ? createPortal(
+            <AnimatePresence>
+              {selected ? (
+                <m.div
+                  key="sheet"
+                  className="fixed inset-0 z-50 md:hidden"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <button
+                    type="button"
+                    aria-label="Close preview"
+                    onClick={() => setSelected(null)}
+                    className="absolute inset-0 bg-black/45"
+                  />
+                  <m.div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={selected.title}
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "100%" }}
+                    transition={{ duration: 0.55, ease: easeOutExpo }}
+                    className="absolute inset-x-0 bottom-0 max-h-[88svh] overflow-y-auto overscroll-contain rounded-t-md bg-white pb-[env(safe-area-inset-bottom)]"
+                  >
+                    <span
+                      aria-hidden
+                      className="absolute top-2 left-1/2 z-10 h-1 w-10 -translate-x-1/2 rounded-full bg-white/80 shadow-[0_1px_3px_rgb(0_0_0/0.25)]"
+                    />
+                    {preview(selected)}
+                  </m.div>
+                </m.div>
+              ) : null}
+            </AnimatePresence>,
+            document.body,
+          )
+        : null}
+
       {/* A compact preview that grows out of the clicked chip. */}
       <AnimatePresence>
-        {selected ? (
+        {selected && !phone ? (
           <m.div
             key={selected.slug}
             role="dialog"
@@ -284,38 +413,7 @@ export function EventsCalendar({
             }}
             className="absolute z-20 overflow-hidden rounded-md bg-white shadow-[0_18px_48px_-12px_rgb(18_58_70/0.35)] ring-1 ring-line"
           >
-            <div className="relative aspect-[16/9]">
-              <ResponsiveImage asset={selected.image} sizes="272px" fill />
-              <button
-                type="button"
-                onClick={() => setSelected(null)}
-                className="wave absolute top-2.5 right-2.5 grid size-8 place-items-center rounded-md bg-white text-ink shadow-float transition-colors duration-500 hover:text-white"
-                aria-label="Close preview"
-              >
-                <Icon name="close" className="size-4" />
-              </button>
-            </div>
-            <div className="flex flex-col gap-1.5 p-4">
-              <span className="flex items-center gap-1.5 text-body-2xs font-semibold tracking-label text-slate uppercase">
-                <span aria-hidden className={cn("size-1.5 rounded-full", dot(selected))} />
-                {categoryLabels[selected.category]}
-              </span>
-              <p className="font-serif text-body-lg leading-snug">{selected.title}</p>
-              <p className="flex items-center gap-1.5 text-body-xs text-slate">
-                <Icon name="pin" className="size-3.5" />
-                {selected.location}
-              </p>
-              <Link
-                href={hrefs[selected.slug]}
-                className="group mt-2 inline-flex w-fit items-center gap-1.5 text-body-xs font-semibold tracking-label text-turquoise uppercase transition-colors hover:text-turquoise-160"
-              >
-                View event
-                <Icon
-                  name="arrow-right"
-                  className="size-3.5 transition-transform duration-500 ease-out-expo group-hover:translate-x-0.5"
-                />
-              </Link>
-            </div>
+            {preview(selected)}
           </m.div>
         ) : null}
       </AnimatePresence>

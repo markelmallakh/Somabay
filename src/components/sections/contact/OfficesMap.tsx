@@ -1,9 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { offices } from "@/content/contact";
 import type { MapPlace } from "@/types/content";
 import { PlacesMap } from "@/components/map/PlacesMap";
+
+const DESKTOP_VIEW = { lat: 30.22, lng: 32.48, zoom: 7.1 };
+const PHONE_VIEW = { lat: 29.3, lng: 32.6, zoom: 6.6 };
 
 const escape = (value: string) => value.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
 
@@ -22,7 +25,21 @@ const ICON = {
  * Both offices on one full-width map, each with an open card: its region and name, address,
  * working hours, phone and email, and a link to directions in Google Maps.
  */
+const PHONE = "(max-width: 639px)";
+const subscribe = (onChange: () => void) => {
+  const query = window.matchMedia(PHONE);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+
 export function OfficesMap() {
+  // Phones: zoomed out and centred between the two offices, so both pins and their open cards
+  // fit the narrow screen, one card above the other.
+  const phone = useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(PHONE).matches,
+    () => false,
+  );
   const { places, popups } = useMemo(() => {
     const placesList: MapPlace[] = offices.map((office) => ({
       id: office.id,
@@ -59,7 +76,7 @@ export function OfficesMap() {
       label="Map of the Somabay offices"
       // Framed on Cairo and the Red Sea coast, zoomed so each office's open card has room
       // above its pin without meeting the other. Fractional zoom needs the tight setting.
-      view={{ lat: 30.22, lng: 32.48, zoom: 7.1 }}
+      view={phone ? PHONE_VIEW : DESKTOP_VIEW}
       fitTight
       className="h-[min(50rem,86svh)] w-full"
     />

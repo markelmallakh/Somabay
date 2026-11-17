@@ -8,7 +8,7 @@ export function ContactOffices() {
   return (
     <section aria-labelledby="offices-title" className="bg-white pt-section text-ink">
       <Container className="pb-6 md:pb-8">
-        <Reveal className="flex flex-col gap-4">
+        <Reveal className="flex flex-col gap-2 lg:gap-3">
           <Eyebrow>Visit us</Eyebrow>
           <h2 id="offices-title" className="text-heading-2">
             Our Offices

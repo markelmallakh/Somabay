@@ -60,8 +60,12 @@ type PhotoCardProps = {
   draggable?: boolean;
   tabIndex?: number;
   priority?: boolean;
-  /** `lg` for the big feature cards (larger title and roomier padding). */
-  size?: "md" | "lg";
+  /**
+   * `lg` for the big feature cards (larger title and roomier padding); `compact` is `md` on
+   * tablets and up but small on phones (tight padding, small title, no action bar), for narrow
+   * cards two to a row.
+   */
+  size?: "md" | "lg" | "compact";
 };
 
 /**
@@ -107,19 +111,43 @@ export function PhotoCard({
         aria-hidden
         className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgb(0_0_0/0.35)_0%,rgb(0_0_0/0)_20%,rgb(0_0_0/0.15)_45%,rgb(0_0_0/0.65)_68%,rgb(0_0_0/0.9)_100%)]"
       />
-      <span className={cn("flex items-start pb-0", size === "lg" ? "p-8" : "p-6")}>
+      <span
+        className={cn(
+          "flex items-start pb-0",
+          size === "lg" ? "p-5 sm:p-8" : size === "compact" ? "p-3 sm:p-6" : "p-6",
+        )}
+      >
         {tag ? (
-          <span className="eyebrow rounded-md bg-black/30 px-2 py-1 text-[0.6875rem] leading-none font-medium tracking-[0.16em] backdrop-blur-lg">
+          <span className="eyebrow rounded-md bg-black/30 px-1.5 py-1 text-[0.5625rem] leading-none font-medium tracking-[0.14em] backdrop-blur-lg sm:px-2 sm:text-[0.6875rem] sm:tracking-[0.16em]">
             {tag}
           </span>
         ) : null}
       </span>
-      <span className="flex flex-col gap-4">
+      <span className={cn("flex flex-col", size === "compact" ? "gap-2.5 sm:gap-4" : "gap-4")}>
         {/* data-card-copy: lines a parent can animate in one by one. */}
-        <span data-card-copy className={cn("flex flex-col gap-4", size === "lg" ? "px-8" : "px-6")}>
+        <span
+          data-card-copy
+          className={cn(
+            "flex flex-col gap-4",
+            size === "lg"
+              ? "px-5 sm:px-8"
+              : size === "compact"
+                ? "px-3 max-sm:pb-3 sm:px-6"
+                : "px-6",
+          )}
+        >
           <span className="flex flex-col gap-2">
             {kicker ? <span className="text-body-sm text-white/80">{kicker}</span> : null}
-            <span className={cn("font-serif", size === "lg" ? "text-heading-3" : "text-heading-5")}>
+            <span
+              className={cn(
+                "font-serif",
+                size === "lg"
+                  ? "text-heading-3"
+                  : size === "compact"
+                    ? "text-body-md leading-tight sm:text-heading-5"
+                    : "text-heading-5",
+              )}
+            >
               {title}
             </span>
           </span>
@@ -134,7 +162,17 @@ export function PhotoCard({
             </span>
           ) : null}
         </span>
-        <CardActionBar label={action} className={size === "lg" ? "px-8 py-6" : undefined} />
+        <CardActionBar
+          label={action}
+          className={
+            size === "lg"
+              ? "px-5 py-4 sm:px-8 sm:py-6"
+              : size === "compact"
+                ? // Phones: no bar at all, just the photo, tag and name.
+                  "max-sm:hidden"
+                : undefined
+          }
+        />
       </span>
     </CardShell>
   );

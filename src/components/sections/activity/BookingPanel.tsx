@@ -52,11 +52,11 @@ export function BookingPanel({
       aria-labelledby="booking-title"
       className="scroll-mt-(--header-bar) bg-sand-100 py-section text-ink"
     >
-      <Container className="grid lg:grid-cols-12 lg:items-center">
+      <Container className="grid grid-cols-1 lg:grid-cols-12 lg:items-center">
         <Reveal className="lg:col-span-7 lg:col-start-1 lg:row-start-1">
           <Parallax
             amount={6}
-            className="relative aspect-[4/5] overflow-hidden rounded-t-md lg:aspect-auto lg:h-[min(50rem,86svh)] lg:min-h-[42rem] lg:rounded-md"
+            className="relative aspect-[4/3] overflow-hidden rounded-t-md sm:aspect-[4/5] lg:aspect-auto lg:h-[min(50rem,86svh)] lg:min-h-[42rem] lg:rounded-md"
           >
             <div className="absolute inset-0">
               <ResponsiveImage asset={image} sizes="(min-width: 1024px) 56vw, 100vw" fill />
@@ -68,21 +68,26 @@ export function BookingPanel({
         <Reveal delay={0.1} className="relative z-10 lg:col-span-6 lg:col-start-7 lg:row-start-1">
           <div
             className={cn(
-              "flex flex-col rounded-b-md p-6 sm:p-10 lg:rounded-md lg:p-12 lg:shadow-[0_18px_48px_-28px_rgb(18_58_70/0.2)]",
+              "flex flex-col rounded-b-md p-5 sm:p-10 lg:rounded-md lg:p-12 lg:shadow-[0_18px_48px_-28px_rgb(18_58_70/0.2)]",
               teal ? "bg-turquoise-160 text-white" : "bg-white",
             )}
           >
             <Eyebrow className={teal ? "[--eyebrow-ink:var(--color-deep-orange)]" : undefined}>
               {eyebrow}
             </Eyebrow>
-            <SplitHeading id="booking-title" className="mt-2 text-heading-3">
+            <SplitHeading id="booking-title" className="mt-2 text-heading-3 lg:mt-3">
               {title}
             </SplitHeading>
-            <p className={cn("mt-2 max-w-lg text-body-md", teal ? "text-white/75" : "text-slate")}>
+            <p
+              className={cn(
+                "mt-2 max-w-lg text-body-md lg:mt-3",
+                teal ? "text-white/75" : "text-slate",
+              )}
+            >
               {description}
             </p>
             {contacts.length ? (
-              <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2.5 text-body-sm">
+              <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2.5 text-body-sm sm:mt-6">
                 {contacts.map((contact) => (
                   <li
                     key={contact.label}
@@ -111,7 +116,7 @@ export function BookingPanel({
                 definition={definition}
                 context={context ?? title}
                 tone={tone}
-                className="mt-6"
+                className="mt-5 sm:mt-6"
               />
             ) : (
               children

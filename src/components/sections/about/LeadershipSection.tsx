@@ -18,7 +18,7 @@ export function LeadershipSection() {
         />
       </Container>
       {/* Full width so the carousel runs off the edge; it aligns itself to the site grid. */}
-      <div className="mt-10 lg:mt-12">
+      <div className="mt-6 sm:mt-10 lg:mt-12">
         <LeadershipGrid leaders={leaders} />
       </div>
     </Section>

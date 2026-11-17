@@ -158,7 +158,8 @@ export function AboutJourney({
               text={statement}
               leadWords={statementLead}
               dimOpacity={0.45}
-              className="max-w-[66.375rem] font-sans text-statement text-white"
+              // Phones: centred, like the rest of the layout.
+              className="mx-auto max-w-[66.375rem] text-center font-sans text-statement text-white sm:mx-0 sm:text-left"
             />
           </Container>
         </section>
@@ -177,7 +178,9 @@ export function AboutJourney({
               }
             >
               <Container className="flex flex-col gap-12 lg:gap-16">
-                <p className="max-w-[66.875rem] text-statement text-white">{paragraph}</p>
+                <p className="mx-auto max-w-[66.875rem] text-center text-statement text-white sm:mx-0 sm:text-left">
+                  {paragraph}
+                </p>
                 {last && outro ? <div>{outro}</div> : null}
               </Container>
             </div>

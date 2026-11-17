@@ -75,7 +75,7 @@ async function EventContent({ params }: { params: PageProps<"/events/[slug]">["p
             </>
           }
         />
-        <Container className="max-w-3xl pt-10 lg:pt-12">
+        <Container className="max-w-3xl pt-8 sm:pt-10 lg:pt-12">
           {event.body ? (
             <ArticleBody blocks={event.body} />
           ) : event.description ? (
@@ -84,7 +84,7 @@ async function EventContent({ params }: { params: PageProps<"/events/[slug]">["p
         </Container>
         <ArticleGallery images={event.gallery} label={event.title} />
         <Container className="pb-section">
-          <div className="mt-12 flex justify-end border-t border-line pt-8">
+          <div className="mt-8 flex justify-end border-t border-line pt-6 sm:mt-12 sm:pt-8">
             <ShareButtons path={path} title={event.title} />
           </div>
         </Container>
@@ -94,7 +94,8 @@ async function EventContent({ params }: { params: PageProps<"/events/[slug]">["p
           <SectionHeading id="more-events-title" align="center" title="More Events" />
           <RevealGroup
             as="ul"
-            className="mt-10 grid gap-x-6 gap-y-12 sm:grid-cols-2 md:mt-12 lg:grid-cols-3"
+            // Phones: a centred swipe row with the cards either side peeking in; a grid from `sm`.
+            className="mt-6 grid gap-x-6 gap-y-12 max-sm:swipe-row max-sm:pb-3 sm:mt-10 sm:grid-cols-2 md:mt-12 lg:grid-cols-3"
           >
             {more.map((other) => (
               <RevealItem as="li" key={other.slug}>
@@ -102,7 +103,7 @@ async function EventContent({ params }: { params: PageProps<"/events/[slug]">["p
               </RevealItem>
             ))}
           </RevealGroup>
-          <Reveal className="mt-12 flex justify-center">
+          <Reveal className="mt-8 flex justify-center sm:mt-12">
             <Button href={routes.events} variant="outline">
               Explore all
             </Button>

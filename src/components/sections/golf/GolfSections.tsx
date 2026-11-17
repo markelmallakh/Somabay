@@ -30,7 +30,7 @@ export function CoursesSection() {
           title={coursesIntro.title}
           description={coursesIntro.description}
         />
-        <div className="mt-12 lg:mt-16">
+        <div className="mt-6 sm:mt-12 lg:mt-16">
           <CoursesStack />
         </div>
       </Container>
@@ -70,7 +70,7 @@ export function AcademySection() {
       className="scroll-mt-(--header-height)"
     >
       <Container>
-        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-6">
+        <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-6">
           <ImageReveal from="left" className="relative aspect-[4/3] rounded-md lg:col-span-6">
             <div className="absolute inset-0">
               <ResponsiveImage asset={academy.image} sizes="(min-width: 1024px) 46vw, 100vw" fill />
@@ -79,13 +79,13 @@ export function AcademySection() {
           <div className="lg:col-span-5 lg:col-start-8">
             <Reveal>
               <Eyebrow>Learn &amp; Improve</Eyebrow>
-              <h2 id="academy-title" className="mt-4 text-heading-2">
+              <h2 id="academy-title" className="mt-2 text-heading-2 lg:mt-3">
                 {academy.intro.title}
               </h2>
-              <p className="mt-5 text-body-md text-slate">{academy.intro.description}</p>
+              <p className="mt-3 text-body-md text-slate sm:mt-5">{academy.intro.description}</p>
             </Reveal>
-            <Reveal delay={0.1}>
-              <dl className="mt-8 grid grid-cols-3 gap-6 border-t border-line pt-6">
+            <Reveal delay={0.1} className="max-sm:text-center">
+              <dl className="mt-6 grid grid-cols-3 gap-4 border-t border-line pt-5 sm:mt-8 sm:gap-6 sm:pt-6">
                 {academy.facts.map((fact) => (
                   <div key={fact.label}>
                     <dt className="text-body-xs tracking-label text-slate uppercase">
@@ -111,7 +111,8 @@ export function AcademySection() {
           </div>
         </div>
 
-        <div className="mt-section">
+        {/* Phones: a divider and more room between the academy and its pros. */}
+        <div className="mt-section max-sm:mt-12 max-sm:border-t max-sm:border-line max-sm:pt-12">
           <HeadingRow
             eyebrow="Our professionals"
             title="Golf Academy Pros"
@@ -121,7 +122,7 @@ export function AcademySection() {
         </div>
       </Container>
       {/* Full width so the carousel aligns itself to the site grid, as on the About page. */}
-      <Reveal className="mt-10 lg:mt-12">
+      <Reveal className="mt-6 sm:mt-10 lg:mt-12">
         <LeadershipGrid leaders={academy.pros} fit label="Golf Academy pros" />
       </Reveal>
     </Section>
@@ -144,7 +145,7 @@ export function AcademyLocationSection() {
           title="Finding the Academy"
           description="The academy sits by the clubhouse of the Gary Player course, a short drive from every hotel on the peninsula."
         />
-        <Reveal className="mt-10 lg:mt-12">
+        <Reveal className="mt-6 sm:mt-10 lg:mt-12">
           <LocationExplorer origin={academy.origin} destinations={academy.destinations} fitTight />
         </Reveal>
       </Container>
@@ -161,17 +162,19 @@ export function TeeBookingSection() {
       description={teeBooking.description}
       image={teeBooking.image}
     >
-      <dl className="mt-8 border-t border-line">
+      {/* Left-aligned rows (the heading above centres on phones), value under its label. */}
+      <dl className="mt-6 border-t border-line text-left sm:mt-8">
         {teeBooking.contacts.map((contact) => (
           <div
             key={contact.label}
-            className="flex items-center justify-between gap-6 border-b border-line py-4"
+            // Phones: label over value, so long emails never push the card wider.
+            className="flex flex-col gap-1 border-b border-line py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-4"
           >
             <dt className="flex items-center gap-3 text-body-md text-slate">
               <Icon name={contact.icon} className="size-4.5 shrink-0 text-turquoise" />
               {contact.label}
             </dt>
-            <dd className="text-right text-body-md font-semibold text-ink">
+            <dd className="min-w-0 pl-7.5 text-body-md font-semibold break-words text-ink sm:pl-0 sm:text-right">
               {"href" in contact && contact.href ? (
                 <a
                   href={contact.href}
@@ -189,7 +192,7 @@ export function TeeBookingSection() {
           </div>
         ))}
       </dl>
-      <div className="mt-8">
+      <div className="mt-6 sm:mt-8">
         <Button href={teeBooking.cta.href} external variant="primary" icon="arrow-up-right">
           {teeBooking.cta.label}
         </Button>

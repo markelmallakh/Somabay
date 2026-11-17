@@ -16,6 +16,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { HotelFacilities } from "@/components/sections/holidays/HotelFacilities";
 import { HotelLocation } from "@/components/sections/holidays/HotelLocation";
 import { RoomsFinder } from "@/components/sections/holidays/RoomsFinder";
+import { BookingBar } from "@/components/sections/holidays/BookingBar";
 import { StarChip } from "@/components/sections/holidays/StarChip";
 import { ContactCta } from "@/components/sections/shared/ContactCta";
 import { Button } from "@/components/ui/Button";
@@ -52,7 +53,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
     <>
       <Section
         spacing="none"
-        className="bg-sand-100 pt-[calc(var(--header-height)+2.5rem)] pb-section"
+        className="bg-sand-100 pt-[calc(var(--header-height)+1.5rem)] pb-section sm:pt-[calc(var(--header-height)+2.5rem)]"
         aria-labelledby="page-title"
       >
         <Container>
@@ -61,10 +62,10 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
               { label: "Book Hotel", href: routes.holidays },
               { label: hotel.name, href: routes.hotel(hotel.slug) },
             ]}
-            className="mb-8"
+            className="mb-5 sm:mb-8"
           />
           {/* The hotel's promise, set above the gallery. */}
-          <Reveal className="mb-8 lg:mb-10">
+          <Reveal className="mb-6 sm:mb-8 lg:mb-10">
             <ul className="flex flex-wrap gap-2">
               {hotel.themes.map((theme) => (
                 <li key={theme}>
@@ -72,20 +73,26 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
                 </li>
               ))}
             </ul>
-            <h1 id="page-title" className="mt-5 text-heading-2">
+            <h1 id="page-title" className="mt-4 text-heading-2 sm:mt-5">
               {hotel.name}
               {hotel.stars ? (
                 <StarChip count={hotel.stars} className="relative -top-[0.2em] ml-3 align-middle" />
               ) : null}
             </h1>
-            <p className="mt-6 max-w-4xl text-lead text-ink">{hotel.description}</p>
+            <p className="mt-4 max-w-4xl text-lead text-ink sm:mt-6">{hotel.description}</p>
           </Reveal>
           <PhotoSlider images={hotel.gallery} label={hotel.name} />
-          <div className="mt-12 grid gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-6">
+          <div className="mt-8 grid gap-8 sm:mt-12 sm:gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-6">
             <aside className="lg:order-last lg:col-span-4 lg:col-start-9">
-              <div className="flex flex-col gap-6 rounded-md bg-white p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
-                {/* The name, its stars and badges head the booking box. */}
-                <div className="flex flex-col gap-4 border-b border-ink/8 pb-6">
+              {/* Phones and tablets: one compact row, the price beside Book now (a sticky bar takes
+                  over once it scrolls away). Desktop: the sticky side panel. */}
+              <div
+                id="booking-box"
+                className="flex items-center justify-between gap-4 rounded-md bg-white p-4 lg:sticky lg:top-[calc(var(--header-height)+2rem)] lg:flex-col lg:items-stretch lg:gap-6 lg:p-8"
+              >
+                {/* The name, its stars and badges head the booking box (on phones the title
+                    is right above, so the box keeps to price and booking). */}
+                <div className="hidden flex-col gap-4 border-b border-ink/8 pb-6 lg:flex">
                   <p className="font-serif text-heading-4 leading-[1.15]">
                     {hotel.name}
                     {hotel.stars ? (
@@ -103,19 +110,28 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
                     ))}
                   </ul>
                 </div>
-                <PriceFrom amount={hotelPrice(hotel)} size="stacked" />
+                <PriceFrom amount={hotelPrice(hotel)} size="compact" className="lg:hidden" />
+                <PriceFrom amount={hotelPrice(hotel)} size="stacked" className="hidden lg:flex" />
                 {hotel.website ? (
                   <Button
                     href={hotel.website}
                     external
                     variant="primary"
                     icon="arrow-up-right"
-                    className="w-full"
+                    className="self-auto lg:w-full"
                   >
                     Book now
                   </Button>
                 ) : null}
               </div>
+              <BookingBar
+                targetId="booking-box"
+                name={hotel.name}
+                stars={hotel.stars}
+                badges={hotel.themes.map((theme) => themeLabel(theme))}
+                price={hotelPrice(hotel)}
+                href={hotel.website}
+              />
             </aside>
             <Reveal className="lg:col-span-7">
               {hotel.overview ? (
@@ -126,8 +142,8 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
               ) : null}
               {hotel.amenities?.length ? (
                 <>
-                  <h2 className="mt-10 text-heading-5">Hotel Amenities</h2>
-                  <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-line pt-6 sm:grid-cols-4">
+                  <h2 className="mt-8 text-heading-5 sm:mt-10">Hotel Amenities</h2>
+                  <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-5 border-t border-line pt-5 sm:mt-5 sm:grid-cols-4 sm:gap-x-6 sm:gap-y-6 sm:pt-6">
                     {hotel.amenities.map((amenity) => (
                       <li
                         key={amenity}
@@ -156,13 +172,16 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
           className={hotel.facilities ? "py-section" : "pb-section"}
         >
           <Container>
-            <ImageReveal parallax={0} className="relative h-[min(40rem,62svh)] rounded-md">
+            <ImageReveal
+              parallax={0}
+              className="relative aspect-[4/3] rounded-md sm:aspect-auto sm:h-[min(40rem,62svh)]"
+            >
               <div className="absolute inset-0">
                 <Video
                   asset={hotel.film}
                   playback="in-view"
                   showToggle
-                  toggleClassName="bottom-6 left-6"
+                  toggleClassName="bottom-4 left-4 sm:bottom-6 sm:left-6"
                   className="size-full"
                 />
               </div>
@@ -180,11 +199,11 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
         <Section tone="white" aria-labelledby="rooms-title" className="bg-sand-100">
           <Container>
             <Reveal>
-              <h2 id="rooms-title" className="text-heading-2">
+              <h2 id="rooms-title" className="text-center text-heading-2 sm:text-left">
                 Accommodation
               </h2>
             </Reveal>
-            <div className="mt-10">
+            <div className="mt-6 sm:mt-10">
               <RoomsFinder rooms={hotel.rooms} bookingHref={hotel.website} />
             </div>
           </Container>
@@ -196,14 +215,14 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
       {/* The other hotels, as photo cards in a draggable row, with a link to them all. */}
       <section aria-labelledby="more-hotels-title" className="overflow-hidden bg-white py-section">
         <Container>
-          <Reveal className="flex flex-col items-center gap-4 text-center">
+          <Reveal className="flex flex-col items-center gap-2 text-center lg:gap-3">
             <Eyebrow>Holidays</Eyebrow>
             <h2 id="more-hotels-title" className="text-heading-2">
               Explore More Hotels
             </h2>
           </Reveal>
         </Container>
-        <Reveal className="mt-10 lg:mt-12">
+        <Reveal className="mt-6 sm:mt-10 lg:mt-12">
           <DragRow label="More hotels in Somabay">
             {hotels
               .filter((other) => other.slug !== hotel.slug)
@@ -218,7 +237,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
               ))}
           </DragRow>
         </Reveal>
-        <Container className="mt-10 flex justify-center lg:mt-12">
+        <Container className="mt-8 flex justify-center sm:mt-10 lg:mt-12">
           <Button href={routes.holidays} variant="outline" icon="arrow-up-right">
             Explore all hotels
           </Button>

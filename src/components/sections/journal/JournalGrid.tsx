@@ -22,7 +22,11 @@ export function JournalGrid({ articles }: { articles: Article[] }) {
   );
   return (
     <>
-      <div role="group" aria-label="Filter by category" className="flex flex-wrap gap-2">
+      <div
+        role="group"
+        aria-label="Filter by category"
+        className="flex flex-wrap justify-center gap-1.5 sm:justify-start sm:gap-2"
+      >
         <button
           type="button"
           aria-pressed={selected.length === 0}
@@ -68,7 +72,7 @@ export function JournalGrid({ articles }: { articles: Article[] }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: easeOutExpo }}
-          className="mt-8 grid gap-x-6 gap-y-12 sm:grid-cols-2 md:mt-10 lg:grid-cols-3"
+          className="mt-6 grid gap-x-6 gap-y-9 sm:mt-8 sm:grid-cols-2 sm:gap-y-12 md:mt-10 lg:grid-cols-3"
         >
           {visible.map((article) => (
             <li key={article.slug}>

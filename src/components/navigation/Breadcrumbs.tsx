@@ -29,7 +29,7 @@ export function Breadcrumbs({ items, tone = "dark", className }: BreadcrumbsProp
       <JsonLd data={structured} />
       <ol
         className={cn(
-          "flex flex-wrap items-center gap-2 text-body-sm",
+          "flex flex-wrap items-center justify-center gap-2 text-body-sm sm:justify-start",
           tone === "light" ? "text-white/75" : "text-slate",
         )}
       >

@@ -50,10 +50,10 @@ export function MarinaIntro({ title, description }: MarinaIntroProps) {
       <h2 id="marina-intro-title" className="sr-only">
         {title}
       </h2>
-      <Container className="pt-28 pb-16 text-center lg:pt-32 lg:pb-24">
+      <Container className="pt-14 pb-12 text-center sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-24">
         <p
           data-statement
-          className="mx-auto max-w-[66rem] text-[clamp(1.5rem,1.05rem+1.25vw,2.25rem)] leading-[1.35] text-pretty text-ink lg:sticky lg:top-[calc(var(--header-height)+14vh)]"
+          className="mx-auto max-w-[66rem] text-[clamp(1.3125rem,1.05rem+1.25vw,2.25rem)] leading-[1.35] text-pretty text-ink lg:sticky lg:top-[calc(var(--header-height)+14vh)]"
         >
           {description}
         </p>

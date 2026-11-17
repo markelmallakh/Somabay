@@ -21,7 +21,7 @@ export type ButtonVariant =
 export type ButtonSize = "lg" | "md" | "sm";
 
 const base =
-  "group/button wave inline-flex items-center justify-center gap-2.5 rounded-md border whitespace-nowrap font-sans font-medium uppercase transition-[color,border-color,scale] duration-500 ease-out-quart delay-75 active:scale-[0.97] active:delay-0 active:duration-150 disabled:pointer-events-none disabled:opacity-50";
+  "cta group/button wave inline-flex items-center justify-center gap-2 rounded-md sm:gap-2.5 border whitespace-nowrap font-sans font-medium uppercase transition-[color,border-color,scale] duration-500 ease-out-quart delay-75 active:scale-[0.97] active:delay-0 active:duration-150 disabled:pointer-events-none disabled:opacity-50";
 
 /**
  * Each type pairs its resting look with the colour of the wave that rises through it on hover or
@@ -65,10 +65,14 @@ const variants: Record<ButtonVariant, { idle: string; fill: string }> = {
   },
 };
 
+/**
+ * Compact on phones (shorter, tighter sides, a smaller label) and centred in their column (the
+ * `cta` class, see globals.css); the Figma sizes from `sm` up.
+ */
 const sizes: Record<ButtonSize, string> = {
-  lg: "min-h-14 px-8 text-cta-lg",
-  md: "min-h-[2.625rem] px-8 text-cta-md",
-  sm: "min-h-[2.375rem] px-6 text-cta-md",
+  lg: "min-h-10 px-5 text-[0.8125rem] sm:min-h-14 sm:px-8 sm:text-cta-lg",
+  md: "min-h-[2.375rem] px-4 text-[0.8125rem] sm:min-h-[2.625rem] sm:px-8 sm:text-cta-md",
+  sm: "min-h-9 px-3.5 text-xs sm:min-h-[2.375rem] sm:px-6 sm:text-cta-md",
 };
 
 type CommonProps = {

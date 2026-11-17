@@ -47,7 +47,7 @@ export default function SustainabilityPage() {
           <ScrollRevealText
             text={sustainabilityOverview}
             leadWords={15}
-            className="mt-6 max-w-4xl"
+            className="mt-3 max-w-4xl sm:mt-6"
           />
         </Container>
       </Section>

@@ -15,7 +15,7 @@ export function AboutHero() {
       aria-labelledby="page-title"
       data-theme-surface="dark"
       data-sticky-hero=""
-      className="relative isolate flex min-h-[max(36rem,min(100svh,61.4vw))] items-end overflow-hidden bg-abyss text-white"
+      className="relative isolate flex min-h-[max(32rem,min(100svh,61.4vw))] items-end overflow-hidden bg-abyss text-white sm:min-h-[max(36rem,min(100svh,61.4vw))]"
     >
       <ResponsiveImage
         asset={aboutHero.image}
@@ -29,7 +29,7 @@ export function AboutHero() {
         aria-hidden
         className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgb(0_0_0/0.35),rgb(0_0_0/0)_22%,rgb(0_0_0/0)_55%,rgb(0_0_0/0.5))]"
       />
-      <Container className="pt-(--header-height) pb-15">
+      <Container className="pt-(--header-height) pb-10 sm:pb-15">
         <Reveal distance={12}>
           <Eyebrow>{aboutHero.eyebrow}</Eyebrow>
         </Reveal>
@@ -38,7 +38,7 @@ export function AboutHero() {
           id="page-title"
           trigger="load"
           delay={0.25}
-          className="mt-3 max-w-[38.75rem] text-heading-1 leading-[1.06]"
+          className="mt-2 max-w-[38.75rem] text-heading-1 leading-[1.06] lg:mt-3"
         >
           {aboutHero.title}
         </SplitHeading>

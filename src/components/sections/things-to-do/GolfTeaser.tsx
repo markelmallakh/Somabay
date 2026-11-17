@@ -132,7 +132,7 @@ export function GolfTeaser() {
       ref={scope}
       aria-labelledby="golf-title"
       data-theme-surface="dark"
-      className="relative isolate flex min-h-svh overflow-hidden bg-abyss text-white"
+      className="relative isolate flex min-h-[78svh] overflow-hidden bg-abyss text-white sm:min-h-svh"
     >
       <video
         ref={video}
@@ -146,23 +146,33 @@ export function GolfTeaser() {
       />
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom_right,rgb(0_0_0/0.7)_0%,rgb(0_0_0/0.3)_32%,rgb(0_0_0/0.05)_50%,rgb(0_0_0/0.4)_70%,rgb(0_0_0/0.75)_100%)]"
+        // Phones: a black veil on top of the gradient, so the centred text reads over the film.
+        className="absolute inset-0 -z-10 max-sm:bg-black/45 sm:bg-[linear-gradient(to_bottom_right,rgb(0_0_0/0.7)_0%,rgb(0_0_0/0.3)_32%,rgb(0_0_0/0.05)_50%,rgb(0_0_0/0.4)_70%,rgb(0_0_0/0.75)_100%)]"
       />
 
-      <Container className="flex w-full pt-[calc(var(--header-height)+3rem)] pb-12 lg:pb-14">
-        <div className="flex w-full flex-col justify-between gap-12 lg:flex-row lg:gap-10">
-          {/* Heading and statement, top-left. */}
-          <div data-golf-intro className="flex flex-col gap-4 lg:max-w-[34rem] lg:self-start">
-            <h2 id="golf-title" className="text-heading-2">
+      <Container className="flex w-full pt-[calc(var(--header-height)+1.5rem)] pb-8 sm:pt-[calc(var(--header-height)+3rem)] sm:pb-12 lg:pb-14">
+        <div className="flex w-full flex-col justify-center gap-6 sm:justify-between sm:gap-12 lg:flex-row lg:gap-10">
+          {/* Heading and statement, top-left (centred on phones; the split lines carry their
+              own text-align, hence the override). */}
+          <div
+            data-golf-intro
+            className="flex flex-col gap-2 max-sm:text-center sm:gap-4 lg:max-w-[34rem] lg:self-start max-sm:[&_div]:text-center!"
+          >
+            <h2 id="golf-title" className="text-heading-3 sm:text-heading-2">
               {golfTeaser.title}
             </h2>
-            <p className="font-serif text-heading-6 text-white/90">{golfTeaser.subtitle}</p>
-            <p className="text-body-md text-white/75">{golfTeaser.statement}</p>
+            <p className="font-serif text-body-md text-white/90 sm:text-heading-6">
+              {golfTeaser.subtitle}
+            </p>
+            <p className="text-[0.8125rem] leading-relaxed text-white/80 sm:text-body-md">
+              {golfTeaser.statement}
+            </p>
           </div>
 
           {/* The golf topics and the CTA, bottom-right. */}
-          <div className="flex flex-col gap-8 lg:w-[32rem] lg:shrink-0 lg:self-end">
-            <ul>
+          <div className="flex flex-col gap-6 sm:gap-8 lg:w-[32rem] lg:shrink-0 lg:self-end">
+            {/* Phones: the four topics as a compact 2×2 grid of titles (no descriptions). */}
+            <ul className="max-sm:grid max-sm:grid-cols-2 max-sm:gap-2">
               {golfTeaser.links.map((link) => (
                 <li
                   key={link.title}
@@ -174,14 +184,15 @@ export function GolfTeaser() {
                   <span
                     aria-hidden
                     data-lines
-                    className="absolute inset-x-0 top-0 h-px transition-opacity duration-500 ease-out-expo"
+                    className="absolute inset-x-0 top-0 h-px transition-opacity duration-500 ease-out-expo max-sm:hidden"
                   >
                     <span className="absolute inset-0 bg-white/25" />
                     <span data-golf-line className="absolute inset-0 origin-left bg-white" />
                   </span>
                   <Link
                     href={link.href}
-                    className="group relative isolate -mx-4 flex items-start justify-between gap-6 overflow-hidden rounded-md px-4 py-4 transition-colors duration-700 ease-out-expo hover:text-ink focus-visible:text-ink"
+                    data-no-touch-hover
+                    className="group relative isolate -mx-3 flex items-start justify-between gap-4 overflow-hidden rounded-md px-3 py-3.5 transition-colors duration-700 ease-out-expo hover:text-ink focus-visible:text-ink max-sm:mx-0 max-sm:h-full max-sm:min-h-12 max-sm:items-center max-sm:gap-2 max-sm:border max-sm:border-white/25 max-sm:bg-white/10 max-sm:py-2.5 max-sm:backdrop-blur-sm sm:-mx-4 sm:gap-6 sm:px-4 sm:py-4"
                   >
                     {/* White panel that rises from the bottom on hover, reaching past the lines. */}
                     <span
@@ -190,21 +201,24 @@ export function GolfTeaser() {
                     />
                     <span className="flex flex-col gap-1.5">
                       <span className="block overflow-hidden">
-                        <span data-golf-title className="block font-serif text-heading-6">
+                        <span
+                          data-golf-title
+                          className="block font-serif text-body-md sm:text-heading-6"
+                        >
                           {link.title}
                         </span>
                       </span>
                       <span
                         data-golf-text
-                        className="text-body-sm text-white/80 transition-colors duration-700 ease-out-expo group-hover:text-slate group-focus-visible:text-slate"
+                        className="text-body-sm text-white/80 transition-colors duration-700 ease-out-expo group-hover:text-slate group-focus-visible:text-slate max-sm:hidden"
                       >
                         {link.description}
                       </span>
                     </span>
-                    <span data-golf-arrow className="mt-1 block shrink-0">
+                    <span data-golf-arrow className="mt-1 block shrink-0 max-sm:mt-0">
                       <Icon
                         name="arrow-up-right"
-                        className="size-5 transition-[transform,color] duration-700 ease-out-expo group-hover:rotate-45 group-hover:text-turquoise group-focus-visible:rotate-45 group-focus-visible:text-turquoise"
+                        className="size-4 transition-[transform,color] duration-700 ease-out-expo group-hover:rotate-45 group-hover:text-turquoise group-focus-visible:rotate-45 group-focus-visible:text-turquoise sm:size-5"
                       />
                     </span>
                   </Link>
@@ -212,7 +226,7 @@ export function GolfTeaser() {
               ))}
             </ul>
 
-            <div data-golf-cta>
+            <div data-golf-cta className="max-sm:text-center">
               <Button href={golfTeaser.cta.href} variant="primary" icon="arrow-up-right">
                 {golfTeaser.cta.label}
               </Button>

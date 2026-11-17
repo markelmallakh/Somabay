@@ -21,7 +21,8 @@ export function Chip({ children, tone = "soft", className }: ChipProps) {
   return (
     <span
       className={cn(
-        "inline-flex w-fit items-center gap-1.5 rounded-md px-2.5 py-[0.3125rem] text-[0.6875rem] leading-none font-semibold tracking-[0.12em] whitespace-nowrap uppercase",
+        // Phones: a step smaller (10px label, tighter padding).
+        "inline-flex w-fit items-center gap-1.5 rounded-md px-2 py-1 text-[0.625rem] leading-none font-semibold tracking-[0.1em] whitespace-nowrap uppercase sm:px-2.5 sm:py-[0.3125rem] sm:text-[0.6875rem] sm:tracking-[0.12em]",
         tone === "light"
           ? "bg-white/90 text-ink backdrop-blur-sm"
           : "border border-ink/15 text-ink/75",

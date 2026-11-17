@@ -17,17 +17,20 @@ export function MarinaStoreList({ items }: { items: DirectoryItem[] }) {
 
   return (
     <>
-      <RevealGroup as="ul" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Two to a row on phones (compact cards, like the dining venues), three on large
+          screens. */}
+      <RevealGroup as="ul" className="grid grid-cols-2 gap-2.5 sm:gap-6 lg:grid-cols-3">
         {items.map((item, index) => (
           <RevealItem as="li" key={item.id} className="flex">
             <PhotoCard
               onClick={() => setOpen(index)}
               image={item.images[0]}
-              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
+              sizes="(min-width: 1024px) 30vw, 50vw"
               tag={item.chip}
               title={item.title}
               action="View details"
-              className="aspect-[400/520]"
+              size="compact"
+              className="aspect-[3/4] sm:aspect-[400/520]"
             />
           </RevealItem>
         ))}

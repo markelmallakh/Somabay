@@ -45,8 +45,13 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
 
   return (
     <>
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div role="group" aria-label="Filter by category" className="flex flex-wrap gap-2">
+      <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
+        {/* Phones: the categories run in one swipeable line instead of wrapping into a block. */}
+        <div
+          role="group"
+          aria-label="Filter by category"
+          className="flex flex-wrap justify-center gap-1.5 sm:justify-start sm:gap-2 [&>button]:whitespace-nowrap"
+        >
           <button
             type="button"
             aria-pressed={selected.length === 0}
@@ -110,9 +115,10 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
       <ResultCount
         count={visible.length}
         label={visible.length === 1 ? "venue" : "venues"}
-        className="mt-8"
+        className="mt-6 sm:mt-8"
       />
-      <ul className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Two to a row on phones too (compact cards), three on large screens. */}
+      <ul className="mt-4 grid grid-cols-2 gap-2.5 sm:gap-6 lg:grid-cols-3">
         {visible.map((venue, index) => (
           // Every card rises in whenever the results change, so a filter or search never shows
           // an empty grid waiting for a scroll.
@@ -127,17 +133,18 @@ export function DiningFinder({ venues, categories }: DiningFinderProps) {
             <PhotoCard
               onClick={() => setOpen(venues.indexOf(venue))}
               image={venue.images[0]}
-              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
+              sizes="(min-width: 1024px) 30vw, 50vw"
               tag={venue.chip}
               title={venue.title}
               action="View details"
-              className="aspect-[400/520]"
+              size="compact"
+              className="aspect-[3/4] sm:aspect-[400/520]"
             />
           </m.li>
         ))}
       </ul>
       {visible.length === 0 ? (
-        <p className="mt-10 rounded-md bg-white p-10 text-center text-slate">
+        <p className="mt-6 rounded-md bg-white p-6 text-center text-slate sm:mt-10 sm:p-10">
           No venues match your search.
         </p>
       ) : null}

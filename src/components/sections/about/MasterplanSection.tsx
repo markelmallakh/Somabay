@@ -17,7 +17,7 @@ export function MasterplanSection() {
           eyebrow={masterplanIntro.eyebrow}
           title={masterplanIntro.title}
           description={masterplanIntro.description}
-          className="mb-10"
+          className="mb-6 sm:mb-10"
         />
         <MasterplanAerial hotspots={masterplanHotspots} />
       </Container>

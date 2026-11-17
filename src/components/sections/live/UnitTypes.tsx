@@ -154,11 +154,15 @@ export function UnitTypes({ name }: { name: string }) {
       </Container>
 
       {/* One row of cards; on desktop the page's scroll slides it while the section is held.
-          Without motion it is a row you can scroll instead. */}
-      <div data-frame className="mt-10 overflow-hidden motion-reduce:overflow-x-auto lg:mt-12">
-        <ul data-row className="flex w-max gap-4 ps-site pe-gutter">
+          Below desktop (and without motion) it is a row you swipe, each card snapping in. */}
+      <div
+        data-frame
+        className="mt-6 max-md:px-gutter sm:mt-10 md:scrollbar-none md:snap-x md:snap-mandatory md:scroll-ps-site md:overflow-x-auto lg:mt-12 lg:snap-none lg:overflow-hidden lg:motion-reduce:overflow-x-auto"
+      >
+        {/* Phones: the card centred with its neighbours peeking at both edges. */}
+        <ul data-row className="max-md:swipe-row md:flex md:w-max md:gap-4 md:ps-site md:pe-gutter">
           {unitTypes.map((unit) => (
-            <li key={unit.title} className="w-[min(80vw,21rem)] shrink-0">
+            <li key={unit.title} className="md:w-[min(78vw,21rem)] md:shrink-0 md:snap-start">
               <UnitCard unit={unit} />
             </li>
           ))}
@@ -177,7 +181,7 @@ function UnitCard({ unit }: { unit: UnitType }) {
     >
       <ResponsiveImage
         asset={unit.image}
-        sizes="(min-width: 640px) 21rem, 80vw"
+        sizes="(min-width: 768px) 21rem, 84vw"
         fill
         className="-z-10 transition-transform duration-[1600ms] ease-out-expo group-focus-within:scale-[1.05] group-hover:scale-[1.05]"
       />
@@ -185,7 +189,7 @@ function UnitCard({ unit }: { unit: UnitType }) {
         aria-hidden
         className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(0_0_0/0.85),rgb(0_0_0/0.35)_45%,rgb(0_0_0/0.05)_75%)]"
       />
-      <div className="p-6">
+      <div className="p-5 sm:p-6">
         <h3 className="font-serif text-heading-5">{unit.title}</h3>
         {/* Compact specs: always on show. */}
         <ul className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-body-sm text-white/85">
@@ -202,16 +206,16 @@ function UnitCard({ unit }: { unit: UnitType }) {
             {unit.size} sqm
           </li>
         </ul>
-        {/* The brief and the link rise out of a mask on hover. */}
-        <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-700 ease-out-expo group-focus-within:grid-rows-[1fr] group-hover:grid-rows-[1fr]">
+        {/* The brief and the link rise out of a mask on hover (always shown below desktop). */}
+        <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-700 ease-out-expo lg:grid-rows-[0fr] lg:group-focus-within:grid-rows-[1fr] lg:group-hover:grid-rows-[1fr]">
           <div className="overflow-hidden">
-            <div className="translate-y-6 opacity-0 transition-[opacity,translate] delay-100 duration-700 ease-out-expo group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100">
-              <p className="mt-4 border-t border-white/25 pt-4 text-body-sm text-white/85">
+            <div className="transition-[opacity,translate] delay-100 duration-700 ease-out-expo lg:translate-y-6 lg:opacity-0 lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
+              <p className="mt-3 border-t border-white/25 pt-3 text-body-sm text-white/85 sm:mt-4 sm:pt-4">
                 {unit.brief}
               </p>
               <a
                 href="#register-interest"
-                className="mt-4 inline-block text-body-xs font-semibold tracking-label text-sun uppercase transition-colors hover:text-white"
+                className="mt-2 inline-flex min-h-10 items-center text-body-xs font-semibold tracking-label text-sun uppercase transition-colors hover:text-white sm:mt-4 sm:min-h-0"
               >
                 Request interest
               </a>

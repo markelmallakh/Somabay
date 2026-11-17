@@ -139,7 +139,7 @@ export function GuestReviews({ reviews }: { reviews: HotelReview[] }) {
         }}
         onClickCapture={onClickCapture}
         className={cn(
-          "relative mt-12 h-[15.5rem] touch-pan-y overflow-hidden rounded-md select-none lg:mt-14",
+          "relative mt-6 h-[15.5rem] touch-pan-y overflow-hidden rounded-md select-none sm:mt-12 lg:mt-14",
           dragging ? "cursor-grabbing" : "cursor-grab",
         )}
       >
@@ -221,7 +221,8 @@ export function GuestReviews({ reviews }: { reviews: HotelReview[] }) {
         </AnimatePresence>
       </div>
 
-      <div className="mt-8 flex justify-center gap-2">
+      {/* Phones swipe the cards (both neighbours peek in); the arrows are for larger screens. */}
+      <div className="mt-8 hidden justify-center gap-2 md:flex">
         <button type="button" onClick={() => go(-1)} className={arrow}>
           <span className="sr-only">Previous review</span>
           <Icon name="arrow-right" className="size-5 rotate-180" />

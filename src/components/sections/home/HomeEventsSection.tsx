@@ -88,8 +88,8 @@ export function HomeEventsSection() {
       data-theme-surface="light"
       className="bg-white py-section text-ink"
     >
-      <Container className="flex flex-col gap-12">
-        <Reveal className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+      <Container className="flex flex-col gap-8 sm:gap-12">
+        <Reveal className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-4">
               <Eyebrow>Somabay Events</Eyebrow>
@@ -97,11 +97,16 @@ export function HomeEventsSection() {
                 Events at Somabay
               </h2>
             </div>
-            <p className="text-body-md text-slate">
+            <p className="text-center text-body-md text-slate sm:text-left">
               Races, tournaments and seasonal celebrations by the Red Sea, all year round.
             </p>
           </div>
-          <div role="tablist" aria-label="Events" className="flex border-b border-line">
+          {/* Phones: two compact tabs centred over a hairline. */}
+          <div
+            role="tablist"
+            aria-label="Events"
+            className="flex justify-center gap-6 border-b border-line sm:justify-start sm:gap-0"
+          >
             {TABS.map((item) => {
               const selected = item.id === tab;
               return (
@@ -112,7 +117,7 @@ export function HomeEventsSection() {
                   aria-selected={selected}
                   onClick={() => setTab(item.id)}
                   className={cn(
-                    "relative -mb-px w-[10rem] pb-4 text-body-sm font-semibold uppercase transition-colors duration-500",
+                    "relative -mb-px min-h-9 pb-2 text-[0.6875rem] font-semibold tracking-[0.06em] uppercase transition-colors duration-500 sm:min-h-11 sm:w-[10rem] sm:pb-4 sm:text-body-sm sm:tracking-normal",
                     selected ? "text-ink" : "text-slate hover:text-ink",
                   )}
                 >
@@ -138,42 +143,38 @@ export function HomeEventsSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.6, ease: easeOutExpo }}
-            className="grid gap-6 md:grid-cols-3"
+            // Phones: a swipe row with the next event peeking in; three columns from `md`.
+            className="max-md:swipe-row md:grid md:grid-cols-3 md:gap-6"
           >
             {cards.map((card) => {
               const date = new Date(card.start);
               const isPast = tab === "past";
               return (
                 <li key={card.key}>
-                  <SmartLink href={card.href} className="group flex flex-col gap-6">
-                    <span className="relative block aspect-[446/480] overflow-hidden rounded-md">
+                  <SmartLink href={card.href} className="group flex flex-col gap-4 sm:gap-6">
+                    <span className="relative block aspect-[4/3] overflow-hidden rounded-md md:aspect-[446/480]">
                       <ResponsiveImage
                         asset={card.image}
-                        sizes="(min-width: 768px) 30vw, 100vw"
+                        sizes="(min-width: 768px) 30vw, 85vw"
                         fill
-                        className={cn(
-                          "transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]",
-                          isPast && "saturate-[0.4]",
-                        )}
+                        className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
                       />
-                      <span className="absolute top-4 left-4 flex flex-col items-center rounded-md bg-white px-4 py-2.5 text-ink">
-                        <span className="font-serif text-heading-4 leading-none">
+                      <span className="absolute top-3 left-3 flex flex-col items-center rounded-md bg-white px-2.5 py-1.5 text-ink sm:top-4 sm:left-4 sm:px-4 sm:py-2.5">
+                        <span className="font-serif text-heading-6 leading-none sm:text-heading-4">
                           {day.format(date)}
                         </span>
                         <span
-                          className={cn(
-                            "mt-1 text-body-sm font-semibold uppercase",
-                            isPast ? "text-slate" : "text-turquoise",
-                          )}
+                          // Past events look the same as upcoming ones (no faded treatment).
+                          className="mt-0.5 text-[0.625rem] font-semibold tracking-[0.08em] text-turquoise uppercase sm:mt-1 sm:text-body-sm sm:tracking-normal"
                         >
                           {month.format(date)}
                         </span>
                       </span>
-                      <span className="eyebrow absolute top-4 right-4 rounded-md bg-black/30 px-2 py-0.5 text-white backdrop-blur-lg">
+                      <span className="eyebrow absolute top-3 right-3 rounded-md bg-black/30 px-1.5 py-1 text-[0.5625rem] leading-none font-medium tracking-[0.14em] text-white backdrop-blur-lg sm:top-4 sm:right-4 sm:px-2 sm:text-[0.6875rem] sm:tracking-[0.16em]">
                         {card.category}
                       </span>
                     </span>
-                    <span className="flex flex-col gap-4">
+                    <span className="flex flex-col gap-3 sm:gap-4">
                       <span className="font-serif text-heading-5">{card.title}</span>
                       <span className="flex items-center gap-2 text-body-sm text-slate">
                         <Icon name="pin" className="size-4" />

@@ -13,14 +13,16 @@ export function DateBadge({ event, className }: { event: EventItem; className?: 
   return (
     <span
       className={cn(
-        "flex min-w-22 flex-col items-center rounded-md bg-white/95 px-4 py-3 text-ink shadow-[0_8px_24px_rgb(18_58_70/0.14)] backdrop-blur-sm",
+        "flex min-w-14 flex-col items-center rounded-md bg-white/95 px-2.5 py-1.5 text-ink shadow-[0_8px_24px_rgb(18_58_70/0.14)] backdrop-blur-sm sm:min-w-22 sm:px-4 sm:py-3",
         className,
       )}
     >
-      <span className="font-serif text-heading-6 leading-none whitespace-nowrap">
+      <span className="font-serif text-body-lg leading-none whitespace-nowrap sm:text-heading-6">
         {formatDayRange(event.start, event.end)}
       </span>
-      <span className="mt-1.5 text-body-sm text-slate">{formatMonthYear(event.start)}</span>
+      <span className="mt-0.5 text-[0.625rem] text-slate sm:mt-1.5 sm:text-body-sm">
+        {formatMonthYear(event.start)}
+      </span>
     </span>
   );
 }
@@ -46,17 +48,17 @@ function ViewEvent() {
 function FeaturedEventCard({ event }: { event: EventItem }) {
   return (
     <article className="group relative grid overflow-hidden rounded-md bg-white md:grid-cols-2">
-      <ImageReveal className="relative aspect-[3/2] md:aspect-auto md:min-h-[36rem]">
+      <ImageReveal className="relative aspect-[4/3] sm:aspect-[3/2] md:aspect-auto md:min-h-[36rem]">
         <div className="absolute inset-0">
           <ResponsiveImage asset={event.image} sizes="(min-width: 768px) 50vw, 100vw" fill />
         </div>
       </ImageReveal>
-      <DateBadge event={event} className="absolute top-4 left-4" />
-      <div className="flex flex-col gap-4 p-6 sm:p-8 lg:p-14">
+      <DateBadge event={event} className="absolute top-3 left-3 sm:top-4 sm:left-4" />
+      <div className="flex flex-col gap-3 p-5 sm:gap-4 sm:p-8 lg:p-14">
         <Chip className={cn("border", colorOf(event.category).tag)}>
           {categoryLabel(event.category)}
         </Chip>
-        <h3 className="font-serif text-heading-2">
+        <h3 className="font-serif text-heading-5 sm:text-heading-2">
           <Link
             href={routes.event(event.slug)}
             className="after:absolute after:inset-0 hover:text-lagoon"
@@ -64,12 +66,14 @@ function FeaturedEventCard({ event }: { event: EventItem }) {
             {event.title}
           </Link>
         </h3>
-        <p className="flex items-center gap-2 text-body-sm text-slate">
+        <p className="flex items-center gap-2 text-body-xs text-slate sm:text-body-sm">
           <Icon name="pin" className="size-4" />
           {event.location}
         </p>
         {event.description ? (
-          <p className="line-clamp-4 max-w-lg text-slate">{event.description}</p>
+          <p className="line-clamp-4 max-w-lg text-slate max-sm:text-body-sm max-sm:leading-relaxed">
+            {event.description}
+          </p>
         ) : null}
         <ViewEvent />
       </div>
@@ -97,7 +101,7 @@ export function EventCard({ event, featured = false, tinted: _tinted = false }: 
         />
         <DateBadge event={event} className="absolute top-3 right-3" />
       </div>
-      <div className="flex flex-1 flex-col gap-3 px-5 pt-5 pb-6 md:px-6">
+      <div className="flex flex-1 flex-col gap-3 px-4 pt-4 pb-5 sm:px-5 sm:pt-5 sm:pb-6 md:px-6">
         <Chip className={cn("border", colorOf(event.category).tag)}>
           {categoryLabel(event.category)}
         </Chip>
@@ -109,11 +113,15 @@ export function EventCard({ event, featured = false, tinted: _tinted = false }: 
             {event.title}
           </Link>
         </h3>
-        <p className="flex items-center gap-2 text-body-sm text-slate">
+        <p className="flex items-center gap-2 text-body-xs text-slate sm:text-body-sm">
           <Icon name="pin" className="size-4" />
           {event.location}
         </p>
-        {event.description ? <p className="line-clamp-2 text-slate">{event.description}</p> : null}
+        {event.description ? (
+          <p className="line-clamp-2 text-slate max-sm:text-body-sm max-sm:leading-relaxed">
+            {event.description}
+          </p>
+        ) : null}
         <ViewEvent />
       </div>
     </article>

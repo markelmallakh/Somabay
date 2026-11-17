@@ -28,7 +28,7 @@ export function MoreToExperience({ intro, items }: MoreToExperienceProps) {
           title={intro.title}
           description={intro.description}
         />
-        <ul className="mt-14 grid gap-4 md:mt-20 md:grid-cols-2 md:gap-6">
+        <ul className="mt-8 grid gap-3 sm:gap-6 md:mt-20 md:grid-cols-2">
           {items.map((item, index) => (
             // The list item (never clipped) watches the viewport; the clipped card can't, as a
             // fully clipped element never counts as in view.
@@ -52,7 +52,7 @@ export function MoreToExperience({ intro, items }: MoreToExperienceProps) {
                   <PhotoCard
                     href={item.href}
                     image={item.image}
-                    sizes="(min-width: 768px) 50vw, 100vw"
+                    sizes="(min-width: 768px) 50vw, 85vw"
                     title={item.title}
                     action={neighborhoodsIntro.cardCta}
                     className="aspect-[3/2]"

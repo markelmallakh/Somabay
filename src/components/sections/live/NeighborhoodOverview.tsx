@@ -76,22 +76,31 @@ export function NeighborhoodOverview({
     <section ref={ref} aria-labelledby={id} className="bg-white py-section text-ink">
       <Container>
         {logo ? (
-          <Reveal className="mb-10 flex justify-center lg:mb-12">
+          <Reveal className="mb-8 flex justify-center sm:mb-10 lg:mb-12">
             {/* eslint-disable-next-line @next/next/no-img-element -- the project's brand SVG, shown as is. */}
-            <img src={logo} alt={`${name} logo`} className="h-12 w-auto lg:h-14" />
+            <img src={logo} alt={`${name} logo`} className="h-10 w-auto sm:h-12 lg:h-14" />
           </Reveal>
         ) : null}
-        {/* The figures in a light row between hairlines, divided by thin rules. */}
+        {/* The figures in a light row between hairlines, divided by thin rules. Phones set them
+            two by two (an odd last figure spans the row). */}
         <ul
           className={cn(
-            "mx-auto grid divide-y divide-line border-y border-line sm:divide-x sm:divide-y-0",
+            "mx-auto grid grid-cols-2 border-t border-line sm:divide-x sm:divide-line sm:border-b",
             tiles.length >= 4 ? "max-w-6xl sm:grid-cols-4" : "max-w-4xl sm:grid-cols-3",
           )}
         >
-          {tiles.map((tile) => {
+          {tiles.map((tile, index) => {
             const numeric = /^\d[\d,]*$/.test(tile.value);
+            const lastAlone = tiles.length % 2 === 1 && index === tiles.length - 1;
             return (
-              <li key={tile.label} data-tile className="px-6 py-8 text-center lg:py-10">
+              <li
+                key={tile.label}
+                data-tile
+                className={cn(
+                  "border-b border-line px-3 py-6 text-center sm:border-b-0 sm:px-6 sm:py-8 lg:py-10",
+                  lastAlone ? "col-span-2 sm:col-span-1" : "odd:border-r sm:odd:border-r-0",
+                )}
+              >
                 <p data-tile-copy className="font-serif text-heading-2 leading-none text-ink">
                   <span data-count={numeric ? tile.value.replace(/,/g, "") : undefined}>
                     {tile.value}
@@ -102,7 +111,10 @@ export function NeighborhoodOverview({
                     </span>
                   ) : null}
                 </p>
-                <p data-tile-copy className="mt-3 text-label tracking-label text-slate uppercase">
+                <p
+                  data-tile-copy
+                  className="mt-2 text-label tracking-label text-slate uppercase sm:mt-3"
+                >
                   {tile.label}
                 </p>
               </li>
@@ -112,8 +124,8 @@ export function NeighborhoodOverview({
 
         {concept ? (
           <>
-            <div className="mt-20 grid gap-10 lg:mt-28 lg:grid-cols-12 lg:gap-6">
-              <div className="flex flex-col gap-5 lg:col-span-4">
+            <div className="mt-12 grid gap-6 sm:mt-20 sm:gap-10 lg:mt-28 lg:grid-cols-12 lg:gap-6">
+              <div className="flex flex-col gap-2 lg:col-span-4 lg:gap-3">
                 <Reveal distance={12}>
                   <Eyebrow>{concept.eyebrow ?? "Overview"}</Eyebrow>
                 </Reveal>
@@ -122,10 +134,10 @@ export function NeighborhoodOverview({
                 </SplitHeading>
               </div>
               {concept.description ? (
-                <div className="flex flex-col items-start gap-10 lg:col-span-8 lg:col-start-5">
+                <div className="flex flex-col items-start gap-6 sm:gap-10 lg:col-span-8 lg:col-start-5">
                   <FillText
                     text={concept.description}
-                    className="font-sans text-[clamp(1.375rem,1rem+1.3vw,2.125rem)] leading-[1.35] tracking-[-0.01em] text-ink"
+                    className="font-sans text-[clamp(1.25rem,0.95rem+1.3vw,2.125rem)] leading-[1.35] tracking-[-0.01em] text-ink"
                   />
                   {/* Takes the visitor down to the register-interest form at the foot of the page. */}
                   <Reveal delay={0.1}>
@@ -137,25 +149,29 @@ export function NeighborhoodOverview({
               ) : null}
             </div>
 
-            {/* The two concept photos: a wide one and a tall one set lower, each drifting. */}
-            <div className="mt-16 grid gap-3 lg:mt-24 lg:grid-cols-12 lg:gap-6">
-              <Reveal className="lg:col-span-7">
-                <Parallax className="relative aspect-[16/11] overflow-hidden rounded-md">
+            {/* The two concept photos: a wide one and a tall one set lower, each drifting. Phones
+                and tablets keep the pair side by side, staggered, instead of two full-width frames. */}
+            <div className="mt-10 grid grid-cols-5 gap-3 sm:mt-16 lg:mt-24 lg:grid-cols-12 lg:gap-6">
+              <Reveal className="col-span-3 lg:col-span-7">
+                <Parallax className="relative aspect-[4/5] overflow-hidden rounded-md sm:aspect-[16/11]">
                   <div className="absolute inset-0">
                     <ResponsiveImage
                       asset={concept.images[0]}
-                      sizes="(min-width: 1024px) 55vw, 100vw"
+                      sizes="(min-width: 1024px) 55vw, 60vw"
                       fill
                     />
                   </div>
                 </Parallax>
               </Reveal>
-              <Reveal delay={0.15} className="lg:col-span-4 lg:col-start-9 lg:mt-32">
+              <Reveal
+                delay={0.15}
+                className="col-span-2 mt-16 sm:mt-24 lg:col-span-4 lg:col-start-9 lg:mt-32"
+              >
                 <Parallax amount={12} className="relative aspect-[4/5] overflow-hidden rounded-md">
                   <div className="absolute inset-0">
                     <ResponsiveImage
                       asset={concept.images[1]}
-                      sizes="(min-width: 1024px) 30vw, 100vw"
+                      sizes="(min-width: 1024px) 30vw, 40vw"
                       fill
                     />
                   </div>

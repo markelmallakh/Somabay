@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { gsap, registerGsap, SplitText } from "@/lib/gsap";
+import { gsap, registerGsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 
 /** Photos smaller than this are left still: parallax only reads on large imagery. */
 const MIN_WIDTH = 400;
@@ -240,6 +240,21 @@ export function SiteMotion() {
         hero.style.removeProperty("--hero-cover");
         hero.style.visibility = "";
       }
+    });
+
+    // Sections stream in and set up their scroll animations in whatever order they hydrate, so a
+    // pinned section higher up (which adds scroll length) can register after one below it has
+    // measured itself, and that one would then start early. Once the page has settled, put the
+    // triggers back in page order and measure them all again.
+    const settle = () => {
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
+    };
+    const settleTimer = window.setTimeout(settle, 1200);
+    window.addEventListener("load", settle, { once: true });
+    cleanups.push(() => {
+      window.clearTimeout(settleTimer);
+      window.removeEventListener("load", settle);
     });
 
     return () => cleanups.forEach((cleanup) => cleanup());

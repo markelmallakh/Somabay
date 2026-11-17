@@ -27,7 +27,7 @@ export function ArticleCard({
         />
         <PostBadge category={article.category} />
       </div>
-      <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-body-sm">
+      <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-body-sm sm:mt-5">
         <span className="text-slate">{article.readingMinutes} min read</span>
         {showDate ? (
           <span className="flex items-center gap-1.5 text-slate">
@@ -36,14 +36,14 @@ export function ArticleCard({
           </span>
         ) : null}
       </p>
-      <h3 className="mt-3 font-serif text-heading-6">
+      <h3 className="mt-2.5 font-serif text-heading-5 sm:mt-3 sm:text-heading-6">
         <Link href={routes.article(article.slug)} className="after:absolute after:inset-0">
           {article.title}
         </Link>
       </h3>
       <p
         aria-hidden
-        className="mt-auto inline-flex items-center gap-2 pt-4 text-body-xs font-semibold tracking-label text-turquoise uppercase"
+        className="mt-auto inline-flex items-center gap-2 pt-3 text-body-xs font-semibold tracking-label text-turquoise uppercase sm:pt-4"
       >
         <span className="link-underline pb-0.5 group-hover:[background-size:100%_1px]">
           Read more

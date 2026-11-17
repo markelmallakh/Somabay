@@ -59,8 +59,13 @@ export function EventsExplorer({
       </div>
       {/* Below it, one row: categories on the left, Upcoming / Past on the right (hidden for the
           calendar, which shows every month). */}
-      <div className="mt-10 flex flex-col-reverse gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div role="group" aria-label="Filter by category" className="flex flex-wrap gap-2">
+      <div className="mt-7 flex flex-col-reverse gap-5 sm:mt-10 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
+        {/* Phones: one centred row of chips (swipeable if it ever overflows); wraps from `sm`. */}
+        <div
+          role="group"
+          aria-label="Filter by category"
+          className="-mx-gutter scrollbar-none flex justify-center-safe gap-1 overflow-x-auto px-gutter sm:mx-0 sm:flex-wrap sm:justify-start sm:gap-2 sm:overflow-visible sm:px-0 [&>button]:shrink-0 max-sm:[&>button]:px-2.5"
+        >
           <button
             type="button"
             aria-pressed={selected.length === 0}
@@ -102,7 +107,11 @@ export function EventsExplorer({
         <div
           role="tablist"
           aria-label="Which events"
-          className={cn("flex gap-10", mode === "calendar" && "invisible")}
+          className={cn(
+            // Phones: centred, with smaller titles.
+            "flex justify-center gap-6 sm:justify-start sm:gap-10",
+            mode === "calendar" && "hidden lg:invisible lg:flex",
+          )}
         >
           {(["upcoming", "past"] as const).map((option) => {
             const on = when === option;
@@ -116,7 +125,7 @@ export function EventsExplorer({
                 disabled={disabled}
                 onClick={() => setWhen(option)}
                 className={cn(
-                  "group relative flex items-baseline pb-2 font-serif text-heading-5 transition-colors duration-500 disabled:opacity-40",
+                  "group relative flex items-baseline pb-1.5 font-serif text-body-lg transition-colors duration-500 disabled:opacity-40 sm:pb-2 sm:text-heading-5",
                   on ? "text-ink" : "text-slate hover:text-ink",
                 )}
               >
@@ -147,11 +156,11 @@ export function EventsExplorer({
           {mode === "grid" ? (
             <>
               {featured ? (
-                <div className="mb-12 md:mb-16">
+                <div className="mb-8 sm:mb-12 md:mb-16">
                   <EventCard event={featured} featured />
                 </div>
               ) : null}
-              <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="grid gap-x-6 gap-y-8 sm:grid-cols-2 sm:gap-y-12 lg:grid-cols-3">
                 {rest.map((event) => (
                   <li key={event.slug}>
                     <EventCard event={event} />
@@ -159,7 +168,7 @@ export function EventsExplorer({
                 ))}
               </ul>
               {visible.length === 0 ? (
-                <p className="rounded-md bg-white p-10 text-center text-slate">
+                <p className="rounded-md bg-white p-6 text-center text-slate sm:p-10">
                   {when === "past"
                     ? "No past events in these categories."
                     : "No upcoming events in these categories yet."}

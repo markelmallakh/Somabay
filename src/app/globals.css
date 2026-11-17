@@ -1,6 +1,22 @@
 @import "tailwindcss";
 
 /*
+ * Hover on touch screens: phones can't hover, so cards and rows that reveal or animate on hover
+ * get the same state while they pass through the middle of the screen. `TouchHover` marks them
+ * with `data-touch-hover`; every `hover:` / `group-hover:` utility answers to it too.
+ */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+  &:where([data-touch-hover]) {
+    @slot;
+  }
+}
+
+/*
  * Somabay design tokens — mirrors the Figma design system (file XtTcWyYysRgXYKaKqcsTGO,
  * local paint + text styles). Desktop values are the Figma sizes at the 1512px frame; type
  * scales down fluidly to ~375px. Legacy names (ink, slate, sand, lagoon, abyss…) are kept
@@ -80,23 +96,23 @@
   --font-eyebrow: var(--font-open-sans), "Helvetica Neue", Arial, sans-serif;
 
   /* Figma text styles: Desktop/Heading/Heading 1–6 (Georgia Regular). */
-  --text-heading-1: clamp(2.25rem, 1.6417rem + 2.4955vw, 4rem);
+  --text-heading-1: clamp(2.125rem, 1.5066rem + 2.6385vw, 4rem);
   --text-heading-1--line-height: 1.06;
-  --text-heading-2: clamp(1.875rem, 1.4405rem + 1.7825vw, 3.125rem);
+  --text-heading-2: clamp(1.75rem, 1.296rem + 1.935vw, 3.125rem);
   --text-heading-2--line-height: 1.2;
-  --text-heading-3: clamp(1.75rem, 1.4459rem + 1.2478vw, 2.625rem);
+  --text-heading-3: clamp(1.5rem, 1.1289rem + 1.5831vw, 2.625rem);
   --text-heading-3--line-height: 1.3;
-  --text-heading-4: clamp(1.5rem, 1.2828rem + 0.8913vw, 2.125rem);
+  --text-heading-4: clamp(1.3125rem, 1.0445rem + 1.1434vw, 2.125rem);
   --text-heading-4--line-height: 1.3;
-  --text-heading-5: clamp(1.3125rem, 1.2039rem + 0.4456vw, 1.625rem);
+  --text-heading-5: clamp(1.1875rem, 1.0432rem + 0.6157vw, 1.625rem);
   --text-heading-5--line-height: 1.3;
-  --text-heading-6: clamp(1.125rem, 1.0598rem + 0.2674vw, 1.3125rem);
+  --text-heading-6: clamp(1.0625rem, 0.98rem + 0.3518vw, 1.3125rem);
   --text-heading-6--line-height: 1.3;
   /* Desktop/Heading/Eyebrow (Open Sans SemiBold, uppercase). */
   --text-eyebrow: 1rem;
   --text-eyebrow--line-height: 1.3;
   /* Desktop/Body … (DM Sans). */
-  --text-body-xl: clamp(1.375rem, 1.169rem + 0.8795vw, 2rem);
+  --text-body-xl: clamp(1.25rem, 1.0026rem + 1.0554vw, 2rem);
   --text-body-xl--line-height: 1.3;
   --text-body-lg: clamp(1.125rem, 1.084rem + 0.1759vw, 1.25rem);
   --text-body-lg--line-height: 1.3;
@@ -112,7 +128,7 @@
   --text-label: 0.6875rem;
   --text-label--line-height: 1.3;
   /* Homepage About statement + story lines (Figma: DM Sans Regular 48 / 130%). */
-  --text-statement: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+  --text-statement: clamp(1.375rem, 0.839rem + 2.2867vw, 3rem);
   --text-statement--line-height: 1.3;
   /* Desktop/CTA (DM Sans Medium, uppercase). */
   --text-cta-lg: 1rem;
@@ -332,6 +348,49 @@ img[data-px][data-in][data-loaded] {
   }
 }
 
+/* Proximity: an eyebrow and its headline read as one unit, so they sit close (10px on phones,
+   12px from `lg`) whatever gap their column uses. Covers the eyebrow on its own or inside a
+   reveal wrapper, when the pair fills the column. */
+:where(.flex, .grid):has(> .eyebrow-tag:first-child + :is(h1, h2, h3, h4):last-child),
+:where(.flex, .grid):has(
+  > :first-child:has(> .eyebrow-tag:only-child) + :is(h1, h2, h3, h4):last-child
+) {
+  row-gap: 0.625rem;
+}
+@media (min-width: 1024px) {
+  :where(.flex, .grid):has(> .eyebrow-tag:first-child + :is(h1, h2, h3, h4):last-child),
+  :where(.flex, .grid):has(
+    > :first-child:has(> .eyebrow-tag:only-child) + :is(h1, h2, h3, h4):last-child
+  ) {
+    row-gap: 0.75rem;
+  }
+}
+
+/* Phones: the layout centres. A heading block (any column that starts with an eyebrow, on its own
+   or in a reveal wrapper) centres its text, eyebrow and lone buttons. Text alignment only, so
+   lists, forms and cards inside keep their full width. Opt out with `data-keep-align`. */
+@media (max-width: 639px) {
+  main
+    :where(.flex-col, .grid, div):not([data-keep-align] *, [data-keep-align]):has(
+      > .eyebrow-tag:first-child,
+      > :first-child > .eyebrow-tag:only-child
+    ) {
+    text-align: center;
+  }
+  main :where(div, p, span):not([data-keep-align] *, [data-keep-align]) > .eyebrow-tag:first-child,
+  main
+    :where(.flex-col, .grid, div):not([data-keep-align] *, [data-keep-align])
+    > :first-child
+    > .eyebrow-tag:only-child {
+    margin-inline: auto;
+  }
+}
+
+/* Pins on a zoomable plan (PanZoom) keep their size while the plan zooms. */
+.pz-counter {
+  scale: calc(1 / var(--plan-zoom, 1));
+}
+
 /* Photo slider: the active thumbnail's progress line, timed to the autoplay. */
 @keyframes slider-progress {
   from {
@@ -351,9 +410,9 @@ img[data-px][data-in][data-loaded] {
 @layer base {
   :root {
     color-scheme: light;
-    /* The bar with the logo; on desktop a row of section tabs sits under it. */
+    /* The bar with the logo and a row of section tabs under it (a slim one on phones). */
     --header-bar: var(--spacing-header);
-    --header-tabs: 0rem;
+    --header-tabs: 2.5rem;
     --header-height: calc(var(--header-bar) + var(--header-tabs));
   }
 
@@ -364,6 +423,38 @@ img[data-px][data-in][data-loaded] {
       --header-bar: 5.25rem;
       --header-tabs: 3rem;
     }
+  }
+
+  /* Phones: 15px side padding, a tighter section rhythm and a 4rem header bar. */
+  @media (max-width: 639px) {
+    :root {
+      --spacing-gutter: 0.9375rem;
+      --spacing-section: 3rem;
+      --header-bar: 4rem;
+    }
+  }
+
+  /* Folding rows (`<details>`, e.g. the footer's link columns on phones) open smoothly where the
+     browser can animate to an auto height. */
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 0.5s var(--ease-out-expo),
+      content-visibility 0.5s allow-discrete;
+  }
+  details[open]::details-content {
+    block-size: auto;
+  }
+
+  /* Nothing may push the page sideways on a phone (a stray wide element would otherwise widen
+     the layout viewport and zoom the whole page out). `clip` keeps sticky positioning working. */
+  html,
+  body {
+    overflow-x: clip;
   }
 
   html {
@@ -417,6 +508,12 @@ img[data-px][data-in][data-loaded] {
   .eyebrow {
     @apply font-eyebrow text-eyebrow font-semibold uppercase;
   }
+  /* Phones: small uppercase labels and links in this style step down to 12px. */
+  @media (max-width: 639px) {
+    .eyebrow {
+      font-size: 0.75rem;
+    }
+  }
 
   /* Section eyebrow: small caps with no background. Turquoise on white and light surfaces;
      sun yellow over photos and dark sections (below). */
@@ -428,9 +525,29 @@ img[data-px][data-in][data-loaded] {
     line-height: 1.2;
     letter-spacing: 0.14em;
   }
+  @media (max-width: 639px) {
+    .eyebrow-tag {
+      font-size: 0.6875rem;
+      letter-spacing: 0.16em;
+    }
+  }
   .eyebrow-tag[data-tone="dark"],
   [data-theme-surface="dark"] .eyebrow-tag:not([data-tone="light"]) {
     --eyebrow-ink: var(--color-sun);
+  }
+
+  /* Phones: a call to action sits centred in its column — on its own line in a stacked column,
+     or alone in a plain wrapper. Buttons that fill a row or a grid cell are left as they are, and
+     an explicit alignment utility still wins (this is the components layer). */
+  @media (max-width: 639px) {
+    :where(.flex-col) > .cta:not(.w-full, .flex-1) {
+      align-self: center;
+    }
+    :where(div, p, li):not(.flex, .inline-flex, .grid, .contents):has(
+        > .cta:only-child:not(.w-full)
+      ) {
+      text-align: center;
+    }
   }
 
   /* Menu link hover: the words glide right as a turquoise dot settles where they began. No underline. */
@@ -540,6 +657,60 @@ img[data-px][data-in][data-loaded] {
   }
 }
 
+/*
+ * Phone carousel: a native swipe row where each card snaps to the centre with the previous and
+ * next cards peeking in at both edges, so it reads as swipeable without arrows. Bleeds out of the
+ * container's gutter. Use below the breakpoint where the row becomes a grid, e.g.
+ * `max-md:swipe-row`; children get their width and snap point from here.
+ */
+@utility swipe-row {
+  display: flex;
+  gap: 0.625rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin-inline: calc(var(--spacing-gutter) * -1);
+  padding-inline: 8vw;
+  scroll-padding-inline: 8vw;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* Important so the row decides card widths on phones over any width the cards carry for
+     larger screens. */
+  & > * {
+    flex: none !important;
+    width: 84vw !important;
+    scroll-snap-align: center !important;
+  }
+}
+
+/*
+ * Phone carousel, compact: cards start at the page padding (in line with the heading) and about
+ * one and a half fit on the screen, so the next one clearly peeks in. Same use as `swipe-row`
+ * (e.g. `max-md:swipe-row-half`); set `--swipe-card` for another card width (38vw ≈ two and a
+ * half to a screen).
+ */
+@utility swipe-row-half {
+  display: flex;
+  gap: 0.625rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin-inline: calc(var(--spacing-gutter) * -1);
+  padding-inline: var(--spacing-gutter);
+  scroll-padding-inline: var(--spacing-gutter);
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  & > * {
+    flex: none !important;
+    width: var(--swipe-card, 62vw) !important;
+    scroll-snap-align: start !important;
+  }
+}
+
 /* Left offset that pins an absolutely placed element to the site container's content edge,
    so it lines up with the page on wide screens too. */
 @utility left-site {
@@ -631,6 +802,28 @@ img[data-px][data-in][data-loaded] {
 /* Brand tint for the drawn map (filter defined in PlacesMap). */
 .somabay-map .somabay-duotone {
   filter: url(#somabay-duotone);
+}
+
+/* Zoom buttons: two 40px squares in the site's 4px corner, easy to hit with a thumb. */
+.somabay-map .leaflet-control-zoom {
+  overflow: hidden;
+  border: 0 !important;
+  border-radius: 4px;
+  box-shadow: var(--shadow-float);
+}
+.somabay-map .leaflet-control-zoom a {
+  width: 40px;
+  height: 40px;
+  font: 400 20px/40px var(--font-sans);
+  color: var(--color-ink);
+  border-radius: 0 !important;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+.somabay-map .leaflet-control-zoom a:active {
+  background: var(--color-turquoise);
+  color: #fff;
 }
 
 .somabay-map .somabay-labels {
@@ -920,6 +1113,57 @@ html.lenis body {
   animation-fill-mode: backwards;
 }
 
+/*
+ * Phones: small dropdown panels (select menus, date and country pickers, filters, language) open
+ * as bottom sheets instead: pinned to the foot of the screen at full width, rising in, with the
+ * page dimmed behind (a wide shadow, so a tap outside still reaches the menu's own outside-click
+ * handling) and a grab bar on top.
+ */
+@media (max-width: 767px) {
+  .popover-sheet {
+    position: fixed !important;
+    inset: auto 0 0 0 !important;
+    width: auto !important;
+    max-height: 80svh;
+    margin: 0 !important;
+    overflow-y: auto;
+    z-index: 70 !important;
+    border-radius: 0.25rem 0.25rem 0 0 !important;
+    border-inline: 0 !important;
+    border-bottom: 0 !important;
+    padding-top: 1.25rem;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    box-shadow: 0 0 0 100vmax rgb(64 67 70 / 0.5) !important;
+    animation: sheet-rise 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+  }
+  .popover-sheet::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    width: 2.5rem;
+    height: 0.25rem;
+    border-radius: 9999px;
+    background: rgb(44 44 44 / 0.2);
+    translate: -50% 0;
+  }
+}
+
+/* Phones: drawers are bottom sheets that rise from the foot of the screen. */
+@keyframes sheet-rise {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (max-width: 767px) {
+  .drawer-sweep {
+    animation-name: sheet-rise;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .drawer-sweep {
     animation: none;
@@ -1015,17 +1259,25 @@ html.lenis body {
       40px 0,
       0 100%;
   }
-  .wave:is(:hover, :focus-visible)::before,
-  .wave:is(:hover, :focus-visible)::after,
-  .group:is(:hover, :focus-visible) .wave-group::before,
-  .group:is(:hover, :focus-visible) .wave-group::after {
+  .wave:is(:hover, :focus-visible, [data-touch-hover])::before,
+  .wave:is(:hover, :focus-visible, [data-touch-hover])::after,
+  .group:is(:hover, :focus-visible, [data-touch-hover]) .wave-group::before,
+  .group:is(:hover, :focus-visible, [data-touch-hover]) .wave-group::after {
     transform: translateY(-12px);
     animation: wave-swell 1.3s linear infinite;
   }
-  .wave:is(:hover, :focus-visible)::after,
-  .group:is(:hover, :focus-visible) .wave-group::after {
+  .wave:is(:hover, :focus-visible, [data-touch-hover])::after,
+  .group:is(:hover, :focus-visible, [data-touch-hover]) .wave-group::after {
     animation-direction: reverse;
     animation-duration: 1.9s;
+  }
+  /* Touch screens: a tap raises the water while the finger is down, as instant feedback. */
+  @media (hover: none) {
+    .wave:active::before,
+    .wave:active::after {
+      transform: translateY(-12px);
+      transition-duration: 0.3s;
+    }
   }
   .wave:disabled::before,
   .wave:disabled::after {

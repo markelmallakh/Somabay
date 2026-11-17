@@ -76,7 +76,13 @@ export function PackagesGrid({
       viewport={{ once: true, amount: 0.25 }}
       data-no-motion=""
     >
-      <DragRow label={label} tone="dark" className="mt-10 lg:mt-12">
+      <DragRow
+        label={label}
+        tone="dark"
+        phoneCards="half"
+        // Phones: about two and a quarter cards to a screen.
+        className="mt-6 max-md:[--swipe-card:40vw] sm:mt-10 lg:mt-12"
+      >
         {packages.map((pack, index) => {
           const external = isExternal(pack.href);
           const drawerIndex = drawerPackages.indexOf(pack);
@@ -85,7 +91,7 @@ export function PackagesGrid({
               key={pack.id}
               custom={index}
               variants={card}
-              className="w-[min(80vw,20rem)] shrink-0 snap-start lg:w-[calc((100%-3rem)/4)]"
+              className="shrink-0 md:w-[min(80vw,20rem)] md:snap-start lg:w-[calc((100%-3rem)/4)]"
             >
               <Card
                 href={external ? pack.href : undefined}
@@ -94,32 +100,52 @@ export function PackagesGrid({
               >
                 {/* The photo: the whole card at rest, a rounded frame above the panel when open. */}
                 <span
-                  className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.25rem)] ${ease} group-hover:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] group-focus-visible:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] [@media(hover:none)]:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)]`}
+                  className={`absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.25rem)] ${ease} group-hover:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] group-focus-visible:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)] max-sm:[clip-path:inset(0_0_0_0_round_0.25rem)]! [@media(hover:none)]:[clip-path:inset(0_0_40%_0_round_0.25rem_0.25rem_0_0)]`}
                 >
                   <span
-                    className={`absolute inset-0 transition-transform ${ease} group-hover:-translate-y-[16%] group-focus-visible:-translate-y-[16%] [@media(hover:none)]:-translate-y-[16%]`}
+                    className={`absolute inset-0 transition-transform ${ease} group-hover:-translate-y-[16%] group-focus-visible:-translate-y-[16%] max-sm:translate-y-0! [@media(hover:none)]:-translate-y-[16%]`}
                   >
                     <m.span custom={index} variants={photo} className="absolute inset-0 block">
-                      <ResponsiveImage asset={pack.image} sizes="20rem" fill />
+                      <ResponsiveImage
+                        asset={pack.image}
+                        sizes="(max-width: 639px) 40vw, 20rem"
+                        fill
+                      />
                     </m.span>
                   </span>
                   <span
                     aria-hidden
-                    className={`absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_45%,rgb(0_0_0/0.65)_100%)] transition-opacity ${ease} group-hover:opacity-0 group-focus-visible:opacity-0 [@media(hover:none)]:opacity-0`}
+                    className={`absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_45%,rgb(0_0_0/0.65)_100%)] transition-opacity max-sm:bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_30%,rgb(0_0_0/0.85)_100%)] max-sm:opacity-100! ${ease} group-hover:opacity-0 group-focus-visible:opacity-0 [@media(hover:none)]:opacity-0`}
                   />
                 </span>
 
-                {/* At rest: the name on the photo. */}
+                {/* Phones: the outside-link arrow in the card's top-right corner. */}
+                {external ? (
+                  <span
+                    aria-hidden
+                    className="absolute top-3 right-3 grid size-7 place-items-center rounded-full bg-turquoise text-white sm:hidden"
+                  >
+                    <Icon name="arrow-up-right" className="size-3.5" />
+                  </span>
+                ) : null}
+
+                {/* At rest: the name on the photo. Phones (no hover) keep it there, with the
+                    description, instead of opening the white panel. */}
                 <span
                   aria-hidden
-                  className={`absolute inset-x-5 bottom-5 font-serif text-heading-5 leading-[1.15] text-white transition-[opacity,translate] ${ease} group-hover:translate-y-3 group-hover:opacity-0 group-focus-visible:translate-y-3 group-focus-visible:opacity-0 [@media(hover:none)]:opacity-0`}
+                  className={`absolute inset-x-3 bottom-3 flex flex-col gap-1 text-white transition-[opacity,translate] max-sm:translate-y-0! max-sm:opacity-100! sm:inset-x-5 sm:bottom-5 ${ease} group-hover:translate-y-3 group-hover:opacity-0 group-focus-visible:translate-y-3 group-focus-visible:opacity-0 [@media(hover:none)]:opacity-0`}
                 >
-                  {pack.title}
+                  <span className="font-serif text-body-md leading-[1.15] sm:text-heading-5">
+                    {pack.title}
+                  </span>
+                  <span className="line-clamp-2 text-[0.6875rem] leading-snug text-white/80 sm:hidden">
+                    {pack.description}
+                  </span>
                 </span>
 
                 {/* Open: the white panel with the name, description and (for outside links) an arrow. */}
                 <span
-                  className={`absolute inset-x-0 bottom-0 flex h-[40%] translate-y-4 flex-col justify-center gap-2 px-5 pb-1 opacity-0 transition-[opacity,translate] ${ease} group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100`}
+                  className={`absolute inset-x-0 bottom-0 flex h-[40%] translate-y-4 flex-col justify-center gap-2 px-5 pb-1 opacity-0 transition-[opacity,translate] max-sm:hidden ${ease} group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100`}
                 >
                   <span className="flex items-start justify-between gap-3">
                     <span className="font-serif text-heading-6 leading-[1.2] text-ink">
@@ -174,6 +200,7 @@ function Card({
   return href ? (
     <a
       href={href}
+      data-no-touch-hover
       target="_blank"
       rel="noopener noreferrer"
       draggable={false}
@@ -183,7 +210,13 @@ function Card({
       {children}
     </a>
   ) : (
-    <button type="button" onClick={onOpen} aria-label={`${title}: details`} className={className}>
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`${title}: details`}
+      data-no-touch-hover
+      className={className}
+    >
       {children}
     </button>
   );

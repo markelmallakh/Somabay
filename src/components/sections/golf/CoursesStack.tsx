@@ -37,7 +37,7 @@ export function CoursesStack() {
   });
 
   return (
-    <ol ref={ref} className="flex flex-col gap-8 lg:gap-[12vh]">
+    <ol ref={ref} className="flex flex-col gap-5 sm:gap-8 lg:gap-[12vh]">
       {courses.map((course, index) => (
         <li
           key={course.title}
@@ -61,13 +61,15 @@ export function CoursesStack() {
                 fill
               />
             </div>
-            <div className="flex flex-col p-6 md:p-10 lg:col-span-5 lg:p-12">
+            <div className="flex flex-col p-5 sm:p-6 md:p-10 lg:col-span-5 lg:p-12">
               <p className="text-body-xs font-semibold tracking-label text-turquoise uppercase">
                 {course.label}
               </p>
-              <h3 className="mt-3 font-serif text-heading-4 leading-[1.1]">{course.title}</h3>
-              <p className="mt-4 text-body-sm text-slate">{course.description}</p>
-              <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-line pt-6 xl:grid-cols-3">
+              <h3 className="mt-2 font-serif text-heading-4 leading-[1.1] lg:mt-3">
+                {course.title}
+              </h3>
+              <p className="mt-3 text-body-sm text-slate sm:mt-4">{course.description}</p>
+              <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-line pt-5 sm:mt-6 sm:pt-6 xl:grid-cols-3">
                 {course.facts.map((fact) => (
                   <div key={fact.label}>
                     <dt className="text-body-xs tracking-label text-slate uppercase">
@@ -77,7 +79,7 @@ export function CoursesStack() {
                   </div>
                 ))}
               </dl>
-              <div className="mt-auto flex flex-wrap items-end justify-between gap-x-6 gap-y-5 pt-6">
+              <div className="mt-auto flex flex-wrap items-end justify-between gap-x-6 gap-y-4 pt-5 sm:gap-y-5 sm:pt-6">
                 <ul className="flex flex-col gap-2 text-body-sm text-slate">
                   {course.hours.map((line) => (
                     <li key={line} className="flex items-center gap-2">

@@ -35,7 +35,7 @@ export default function DiningPage() {
             eyebrow="Your table awaits"
             title="Flavours by the Red Sea"
           />
-          <div className="mt-10 lg:mt-12">
+          <div className="mt-6 sm:mt-10 lg:mt-12">
             <DiningFinder venues={venues} categories={diningCategories} />
           </div>
         </Container>

@@ -58,7 +58,7 @@ export default function MarinaPage() {
             title={retailIntro.title}
             description={retailIntro.description}
           />
-          <div className="mt-12 lg:mt-14">
+          <div className="mt-8 sm:mt-12 lg:mt-14">
             <MarinaStoreList items={marinaStores} />
           </div>
         </Container>
@@ -88,7 +88,11 @@ export default function MarinaPage() {
         <Container>
           <HeadingRow id="gallery-title" eyebrow="Gallery" title="Scenes From The Bay" />
         </Container>
-        <GalleryCarousel images={marinaGallery} label="The Marina gallery" className="mt-12" />
+        <GalleryCarousel
+          images={marinaGallery}
+          label="The Marina gallery"
+          className="mt-6 sm:mt-12"
+        />
       </Section>
       <MoreToExperience intro={moreToExperienceIntro} items={moreFromMarina} />
       <FaqBlock items={faqs.filter((item) => item.category !== "buying")} />

@@ -33,7 +33,7 @@ export async function generateMetadata({
 /** One titled list on the job page (About the Role, Requirements, Benefits & Privileges). */
 function JobSection({ title, items }: { title: string; items: string[] }) {
   return (
-    <Reveal className="grid gap-4 border-t border-ink/10 py-7 lg:grid-cols-12 lg:gap-6 lg:py-8">
+    <Reveal className="grid gap-3 border-t border-ink/10 py-5 sm:gap-4 sm:py-7 lg:grid-cols-12 lg:gap-6 lg:py-8">
       <h2 className="font-serif text-heading-5 lg:col-span-4">{title}</h2>
       <ul className="flex flex-col gap-2.5 lg:col-span-7 lg:col-start-6">
         {items.map((item) => (
@@ -52,18 +52,18 @@ async function CareerContent({ params }: { params: PageProps<"/careers/[slug]">[
   if (!job) notFound();
 
   return (
-    <article className="bg-sand-100 pt-[calc(var(--header-height)+2.5rem)] pb-section">
+    <article className="bg-sand-100 pt-[calc(var(--header-height)+1.25rem)] pb-section sm:pt-[calc(var(--header-height)+2.5rem)]">
       <Container>
         <Link
           href={routes.careers}
-          className="eyebrow inline-flex items-center gap-2 text-lagoon hover:text-ink"
+          className="eyebrow inline-flex min-h-11 items-center gap-2 text-lagoon hover:text-ink"
         >
           <Icon name="chevron-left" className="size-4" />
           Back to careers
         </Link>
 
         {/* The cap: the role, its badges and Apply Now, which glides down to the form. */}
-        <Reveal className="mt-6 flex flex-col gap-5 pb-2 md:flex-row md:items-end md:justify-between">
+        <Reveal className="mt-3 flex flex-col gap-5 pb-2 sm:mt-6 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-3">
             <JobMeta job={job} tone="plain" />
             <h1 className="max-w-3xl text-heading-3">{job.title}</h1>
@@ -85,11 +85,11 @@ async function CareerContent({ params }: { params: PageProps<"/careers/[slug]">[
       <section
         id="apply"
         aria-labelledby="apply-title"
-        className="mt-12 scroll-mt-(--header-height) lg:mt-14"
+        className="mt-8 scroll-mt-(--header-height) sm:mt-12 lg:mt-14"
       >
         {/* One centred card: the heading inside it, then the form with a full-width submit. */}
         <Container className="flex justify-center">
-          <Reveal className="w-full max-w-[40rem] rounded-md bg-white p-6 sm:p-8">
+          <Reveal className="w-full max-w-[40rem] rounded-md bg-white px-4 py-6 sm:p-8">
             <div className="flex flex-col items-center gap-2 text-center">
               <h2 id="apply-title" className="text-heading-4">
                 Apply Now

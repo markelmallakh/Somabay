@@ -62,7 +62,7 @@ export function StoryFan({ title, paragraph, photos, children }: StoryFanProps) 
   });
 
   return (
-    <div ref={scope} className="flex flex-col items-center gap-14 text-center lg:gap-20">
+    <div ref={scope} className="flex flex-col items-center gap-8 text-center sm:gap-14 lg:gap-20">
       <h2 id="story-title" data-story-title className="font-serif text-heading-2 text-ink">
         {title}
       </h2>
@@ -92,7 +92,7 @@ export function StoryFan({ title, paragraph, photos, children }: StoryFanProps) 
         <div>
           <p
             data-story-paragraph
-            className="mx-auto max-w-[58rem] py-12 text-[clamp(1.5rem,1.05rem+1.25vw,2.25rem)] leading-[1.35] text-ink md:py-16 lg:sticky lg:top-[calc(var(--header-height)+14vh)] lg:py-0"
+            className="mx-auto max-w-[58rem] py-8 text-[clamp(1.375rem,1.05rem+1.25vw,2.25rem)] leading-[1.35] text-ink sm:py-12 md:py-16 lg:sticky lg:top-[calc(var(--header-height)+14vh)] lg:py-0"
           >
             {paragraph}
           </p>

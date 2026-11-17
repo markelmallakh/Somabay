@@ -148,7 +148,7 @@ export function ApproachScroll({
           </h2>
           <p
             data-approach-intro
-            className="mx-auto mt-6 max-w-[58rem] text-[clamp(1.5rem,1.05rem+1.25vw,2.25rem)] leading-[1.35] text-pretty"
+            className="mx-auto mt-3 max-w-[58rem] text-[clamp(1.375rem,1.05rem+1.25vw,2.25rem)] leading-[1.35] text-pretty sm:mt-6"
           >
             {intro}
           </p>
@@ -156,18 +156,26 @@ export function ApproachScroll({
         <div aria-hidden className="hidden h-[42vh] lg:block" />
       </div>
 
-      {/* Phones: each pillar with its photo. */}
-      <ol className="flex flex-col gap-14 px-gutter py-section lg:hidden">
-        {pillars.map((pillar) => (
-          <li key={pillar.title} className="flex flex-col gap-4">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-md">
-              <ResponsiveImage asset={pillar.image} sizes="100vw" fill />
-            </div>
-            <h3 className="font-serif text-heading-4">{pillar.title}</h3>
-            <p className="text-body-md text-slate">{pillar.description}</p>
-          </li>
-        ))}
-      </ol>
+      {/* Phones and tablets: the pillars as a swipe row, the card in view centred with its
+          neighbours peeking in at both sides. */}
+      <div className="px-gutter pt-8 pb-section lg:hidden">
+        {/* Phones: about one and a half cards to a screen. */}
+        <ol aria-label={title} className="max-sm:swipe-row-half sm:swipe-row md:[&>li]:w-[46vw]">
+          {pillars.map((pillar) => (
+            <li key={pillar.title} className="flex flex-col gap-2 sm:gap-3">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-md">
+                <ResponsiveImage
+                  asset={pillar.image}
+                  sizes="(min-width: 768px) 46vw, (min-width: 640px) 84vw, 62vw"
+                  fill
+                />
+              </div>
+              <h3 className="mt-1 font-serif text-body-lg sm:text-heading-4">{pillar.title}</h3>
+              <p className="text-body-xs text-slate sm:text-body-md">{pillar.description}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
 
       {/* Desktop: ruled grid, the pillar held in the centre, photo cards passing at the sides. */}
       <div className="relative mx-auto hidden max-w-site lg:block">

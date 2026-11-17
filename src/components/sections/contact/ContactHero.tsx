@@ -18,7 +18,7 @@ export function ContactHero() {
     <section
       aria-labelledby="page-title"
       data-theme-surface="dark"
-      className="relative isolate overflow-hidden bg-abyss pt-[calc(var(--header-height)+1.5rem)] pb-12 text-ink"
+      className="relative isolate overflow-hidden bg-abyss pt-[calc(var(--header-height)+1rem)] pb-8 text-ink sm:pt-[calc(var(--header-height)+1.5rem)] sm:pb-12"
     >
       <Parallax mode="hero" amount={6} className="absolute inset-0 -z-20">
         <div className="absolute inset-0">
@@ -29,7 +29,7 @@ export function ContactHero() {
       <Container className="flex justify-center">
         <Reveal distance={32} className="w-full max-w-[52rem]">
           {/* The compact heading. */}
-          <div className="rounded-md bg-white p-6 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.4)] sm:px-10 sm:py-8">
+          <div className="rounded-md bg-white px-4 py-6 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.4)] sm:px-10 sm:py-8">
             <div className="flex flex-col items-center gap-2 text-center">
               <Eyebrow tone="light">{contactHero.eyebrow}</Eyebrow>
               <SplitHeading

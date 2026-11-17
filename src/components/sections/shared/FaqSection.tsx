@@ -28,7 +28,7 @@ export function FaqList({ items, filterable = false }: FaqListProps) {
         <div
           role="group"
           aria-label="Question category"
-          className="mb-10 flex flex-wrap justify-center gap-2"
+          className="mb-6 flex flex-wrap justify-center gap-1.5 sm:mb-10 sm:gap-2"
         >
           {faqCategories.map((option) => {
             const on = category === option.id;
@@ -57,7 +57,9 @@ export function FaqList({ items, filterable = false }: FaqListProps) {
           })}
         </div>
       ) : null}
-      <div className="rounded-md border border-line bg-white px-6 md:px-10">
+      {/* Phones: the list runs on the page itself (the card's inset on top of the gutter made the
+          questions wrap early); the white card returns from `sm`. */}
+      <div className="sm:rounded-md sm:border sm:border-line sm:bg-white sm:px-6 md:px-10">
         <Accordion
           key={category}
           className="border-y-0"

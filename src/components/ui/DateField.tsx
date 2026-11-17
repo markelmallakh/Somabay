@@ -165,7 +165,7 @@ export function DateField({ id, name, label, required, error, className }: DateF
               exit={{ opacity: 0, y: -4, scale: 0.98, transition: { duration: 0.18 } }}
               transition={{ duration: 0.45, ease: easeOutExpo }}
               style={{ transformOrigin: "100% 0%" }}
-              className="absolute top-[calc(100%+0.5rem)] right-0 z-50 w-[19.5rem] rounded-md border border-line bg-white p-3 text-ink shadow-[0_18px_50px_rgb(18_58_70/0.18)]"
+              className="popover-sheet absolute top-[calc(100%+0.5rem)] right-0 z-50 w-[19.5rem] rounded-md border border-line bg-white p-3 text-ink shadow-[0_18px_50px_rgb(18_58_70/0.18)]"
             >
               {/* Month, between previous and next. */}
               <div className="flex items-center justify-between">

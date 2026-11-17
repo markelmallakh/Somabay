@@ -174,61 +174,89 @@ export function DevelopmentSlider({
       data-no-motion=""
       className={cn("relative scroll-mt-(--header-height) overflow-hidden text-ink", className)}
     >
-      <div className="flex flex-col gap-10 py-section lg:h-svh lg:justify-center lg:gap-0 lg:py-0 lg:pt-(--header-bar)">
-        <div
-          data-track
-          className="scrollbar-none flex snap-x gap-4 overflow-x-auto px-gutter lg:w-max lg:snap-none lg:items-center lg:gap-6 lg:overflow-visible lg:ps-site lg:pe-[8vw] lg:will-change-transform"
-        >
-          {/* The heading leads the row. */}
-          <div className="flex w-[min(80vw,24rem)] shrink-0 flex-col justify-center gap-5 lg:w-[30vw] lg:pr-10">
-            {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
-            <h2
-              id={headingId}
-              className="font-serif text-[clamp(2.25rem,1.5rem+2.6vw,4.25rem)] leading-[1.05]"
-            >
-              {title}
-            </h2>
-            {description ? <p className="text-body-md text-slate">{description}</p> : null}
-          </div>
-
-          {tiles.map((tile, index) => (
-            <article
-              key={tile.label}
-              data-panel
-              className="relative h-[70svh] min-h-[26rem] w-[min(82vw,26rem)] shrink-0 snap-start overflow-hidden rounded-md lg:h-[min(72svh,46rem)] lg:w-[min(46vw,44rem)]"
-            >
-              <div data-panel-media className="absolute -inset-x-[10%] inset-y-0">
-                <ResponsiveImage
-                  asset={tile.image}
-                  sizes="(min-width: 1024px) 50vw, 85vw"
-                  quality={85}
-                  fill
-                />
-              </div>
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/0.7)_0%,rgb(0_0_0/0.25)_38%,rgb(0_0_0/0)_60%)]"
-              />
-              <div
-                data-panel-copy
-                className="absolute inset-x-6 bottom-6 flex flex-col gap-3 text-white md:inset-x-8 md:bottom-8 lg:[&>*]:translate-y-6 lg:[&>*]:opacity-0 lg:[&>*]:transition-[opacity,translate] lg:[&>*]:duration-1000 lg:[&>*]:ease-out-expo lg:[[data-shown]_&>*]:translate-y-0 lg:[[data-shown]_&>*]:opacity-100"
-              >
-                {/* A tile with a note (e.g. hours) shows it above the title in place of the number. */}
-                {tile.meta ? (
-                  <span className="w-fit rounded-full bg-sun px-3.5 py-1.5 text-body-xs font-semibold tracking-label text-ink uppercase">
-                    {tile.meta}
-                  </span>
-                ) : (
-                  <span className="text-body-xs font-semibold tracking-label text-sun uppercase tabular-nums">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                )}
-                <h3 className="font-serif text-heading-4 leading-[1.1]">{tile.label}</h3>
-                <p className="max-w-md text-body-md text-white/85">{tile.description}</p>
-              </div>
-            </article>
-          ))}
+      <div className="flex flex-col gap-6 py-section sm:gap-10 lg:h-svh lg:justify-center lg:gap-0 lg:py-0 lg:pt-(--header-bar)">
+        {/* Phones and tablets: the heading sits above the swipe row. */}
+        <div className="flex flex-col gap-2 px-gutter lg:hidden">
+          {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
+          <h2 id={headingId} className="text-heading-2">
+            {title}
+          </h2>
+          {description ? <p className="mt-1 text-body-md text-slate">{description}</p> : null}
         </div>
+        <div className="px-gutter lg:contents">
+          <div
+            data-track
+            className="max-sm:swipe-row-half sm:max-lg:swipe-row lg:flex lg:w-max lg:items-center lg:gap-6 lg:ps-site lg:pe-[8vw] lg:will-change-transform md:max-lg:[&>article]:w-[46vw]"
+          >
+            {/* Large screens: the heading leads the row. */}
+            <div className="hidden shrink-0 flex-col justify-center gap-3 lg:flex lg:w-[30vw] lg:pr-10">
+              {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
+              <p
+                role="heading"
+                aria-level={2}
+                className="font-serif text-[clamp(2.25rem,1.5rem+2.6vw,4.25rem)] leading-[1.05]"
+              >
+                {title}
+              </p>
+              {description ? <p className="text-body-md text-slate">{description}</p> : null}
+            </div>
+
+            {tiles.map((tile, index) => (
+              <article
+                key={tile.label}
+                data-panel
+                className="relative aspect-[4/5] overflow-hidden rounded-md lg:aspect-auto lg:h-[min(72svh,46rem)] lg:w-[min(46vw,44rem)] lg:shrink-0"
+              >
+                <div data-panel-media className="absolute -inset-x-[10%] inset-y-0">
+                  <ResponsiveImage
+                    asset={tile.image}
+                    sizes="(min-width: 1024px) 50vw, (min-width: 768px) 46vw, (min-width: 640px) 84vw, 62vw"
+                    quality={85}
+                    fill
+                  />
+                </div>
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/0.7)_0%,rgb(0_0_0/0.25)_38%,rgb(0_0_0/0)_60%)]"
+                />
+                <div
+                  data-panel-copy
+                  className="absolute inset-x-3.5 bottom-3.5 flex flex-col gap-1.5 text-white sm:inset-x-5 sm:bottom-5 sm:gap-2.5 md:inset-x-8 md:bottom-8 lg:[&>*]:translate-y-6 lg:[&>*]:opacity-0 lg:[&>*]:transition-[opacity,translate] lg:[&>*]:duration-1000 lg:[&>*]:ease-out-expo lg:[[data-shown]_&>*]:translate-y-0 lg:[[data-shown]_&>*]:opacity-100"
+                >
+                  {/* A tile with a note (e.g. hours) shows it above the title in place of the number. */}
+                  {tile.meta ? (
+                    <span className="w-fit rounded-full bg-sun px-2.5 py-1 text-[0.625rem] font-semibold tracking-label text-ink uppercase sm:px-3.5 sm:py-1.5 sm:text-body-xs">
+                      {tile.meta}
+                    </span>
+                  ) : (
+                    <span className="text-body-xs font-semibold tracking-label text-sun uppercase tabular-nums">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  )}
+                  <h3 className="font-serif text-body-lg leading-[1.15] sm:text-heading-4 sm:leading-[1.1]">
+                    {tile.label}
+                  </h3>
+                  <p className="max-w-md text-white/85 max-sm:line-clamp-3 max-sm:text-body-xs max-sm:leading-snug sm:text-body-md">
+                    {tile.description}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+        {/* Phones and tablets: the closing quote under the row (large screens grow it out of the
+            last panel). */}
+        {quote ? (
+          <figure aria-hidden className="px-gutter pt-4 text-center lg:hidden">
+            <span className="block font-serif text-[4rem] leading-[0.6] text-turquoise">“</span>
+            <p className="mx-auto mt-2 max-w-[24ch] font-serif text-heading-3 text-balance">
+              {quote.text}
+            </p>
+            <figcaption className="mt-4 text-body-xs font-semibold tracking-label text-slate uppercase">
+              {quote.attribution}
+            </figcaption>
+          </figure>
+        ) : null}
       </div>
 
       {/* Finale (large screens): once the row has slid home, the last panel (photo and words)

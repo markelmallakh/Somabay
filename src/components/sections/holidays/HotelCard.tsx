@@ -27,7 +27,12 @@ export function HotelCard({ hotel, href, themeLabels }: HotelCardProps) {
   const cover = hotel.cover ?? hotel.images[0];
 
   return (
-    <article className="group relative isolate aspect-[10/12] overflow-hidden rounded-md bg-white">
+    // Phones have no hover: everything shows over the photo at rest (and the in-view "hover" is
+    // off for this card), with the price and Book now along its foot.
+    <article
+      data-no-touch-hover
+      className="group relative isolate aspect-[10/12] overflow-hidden rounded-md bg-white"
+    >
       {/* The whole card opens the hotel page. */}
       <Link
         href={href}
@@ -38,10 +43,10 @@ export function HotelCard({ hotel, href, themeLabels }: HotelCardProps) {
       {/* Photo: full card at rest, framed thumbnail on hover. */}
       <div
         data-no-motion
-        className={`pointer-events-none absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.25rem)] ${ease} group-focus-within:[clip-path:inset(0.5rem_0.5rem_57%_0.5rem_round_0.25rem)] group-hover:[clip-path:inset(0.5rem_0.5rem_57%_0.5rem_round_0.25rem)]`}
+        className={`pointer-events-none absolute inset-0 overflow-hidden transition-[clip-path] [clip-path:inset(0_0_0_0_round_0.25rem)] ${ease} md:group-focus-within:[clip-path:inset(0.5rem_0.5rem_57%_0.5rem_round_0.25rem)] md:group-hover:[clip-path:inset(0.5rem_0.5rem_57%_0.5rem_round_0.25rem)]`}
       >
         <div
-          className={`absolute inset-0 transition-transform ${ease} group-focus-within:-translate-y-[26%] group-hover:-translate-y-[26%]`}
+          className={`absolute inset-0 transition-transform ${ease} md:group-focus-within:-translate-y-[26%] md:group-hover:-translate-y-[26%]`}
         >
           <ResponsiveImage
             asset={cover}
@@ -51,24 +56,24 @@ export function HotelCard({ hotel, href, themeLabels }: HotelCardProps) {
         </div>
         <div
           aria-hidden
-          className={`absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_40%,rgb(0_0_0/0.75)_100%)] transition-opacity ${ease} group-focus-within:opacity-0 group-hover:opacity-0`}
+          className={`absolute inset-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_30%,rgb(0_0_0/0.85)_100%)] transition-opacity md:bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_40%,rgb(0_0_0/0.75)_100%)] ${ease} md:group-focus-within:opacity-0 md:group-hover:opacity-0`}
         />
       </div>
 
       {/* At rest: tagline, name with its stars, and the themes over the photo's foot. */}
       <div
         aria-hidden
-        className={`pointer-events-none absolute inset-x-6 bottom-6 flex flex-col gap-1.5 text-white transition-[opacity,translate] ${ease} group-focus-within:translate-y-4 group-focus-within:opacity-0 group-hover:translate-y-4 group-hover:opacity-0`}
+        className={`pointer-events-none absolute inset-x-5 bottom-[4.75rem] flex flex-col gap-1.5 text-white transition-[opacity,translate] md:inset-x-6 md:bottom-6 ${ease} md:group-focus-within:translate-y-4 md:group-focus-within:opacity-0 md:group-hover:translate-y-4 md:group-hover:opacity-0`}
       >
         <span className="text-body-sm text-white/80">{hotel.tagline}</span>
-        <span className="font-serif text-heading-4 leading-[1.15]">
+        <span className="font-serif text-heading-5 leading-[1.15] md:text-heading-4">
           {hotel.name}
           {hotel.stars ? (
             <StarChip count={hotel.stars} className="relative -top-[0.2em] ml-3 align-middle" />
           ) : null}
         </span>
         {themeLabels.length ? (
-          <span className="mt-2 flex flex-wrap gap-2">
+          <span className="mt-1 flex flex-wrap gap-1.5 md:mt-2 md:gap-2">
             {themeLabels.map((label) => (
               <Chip key={label} tone="light">
                 {label}
@@ -76,11 +81,31 @@ export function HotelCard({ hotel, href, themeLabels }: HotelCardProps) {
             ))}
           </span>
         ) : null}
+        <span className="mt-1 line-clamp-2 text-body-xs text-white/80 md:hidden">
+          {hotel.description}
+        </span>
+      </div>
+
+      {/* Phones: the price and Book now along the photo's foot. */}
+      <div className="pointer-events-none absolute inset-x-5 bottom-4 flex items-center justify-between gap-3 border-t border-white/20 pt-3 md:hidden">
+        <PriceFrom amount={hotelPrice(hotel)} size="compact" tone="dark" />
+        {hotel.website ? (
+          <Button
+            href={hotel.website}
+            external
+            variant="light"
+            size="sm"
+            aria-label={`Book now at ${hotel.name}`}
+            className="pointer-events-auto relative z-10 self-auto"
+          >
+            Book now
+          </Button>
+        ) : null}
       </div>
 
       {/* On hover: the details panel beneath the framed photo. */}
       <div
-        className={`pointer-events-none absolute inset-x-0 top-[43%] bottom-0 flex translate-y-6 flex-col gap-2.5 px-6 pt-4 pb-6 opacity-0 transition-[opacity,translate] ${ease} group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 md:px-7`}
+        className={`pointer-events-none absolute inset-x-0 top-[43%] bottom-0 hidden translate-y-6 flex-col gap-2.5 px-6 pt-4 pb-6 opacity-0 transition-[opacity,translate] md:flex ${ease} group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 md:px-7`}
       >
         <h3 className="font-serif text-heading-5 leading-[1.15]">
           {hotel.name}

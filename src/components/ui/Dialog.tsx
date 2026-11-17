@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, m } from "framer-motion";
-import { type ReactNode, useEffect, useRef } from "react";
+import { AnimatePresence, m, useDragControls } from "framer-motion";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { getLenis } from "@/components/animations/SmoothScroll";
 import { easeInOutQuart } from "@/components/animations/easing";
 
@@ -15,6 +15,22 @@ const easeInCubic = [0.55, 0, 1, 0.45] as const;
 const LEAD = 0.05;
 /** One width for every side drawer on the site. */
 const DRAWER_WIDTH = "max-w-[42.5rem]";
+/** Below this width drawers open as bottom sheets. */
+const SHEET_QUERY = "(max-width: 767px)";
+
+/** Phones: the drawer is a bottom sheet (decided when it opens). */
+function useSheet(open: boolean) {
+  const [sheet, setSheet] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    const query = window.matchMedia(SHEET_QUERY);
+    const update = () => setSheet(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, [open]);
+  return sheet;
+}
 
 type DialogProps = {
   open: boolean;
@@ -55,6 +71,8 @@ export function Dialog({
   outside,
 }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
+  const sheet = useSheet(open && variant === "drawer");
+  const drag = useDragControls();
 
   useEffect(() => {
     const dialog = ref.current;
@@ -107,12 +125,16 @@ export function Dialog({
               exit={{ opacity: 0, transition: { duration: 0.35, delay: 0.1 } }}
               transition={{ duration: 0.5 }}
             />
-            {/* Staggered colour layers sweep in ahead of the panel (brand orange, then turquoise). */}
+            {/* Staggered colour layers sweep in ahead of the panel (brand orange, then turquoise).
+                Desktop only: a bottom sheet rises on its own. */}
             {DRAWER_LAYERS.map((color, index) => (
               <m.div
                 key={color}
                 aria-hidden
-                className={cn("drawer-sweep absolute inset-y-0 right-0 w-full", drawerWidth)}
+                className={cn(
+                  "drawer-sweep absolute inset-y-0 right-0 hidden w-full md:block",
+                  drawerWidth,
+                )}
                 style={{
                   backgroundColor: color,
                   animationDelay: `${LEAD + index * 0.07}s`,
@@ -121,20 +143,46 @@ export function Dialog({
                 exit={{ x: "100%", transition: { duration: 0.32, ease: easeInCubic } }}
               />
             ))}
+            {/* Phones: a bottom sheet as tall as its content (up to 90% of the screen) that rises
+                from the foot, with a grab bar to drag it down and away. Desktop: the side panel. */}
             <m.div
               data-lenis-prevent
               className={cn(
-                "drawer-sweep absolute inset-y-0 right-0 w-full overflow-y-auto bg-sand-50 shadow-soft",
+                "drawer-sweep absolute inset-x-0 bottom-0 flex max-h-[90svh] w-full flex-col overflow-hidden rounded-t-md bg-sand-50 shadow-soft",
+                "md:inset-x-auto md:inset-y-0 md:right-0 md:block md:max-h-none md:overflow-y-auto md:rounded-none",
                 drawerWidth,
                 className,
               )}
               style={{
-                animationDelay: `${LEAD + (DRAWER_LAYERS.length - 1) * 0.07 + 0.08}s`,
-                animationDuration: "0.65s",
+                animationDelay: sheet
+                  ? `${LEAD}s`
+                  : `${LEAD + (DRAWER_LAYERS.length - 1) * 0.07 + 0.08}s`,
+                animationDuration: sheet ? "0.6s" : "0.65s",
               }}
-              exit={{ x: "100%", transition: { duration: 0.32, ease: easeInCubic } }}
+              drag={sheet ? "y" : false}
+              dragListener={false}
+              dragControls={drag}
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 0.9 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 120 || info.velocity.y > 600) onClose();
+              }}
+              exit={
+                sheet
+                  ? { y: "100%", transition: { duration: 0.38, ease: easeInCubic } }
+                  : { x: "100%", transition: { duration: 0.32, ease: easeInCubic } }
+              }
             >
-              {children}
+              <div
+                aria-hidden
+                onPointerDown={(event) => drag.start(event)}
+                className="flex h-6 shrink-0 cursor-grab touch-none items-center justify-center md:hidden"
+              >
+                <span className="h-1 w-10 rounded-full bg-ink/20" />
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain md:contents">
+                {children}
+              </div>
             </m.div>
             {/* Outside the panel's left edge: the close X at the top and any controls (e.g.
                 previous / next) at the foot, in one column. Phones keep the panel's own close. */}

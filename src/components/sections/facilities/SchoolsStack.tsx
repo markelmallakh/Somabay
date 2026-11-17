@@ -51,7 +51,7 @@ function SchoolGallery({ images, label }: { images: ImageAsset[]; label: string 
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 bg-linear-to-t from-black/45 to-transparent"
       />
-      <div className="absolute bottom-5 left-5 z-10 sm:bottom-6 sm:left-6">
+      <div className="absolute bottom-5 left-5 z-10 hidden sm:bottom-6 sm:left-6 md:block">
         <CarouselArrows
           canBack
           canForward
@@ -93,7 +93,11 @@ export function SchoolsStack() {
   });
 
   return (
-    <ol ref={ref} data-no-motion className="mt-10 flex flex-col gap-8 md:mt-12 lg:gap-[12vh]">
+    <ol
+      ref={ref}
+      data-no-motion
+      className="mt-7 flex flex-col gap-5 sm:mt-10 sm:gap-8 md:mt-12 lg:gap-[12vh]"
+    >
       {schools.map((school, index) => (
         <li
           key={school.name}
@@ -121,13 +125,13 @@ export function SchoolsStack() {
             />
             <div
               className={cn(
-                "relative aspect-[16/10] lg:col-span-7 lg:aspect-auto",
+                "relative aspect-[4/3] sm:aspect-[16/10] lg:col-span-7 lg:aspect-auto",
                 index % 2 && "lg:order-2",
               )}
             >
               <SchoolGallery images={school.gallery} label={school.name} />
             </div>
-            <div className="flex flex-col p-6 md:p-10 lg:col-span-5 lg:p-12">
+            <div className="flex flex-col p-5 sm:p-6 md:p-10 lg:col-span-5 lg:p-12">
               {/* The logo; a blue wordmark sits on a white plate so it reads on the blue panel. */}
               <span
                 className={cn(
@@ -141,15 +145,17 @@ export function SchoolsStack() {
                   alt={`${school.name} logo`}
                   width={school.logo.width}
                   height={school.logo.height}
-                  className="h-14 w-auto object-contain"
+                  className="h-11 w-auto object-contain sm:h-14"
                 />
               </span>
-              <p className="mt-8 text-body-xs font-semibold tracking-label text-(--label) uppercase">
+              <p className="mt-6 text-body-xs font-semibold tracking-label text-(--label) uppercase sm:mt-8">
                 {school.label}
               </p>
-              <h3 className="mt-3 font-serif text-heading-3 leading-[1.1]">{school.name}</h3>
-              <p className="mt-5 text-body-md text-(--muted)">{school.description}</p>
-              <div className="mt-auto pt-8">
+              <h3 className="mt-2 font-serif text-heading-3 leading-[1.1] sm:mt-3">
+                {school.name}
+              </h3>
+              <p className="mt-3 text-body-md text-(--muted) sm:mt-5">{school.description}</p>
+              <div className="mt-auto pt-6 sm:pt-8">
                 {/* The site's border CTA: white on the GEMS blue, turquoise on the Kompass cream. */}
                 <Button
                   href={school.website.href}

@@ -42,12 +42,12 @@ export function LeadershipGrid({
 
   return (
     <>
-      <DragRow label={label} className="gap-2">
+      <DragRow label={label} className="gap-2" phoneCards="half">
         {leaders.map((leader, index) => (
           <li
             key={leader.name}
             className={cn(
-              "w-[min(78vw,22rem)] shrink-0",
+              "shrink-0 md:w-[22rem]",
               fit && "lg:w-[calc((100%-(var(--n)-1)*0.5rem)/var(--n))]",
             )}
             style={fit ? ({ "--n": leaders.length } as CSSProperties) : undefined}
@@ -81,11 +81,11 @@ export function LeadershipGrid({
                 aria-hidden
                 className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgb(0_0_0/0)_40%,rgb(0_0_0/0.25)_65%,rgb(0_0_0/0.7)_100%)]"
               />
-              <span className="flex flex-col gap-1 px-5 pb-4">
+              <span className="flex flex-col gap-1 px-4 pb-3.5 sm:px-5 sm:pb-4">
                 <span className="font-serif text-heading-6 leading-tight">{leader.name}</span>
                 <span className="text-body-sm text-white/75">{leader.role}</span>
               </span>
-              <CardActionBar label="Read bio" className="px-5 py-3.5" />
+              <CardActionBar label="Read bio" className="px-4 py-3 sm:px-5 sm:py-3.5" />
             </button>
           </li>
         ))}
@@ -176,7 +176,7 @@ function LeaderDrawer({
 
           {/* Role, name and biography. */}
           <div
-            className="flex flex-col gap-6 px-6 py-10 md:overflow-y-auto md:px-12 md:py-16"
+            className="flex flex-col gap-5 px-gutter py-8 md:gap-6 md:overflow-y-auto md:px-12 md:py-16"
             data-lenis-prevent
           >
             <p

@@ -47,7 +47,7 @@ export function HotelRow({ hotel, href, themeLabels }: HotelRowProps) {
         </Parallax>
       </div>
 
-      <div className="pointer-events-none flex flex-col p-6 md:p-8 lg:p-10">
+      <div className="pointer-events-none flex flex-col p-5 sm:p-6 md:p-8 lg:p-10">
         <p className="text-body-sm text-slate">{hotel.tagline}</p>
         {/* The name with its star rating beside it, then the themes under it. */}
         <h3 className="mt-1.5 font-serif text-heading-3 leading-[1.15] transition-colors duration-500 group-hover:text-turquoise-160">
@@ -58,7 +58,7 @@ export function HotelRow({ hotel, href, themeLabels }: HotelRowProps) {
           ) : null}
         </h3>
         {themeLabels.length ? (
-          <ul className="mt-4 flex flex-wrap gap-2">
+          <ul className="mt-3 flex flex-wrap gap-2 sm:mt-4">
             {themeLabels.map((label) => (
               <li key={label}>
                 <Chip>{label}</Chip>
@@ -66,13 +66,14 @@ export function HotelRow({ hotel, href, themeLabels }: HotelRowProps) {
             ))}
           </ul>
         ) : null}
-        <p className="mt-4 mb-8 line-clamp-3 max-w-xl text-body-md text-slate">
+        <p className="mt-3 mb-6 line-clamp-3 max-w-xl text-body-md text-slate sm:mt-4 sm:mb-8">
           {hotel.description}
         </p>
 
-        <div className="mt-auto flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-t border-line pt-6">
+        <div className="mt-auto flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-t border-line pt-5 sm:pt-6">
           <PriceFrom amount={hotelPrice(hotel)} />
-          <div className="pointer-events-auto relative z-10 flex flex-wrap gap-3">
+          {/* Phones: the two actions share the row in equal halves. */}
+          <div className="pointer-events-auto relative z-10 grid w-full grid-cols-2 gap-2 has-[>:only-child]:grid-cols-1 sm:flex sm:w-auto sm:flex-wrap sm:gap-3">
             <Button
               href={href}
               variant="outline"

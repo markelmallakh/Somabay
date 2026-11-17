@@ -10,13 +10,13 @@ import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 
-/** Every tile and photo shares one size. */
-const CELL = "h-[14.5rem] rounded-md";
+/** Every tile and photo shares one size (phones: tiles fit their content). */
+const CELL = "rounded-md sm:h-[14.5rem]";
 
 /** A rounded pill for one way in: a small solid icon and the number, address or link. */
 function ActionPill({ action }: { action: ContactLine }) {
   const className =
-    "inline-flex min-h-8 max-w-full items-center gap-1.5 rounded-full border border-ink/15 px-3 text-body-xs text-ink transition-[border-color,color] duration-500 ease-out-expo hover:border-turquoise hover:text-turquoise-160";
+    "inline-flex min-h-10 max-w-full items-center sm:min-h-8 gap-1.5 rounded-full border border-ink/15 px-3 text-body-xs text-ink transition-[border-color,color] duration-500 ease-out-expo hover:border-turquoise hover:text-turquoise-160";
   const content = (
     <>
       <Icon name={action.icon} className="size-3 shrink-0 text-turquoise" />
@@ -44,7 +44,7 @@ function ActionPill({ action }: { action: ContactLine }) {
 /** A flat white tile: the title and its line at the top, the ways in at the bottom. */
 function Tile({ card }: { card: ContactCard }) {
   return (
-    <div className={cn(CELL, "flex flex-col justify-between gap-4 bg-white p-6 text-ink")}>
+    <div className={cn(CELL, "flex flex-col justify-between gap-4 bg-white p-4 text-ink sm:p-6")}>
       {/* The title with its line (and any hours) directly under it; the ways in at the foot. */}
       <div className="flex flex-col gap-1">
         <h4 className="mb-1 font-serif text-heading-6">{card.title}</h4>
@@ -117,7 +117,7 @@ export function ContactDirectory({ groups }: { groups: ContactGroup[] }) {
   return (
     <section aria-labelledby="directory-title" className="bg-sand-100 py-section text-ink">
       <Container>
-        <Reveal className="flex flex-col items-center gap-4 text-center">
+        <Reveal className="flex flex-col items-center gap-3 text-center sm:gap-4">
           <h2 id="directory-title" className="text-heading-2">
             Reach the Right Team
           </h2>
@@ -125,7 +125,7 @@ export function ContactDirectory({ groups }: { groups: ContactGroup[] }) {
             Every team and hotel in one place, so you reach the people who handle it directly.
           </p>
         </Reveal>
-        <div ref={list} className="mt-8 flex flex-col gap-10">
+        <div ref={list} className="mt-6 flex flex-col gap-8 sm:mt-8 sm:gap-10">
           {groups.map((group) => (
             <div key={group.id} id={groupId(group.id)} className="flex flex-col gap-3">
               <h3 className="flex items-center gap-2.5 font-serif text-heading-5">
@@ -139,7 +139,13 @@ export function ContactDirectory({ groups }: { groups: ContactGroup[] }) {
                   ) : (
                     <div
                       key={index}
-                      className={cn(CELL, "relative overflow-hidden", item.wide && "lg:col-span-2")}
+                      // Phones: the photos between the tiles are left out, so the directory stays a
+                      // short list of teams.
+                      className={cn(
+                        CELL,
+                        "relative hidden overflow-hidden sm:block",
+                        item.wide && "lg:col-span-2",
+                      )}
                     >
                       <ResponsiveImage
                         asset={item.image}
@@ -164,11 +170,11 @@ export function ContactDirectory({ groups }: { groups: ContactGroup[] }) {
         aria-label="Contact groups"
         inert={!shown}
         className={cn(
-          "fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/92 backdrop-blur-xl transition-transform duration-700 ease-out-expo",
+          "fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/92 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl transition-transform duration-700 ease-out-expo",
           shown ? "translate-y-0" : "translate-y-full",
         )}
       >
-        <ul className="mx-auto scrollbar-none flex h-12 max-w-site items-stretch justify-center gap-8 overflow-x-auto px-gutter">
+        <ul className="mx-auto scrollbar-none flex h-12 max-w-site items-stretch justify-start gap-6 overflow-x-auto px-gutter sm:justify-center sm:gap-8">
           {groups.map((group) => {
             const on = group.id === active;
             return (
