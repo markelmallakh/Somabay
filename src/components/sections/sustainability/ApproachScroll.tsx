@@ -11,9 +11,18 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 type Pillar = { title: string; description: string; image: ImageAsset };
 
 type ApproachScrollProps = {
+  /** The small label over the statement (also the section's heading for screen readers). */
   title: string;
   intro: string;
   pillars: Pillar[];
+  /** The section's id, for in-page links. */
+  id?: string;
+  /** The heading's id; defaults to "approach-title". */
+  headingId?: string;
+  /** A fuller heading for screen readers, when the label alone is too short. */
+  heading?: string;
+  /** The section's background (defaults to the pale turquoise). */
+  className?: string;
 };
 
 /**
@@ -28,7 +37,15 @@ type ApproachScrollProps = {
  * alternating right, left, right. As a card reaches the middle of the screen the centre text
  * changes to its pillar, rising in softly. Phones get each pillar with its photo, stacked.
  */
-export function ApproachScroll({ title, intro, pillars }: ApproachScrollProps) {
+export function ApproachScroll({
+  title,
+  intro,
+  pillars,
+  id,
+  headingId = "approach-title",
+  heading,
+  className = "bg-turquoise-5",
+}: ApproachScrollProps) {
   const [active, setActive] = useState(0);
 
   const ref = useGsap<HTMLElement>(
@@ -117,16 +134,17 @@ export function ApproachScroll({ title, intro, pillars }: ApproachScrollProps) {
   return (
     <section
       ref={ref}
-      aria-labelledby="approach-title"
+      id={id}
+      aria-labelledby={headingId}
       data-no-motion=""
-      className="relative bg-turquoise-5 text-ink"
+      className={cn("relative scroll-mt-(--header-height) text-ink", className)}
     >
       {/* The title and paragraph, centred; sticky until the pillars arrive. */}
       <div className="mx-auto max-w-site px-gutter pt-section text-center">
         <div className="lg:sticky lg:top-[calc(var(--header-height)+14vh)]">
           <Eyebrow className="mx-auto">{title}</Eyebrow>
-          <h2 id="approach-title" className="sr-only">
-            {title}
+          <h2 id={headingId} className="sr-only">
+            {heading ?? title}
           </h2>
           <p
             data-approach-intro

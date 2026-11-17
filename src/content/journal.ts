@@ -12,6 +12,31 @@ export const articles: Article[] = [
       "/images/journal/new-chapter.webp",
       "A long dinner table set in the sea at sunset",
     ),
+    // DRAFT COPY: placeholder article text until the client's copy arrives.
+    body: [
+      { type: "heading", text: "Life at the Pace of the Sea" },
+      {
+        type: "paragraph",
+        text: "Somabay is opening a new chapter for everyone who calls the bay home, whether for a season or for good. New residences, shared spaces and everyday services are coming together to make life by the Red Sea easier, calmer and more connected.",
+      },
+      {
+        type: "image",
+        image: image(
+          "/images/library/zouni/soma-43.webp",
+          "A family walking along the beach at sunset",
+        ),
+      },
+      { type: "heading", text: "Room to Grow" },
+      {
+        type: "paragraph",
+        text: "Each new neighborhood is planned around open space, sea views and short walks to the beach, so homes feel part of the landscape rather than set against it. Families, couples and remote workers will find homes shaped around the way they want to live.",
+      },
+      { type: "heading", text: "What Comes Next" },
+      {
+        type: "paragraph",
+        text: "Over the coming months we will share more about the projects, partners and experiences shaping this next chapter. Follow the Somabay Journal for the latest news from the bay.",
+      },
+    ],
   },
   {
     slug: "somabay-welcomes-new-ways-to-experience-the-bay",
@@ -57,6 +82,31 @@ export const articles: Article[] = [
     readingMinutes: 4,
     date: "2026-01-22",
     image: image("/images/journal/community.webp", "Two players shaking hands on a tennis court"),
+    // DRAFT COPY: placeholder article text until the client's copy arrives.
+    body: [
+      { type: "heading", text: "A Community That Comes Together" },
+      {
+        type: "paragraph",
+        text: "Somabay is more than a destination; it is a community of residents, guests and teams who share the bay every day. Each season brings new reasons to meet, from sports tournaments and wellness mornings to festive markets and evenings by the sea.",
+      },
+      {
+        type: "image",
+        image: image(
+          "/images/library/tennis/muo-1435.webp",
+          "The tennis courts at the Somabay sports club",
+        ),
+      },
+      { type: "heading", text: "On the Courts and Beyond" },
+      {
+        type: "paragraph",
+        text: "The sports club hosts friendly matches and international tournaments, while the marina, beaches and golf course keep the calendar full year-round. Residents are invited to join leagues, classes and clinics for every age and level.",
+      },
+      { type: "heading", text: "Stay in the Loop" },
+      {
+        type: "paragraph",
+        text: "Keep an eye on the events calendar for upcoming gatherings, and get in touch with our guest services team to find out how to take part.",
+      },
+    ],
   },
   {
     slug: "the-latest-stories-shaping-somabay",
@@ -65,6 +115,31 @@ export const articles: Article[] = [
     readingMinutes: 4,
     date: "2026-01-22",
     image: image("/images/journal/latest-stories.webp", "A sculpted sun mask on a thatched roof"),
+    // DRAFT COPY: placeholder article text until the client's copy arrives.
+    body: [
+      { type: "heading", text: "Stories From the Bay" },
+      {
+        type: "paragraph",
+        text: "Every corner of Somabay has a story, from the craftspeople behind its architecture to the chefs, coaches and hosts who welcome guests each day. This series shares the people and places that give the bay its character.",
+      },
+      {
+        type: "image",
+        image: image(
+          "/images/library/lifestyle/067a2075.webp",
+          "A guest on a terrace balcony at Somabay",
+        ),
+      },
+      { type: "heading", text: "Designed Around the Landscape" },
+      {
+        type: "paragraph",
+        text: "Natural textures, local materials and wide terraces connect each space to the desert, the mountains and the Red Sea. The result is a destination that feels both relaxed and considered, wherever you stay.",
+      },
+      { type: "heading", text: "More to Come" },
+      {
+        type: "paragraph",
+        text: "New chapters of the story are always being written. Check back for more interviews, behind-the-scenes features and seasonal highlights from Somabay.",
+      },
+    ],
   },
 ];
 

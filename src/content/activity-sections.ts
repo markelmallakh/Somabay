@@ -286,7 +286,10 @@ export const activitySections: Record<string, ActivitySections> = {
           title: "Boat Trips",
           description:
             "Snorkeling trips, full days, breakfast trips and classic sunset tours on the turquoise water.",
-          image: dir("boat-trips", "05", "A boat anchored over the reef"),
+          image: image(
+            "/images/things-to-do/boat-trip-sundeck.webp",
+            "A guest relaxing on a boat deck over the turquoise Red Sea",
+          ),
         },
         {
           title: "Fun on the Water",

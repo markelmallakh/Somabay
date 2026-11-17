@@ -1,12 +1,19 @@
 "use client";
 
 import type { ImageAsset } from "@/types/media";
+import { cn } from "@/lib/utils";
 import { useGsap } from "@/hooks/useGsap";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
-type Tile = { label: string; description: string; image: ImageAsset };
+type Tile = {
+  label: string;
+  description: string;
+  image: ImageAsset;
+  /** A short note in a small pill above the title, in place of the number (e.g. opening hours). */
+  meta?: string;
+};
 
 type DevelopmentSliderProps = {
   eyebrow?: string;
@@ -15,6 +22,12 @@ type DevelopmentSliderProps = {
   tiles: readonly Tile[];
   /** Set over the last photo once it has opened out to fill the screen. */
   quote?: { text: string; attribution: string };
+  /** The section's id, for in-page links. */
+  id?: string;
+  /** The heading's id; defaults to "development-title". */
+  headingId?: string;
+  /** The section's background (defaults to white). */
+  className?: string;
 };
 
 /**
@@ -30,6 +43,9 @@ export function DevelopmentSlider({
   description,
   tiles,
   quote,
+  id,
+  headingId = "development-title",
+  className = "bg-white",
 }: DevelopmentSliderProps) {
   const lastTile = tiles[tiles.length - 1];
   const ref = useGsap<HTMLElement>(
@@ -153,9 +169,10 @@ export function DevelopmentSlider({
   return (
     <section
       ref={ref}
-      aria-labelledby="development-title"
+      id={id}
+      aria-labelledby={headingId}
       data-no-motion=""
-      className="relative overflow-hidden bg-white text-ink"
+      className={cn("relative scroll-mt-(--header-height) overflow-hidden text-ink", className)}
     >
       <div className="flex flex-col gap-10 py-section lg:h-svh lg:justify-center lg:gap-0 lg:py-0 lg:pt-(--header-bar)">
         <div
@@ -166,7 +183,7 @@ export function DevelopmentSlider({
           <div className="flex w-[min(80vw,24rem)] shrink-0 flex-col justify-center gap-5 lg:w-[30vw] lg:pr-10">
             {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
             <h2
-              id="development-title"
+              id={headingId}
               className="font-serif text-[clamp(2.25rem,1.5rem+2.6vw,4.25rem)] leading-[1.05]"
             >
               {title}
@@ -196,9 +213,16 @@ export function DevelopmentSlider({
                 data-panel-copy
                 className="absolute inset-x-6 bottom-6 flex flex-col gap-3 text-white md:inset-x-8 md:bottom-8 lg:[&>*]:translate-y-6 lg:[&>*]:opacity-0 lg:[&>*]:transition-[opacity,translate] lg:[&>*]:duration-1000 lg:[&>*]:ease-out-expo lg:[[data-shown]_&>*]:translate-y-0 lg:[[data-shown]_&>*]:opacity-100"
               >
-                <span className="text-body-xs font-semibold tracking-label text-sun uppercase tabular-nums">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
+                {/* A tile with a note (e.g. hours) shows it above the title in place of the number. */}
+                {tile.meta ? (
+                  <span className="w-fit rounded-full bg-sun px-3.5 py-1.5 text-body-xs font-semibold tracking-label text-ink uppercase">
+                    {tile.meta}
+                  </span>
+                ) : (
+                  <span className="text-body-xs font-semibold tracking-label text-sun uppercase tabular-nums">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                )}
                 <h3 className="font-serif text-heading-4 leading-[1.1]">{tile.label}</h3>
                 <p className="max-w-md text-body-md text-white/85">{tile.description}</p>
               </div>

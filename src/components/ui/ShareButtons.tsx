@@ -35,7 +35,7 @@ export function ShareButtons({ path, title, className }: ShareButtonsProps) {
     },
   ];
   const button =
-    "grid size-10 place-items-center rounded-md border border-line text-ink transition-colors duration-300 hover:border-turquoise wave hover:text-white";
+    "-m-2 grid size-10 place-items-center rounded-md text-ink transition-colors duration-300 hover:text-turquoise focus-visible:text-turquoise";
 
   const copy = async () => {
     try {
@@ -48,22 +48,25 @@ export function ShareButtons({ path, title, className }: ShareButtonsProps) {
   };
 
   return (
-    <div className={cn("flex items-center gap-3", className)}>
-      <button type="button" onClick={copy} className={button} aria-label="Copy link">
-        <Icon name={copied ? "check" : "link"} className="size-4" />
-      </button>
-      {networks.map((network) => (
-        <a
-          key={network.icon}
-          href={network.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={button}
-          aria-label={network.label}
-        >
-          <Icon name={network.icon} className="size-4" />
-        </a>
-      ))}
+    <div className={cn("flex flex-col gap-3", className)}>
+      <span className="text-body-xs text-slate">Share</span>
+      <div className="flex items-center gap-4">
+        <button type="button" onClick={copy} className={button} aria-label="Copy link">
+          <Icon name={copied ? "check" : "link"} className="size-5" />
+        </button>
+        {networks.map((network) => (
+          <a
+            key={network.icon}
+            href={network.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={button}
+            aria-label={network.label}
+          >
+            <Icon name={network.icon} className="size-5" />
+          </a>
+        ))}
+      </div>
       <span className="sr-only" aria-live="polite">
         {copied ? "Link copied" : ""}
       </span>

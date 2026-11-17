@@ -5,7 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { MasterplanAerial } from "./MasterplanAerial";
 
 /**
- * Figma About "Section / Masterplan" (491:10609) heading, over the interactive peninsula aerial, rounded and never taller than the screen:
+ * Figma About "Section / Masterplan" (491:10609) heading, over the interactive peninsula aerial, rounded and as wide as the content:
  * category tabs, clickable places that open a side drawer, and the 360 tour.
  */
 export function MasterplanSection() {

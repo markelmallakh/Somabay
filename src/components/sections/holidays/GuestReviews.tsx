@@ -1,8 +1,15 @@
 "use client";
 
-import Grainient from "@/components/backgrounds/Grainient";
+import SideRays from "@/components/backgrounds/SideRays";
 import { AnimatePresence, m } from "framer-motion";
-import { type KeyboardEvent, useEffect, useState } from "react";
+import {
+  type KeyboardEvent,
+  type MouseEvent,
+  type PointerEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { HotelReview } from "@/types/content";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/layout/Container";
@@ -22,9 +29,9 @@ const CARD_REST = "rgba(255, 255, 255, 0.86)";
 const wrap = (value: number, length: number) => ((value % length) + length) % length;
 
 /**
- * Guest Reviews as a looping carousel with the open review always in the centre, on a deep
- * orange ground. Every card is white: the open one solid, the rest a touch see-through, each teasing the first line
- * of its review. The arrows (or the arrow keys, or a click on any card) move round the loop.
+ * Guest Reviews as a looping carousel with the open review always in the centre, on light
+ * turquoise with sun-yellow rays. Every card is white: the open one solid, the rest a touch see-through, each teasing the first line
+ * of its review. The arrows (or the arrow keys, a swipe or a click on any card) move round the loop.
  */
 export function GuestReviews({ reviews }: { reviews: HotelReview[] }) {
   // An ever-growing position, so stepping past the last review carries straight on to the first.
@@ -41,6 +48,37 @@ export function GuestReviews({ reviews }: { reviews: HotelReview[] }) {
 
   const step = cardWidth + GAP;
   const go = (delta: number) => setCursor((value) => value + delta);
+  // Swipe with the cursor (or a finger): a horizontal drag of 40px or more steps the loop, and the
+  // click that ends the drag is swallowed so it doesn't also open a card.
+  const drag = useRef<{ x: number; moved: boolean } | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    drag.current = { x: event.clientX, moved: false };
+    setDragging(true);
+  };
+  const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const start = drag.current;
+    if (start && Math.abs(event.clientX - start.x) > 8) start.moved = true;
+  };
+  const onPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    const start = drag.current;
+    setDragging(false);
+    if (!start) return;
+    const dx = event.clientX - start.x;
+    if (Math.abs(dx) >= 40) go(dx < 0 ? 1 : -1);
+    // Keep the "moved" flag until the click that follows has been swallowed.
+    window.setTimeout(() => {
+      drag.current = null;
+    }, 0);
+  };
+  const onClickCapture = (event: MouseEvent<HTMLDivElement>) => {
+    if (drag.current?.moved) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
+
   const onKey = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "ArrowRight") go(1);
     else if (event.key === "ArrowLeft") go(-1);
@@ -51,31 +89,36 @@ export function GuestReviews({ reviews }: { reviews: HotelReview[] }) {
   const slots = Array.from({ length: REACH * 2 + 1 }, (_, index) => cursor - REACH + index);
 
   const arrow =
-    "grid size-11 place-items-center rounded-md border border-white/60 text-white transition-colors duration-500 hover:border-white hover:bg-white hover:text-deep-orange";
+    "grid size-11 place-items-center rounded-md border border-white text-white transition-colors duration-500 hover:bg-white hover:text-turquoise-160";
 
   return (
     <Section
       tone="white"
-      className="isolate overflow-hidden bg-deep-orange text-white"
+      className="isolate overflow-hidden bg-turquoise-40 text-ink"
       aria-labelledby="reviews-title"
     >
-      {/* A slow, grainy orange gradient drifting behind everything (React Bits "Grainient"),
-          so the orange reads soft and deep rather than flat and bright. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <Grainient
-          colors={["#c9580f", "#e06a18", "#f58025", "#f79a52", "#fbc08c"]}
-          angle={55}
-          flow={0.8}
-          silk={0.3}
-          grainAmount={0.06}
-          contrast={0.9}
-          interactive={false}
-          clickSwirl={false}
+      {/* Sun-yellow light raking in from the top corner over light turquoise (React Bits "Side
+          Rays"), blended with "screen" so it only ever brightens: no dark shading. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 mix-blend-screen">
+        <SideRays
+          rayColor1="#ffe28a"
+          rayColor2="#ffc222"
+          blend={0.55}
+          origin="top-right"
+          speed={1.6}
+          intensity={1.7}
+          spread={2.3}
+          density={5}
+          sharpness={0.45}
+          falloff={1.3}
+          glow={0.9}
+          dust={0.2}
+          mouseInfluence={0.35}
         />
       </div>
       <Container>
         <Reveal>
-          <h2 id="reviews-title" className="text-center text-heading-2">
+          <h2 id="reviews-title" className="text-center text-heading-2 text-white">
             Guest Reviews
           </h2>
         </Reveal>
@@ -87,7 +130,18 @@ export function GuestReviews({ reviews }: { reviews: HotelReview[] }) {
         aria-label="Guest reviews"
         tabIndex={0}
         onKeyDown={onKey}
-        className="relative mt-12 h-[15.5rem] overflow-hidden rounded-md lg:mt-14"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={() => {
+          drag.current = null;
+          setDragging(false);
+        }}
+        onClickCapture={onClickCapture}
+        className={cn(
+          "relative mt-12 h-[15.5rem] touch-pan-y overflow-hidden rounded-md select-none lg:mt-14",
+          dragging ? "cursor-grabbing" : "cursor-grab",
+        )}
       >
         <AnimatePresence initial={false}>
           {slots.map((position) => {

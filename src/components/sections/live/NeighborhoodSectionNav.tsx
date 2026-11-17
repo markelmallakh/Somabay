@@ -17,8 +17,10 @@ type NeighborhoodSectionNavProps = {
   /** Sizing for the logo when it isn't a wide wordmark (e.g. a stacked lockup). */
   logoClassName?: string;
   items: NavItem[];
-  /** The button on the right; defaults to the neighborhood's Request Interest. */
-  cta?: { label: string; href: string; external?: boolean };
+  /** The button on the right; defaults to the neighborhood's Request Interest. `null` hides it. */
+  cta?: { label: string; href: string; external?: boolean } | null;
+  /** Hide the logo or name on the left (pages that aren't a single project). */
+  hideName?: boolean;
   /** The bar steps aside once the element matching this CSS selector comes into view. */
   hideAt?: string;
 };
@@ -39,6 +41,7 @@ export function NeighborhoodSectionNav({
   items,
   cta = defaultCta,
   hideAt = "#register-interest",
+  hideName = false,
 }: NeighborhoodSectionNavProps) {
   const [shown, setShown] = useState(false);
   const [active, setActive] = useState<string | null>(null);
@@ -89,7 +92,7 @@ export function NeighborhoodSectionNav({
       )}
     >
       <div className="mx-auto flex h-12 max-w-site items-center gap-10 px-gutter">
-        {logo ? (
+        {hideName ? null : logo ? (
           // eslint-disable-next-line @next/next/no-img-element -- a small brand SVG, shown as is.
           <img src={logo} alt={name} className={cn("h-4.5 w-auto shrink-0", logoClassName)} />
         ) : (
@@ -123,16 +126,18 @@ export function NeighborhoodSectionNav({
             );
           })}
         </ul>
-        <Button
-          href={cta.href}
-          external={cta.external}
-          icon={cta.external ? "arrow-up-right" : undefined}
-          variant="primary"
-          size="sm"
-          className="min-h-8 shrink-0 px-5"
-        >
-          {cta.label}
-        </Button>
+        {cta ? (
+          <Button
+            href={cta.href}
+            external={cta.external}
+            icon={cta.external ? "arrow-up-right" : undefined}
+            variant="primary"
+            size="sm"
+            className="min-h-8 shrink-0 px-5"
+          >
+            {cta.label}
+          </Button>
+        ) : null}
       </div>
     </nav>
   );

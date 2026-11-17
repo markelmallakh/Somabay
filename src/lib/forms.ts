@@ -1,7 +1,12 @@
+import { activityDetails } from "@/content/things-to-do";
+import { hotels } from "@/content/hotels";
 import { neighborhoods } from "@/content/neighborhoods";
 import { type Unit, units } from "@/content/resale";
 
-export type FormField =
+/** Show (and require) a field only when another field holds one of these values. */
+export type ShowWhen = { field: string; values: string[] };
+
+export type FormField = (
   | {
       kind: "text" | "email" | "tel" | "date";
       name: string;
@@ -28,8 +33,27 @@ export type FormField =
       required?: boolean;
       options: string[];
       columns?: 1 | 2;
+      /** `chips`: the choices as rounded sun-yellow chips, like the site's filters. */
+      display?: "chips";
     }
-  | { kind: "consent"; name: string; label: string };
+  | { kind: "consent"; name: string; label: string }
+  | {
+      /** A document upload, e.g. a CV. */
+      kind: "file";
+      name: string;
+      label: string;
+      required?: boolean;
+      /** File types the picker offers, as extensions: ".pdf,.doc,.docx". */
+      accept: string;
+      /** Largest file accepted, in megabytes. */
+      maxMb: number;
+      hint?: string;
+    }
+) & { showWhen?: ShowWhen };
+
+/** Whether a field applies, given the values chosen so far. */
+export const fieldShown = (field: FormField, read: (name: string) => string) =>
+  !field.showWhen || field.showWhen.values.includes(read(field.showWhen.field));
 
 export type FormDefinition = {
   id: string;
@@ -39,6 +63,8 @@ export type FormDefinition = {
   fields: FormField[];
   /** Legal note under the submit button. */
   note?: string;
+  /** What the visitor reads once the request is sent. */
+  successMessage?: string;
 };
 
 const firstName: FormField = {
@@ -76,6 +102,14 @@ export const unitChoice = (unit: Pick<Unit, "type" | "bedrooms">) =>
 
 const NOT_SURE = "Not sure yet";
 
+/** The contact purposes that bring their own follow-up questions. */
+export const CONTACT_PURPOSE = {
+  hotel: "Hotel Stay",
+  living: "Living in Somabay",
+  thingsToDo: "Things to Do",
+  general: "General Inquiry",
+} as const;
+
 /** Unit choices for a neighborhood's interest form: its listed units, else every listed type. */
 export function unitChoicesFor(neighborhood: string): string[] {
   const own = units.filter((unit) => unit.neighborhood === neighborhood);
@@ -83,6 +117,43 @@ export function unitChoicesFor(neighborhood: string): string[] {
 }
 
 export const formDefinitions = {
+  // Every vacancy uses this form; the page sends the role's title as the context.
+  jobApplication: {
+    id: "jobApplication",
+    subject: "Job application",
+    submitLabel: "Submit application",
+    successMessage:
+      "Thank you for applying. Our team will review your application and get in touch with you soon.",
+    note: "By submitting, you agree to our Terms & Conditions.",
+    fields: [
+      firstName,
+      lastName,
+      email,
+      phone,
+      {
+        kind: "text",
+        name: "linkedin",
+        label: "LinkedIn or portfolio link",
+        span: 2,
+        autoComplete: "url",
+      },
+      {
+        kind: "file",
+        name: "cv",
+        label: "Attach your CV",
+        required: true,
+        accept: ".pdf,.doc,.docx",
+        maxMb: 5,
+        hint: "PDF or Word, up to 5 MB",
+      },
+      {
+        kind: "textarea",
+        name: "message",
+        label: "Cover note",
+        placeholder: "Tell us a little about yourself",
+      },
+    ],
+  },
   // Fields are shared by every neighborhood page; each page narrows the unit list to its own.
   neighborhoodInterest: {
     id: "neighborhoodInterest",
@@ -111,44 +182,79 @@ export const formDefinitions = {
       },
     ],
   },
+  // The follow-up questions change with the purpose: a hotel, a neighborhood, or an activity
+  // and its date. Only the questions shown are sent and checked.
   contact: {
     id: "contact",
     subject: "Website contact form",
-    submitLabel: "Submit",
+    submitLabel: "Send message",
     note: "By submitting, you agree to our Terms & Conditions.",
+    successMessage: "Thank you. Our team will get in touch with you soon.",
     fields: [
       firstName,
       lastName,
-      { ...email, span: 2 },
+      email,
+      phone,
       {
-        kind: "select",
+        kind: "radio",
         name: "purpose",
         label: "Inquiry purpose",
         required: true,
-        placeholder: "Select purpose",
+        display: "chips",
         options: [
-          "Sales",
-          "Holidays",
-          "Residents & services",
-          "Events",
-          "Media",
-          "Careers",
-          "Other",
+          CONTACT_PURPOSE.hotel,
+          CONTACT_PURPOSE.living,
+          CONTACT_PURPOSE.thingsToDo,
+          CONTACT_PURPOSE.general,
         ],
       },
       {
         kind: "select",
-        name: "interest",
+        name: "hotel",
         label: "Interested in",
-        placeholder: "Select neighborhood",
-        options: neighborhoods.map((item) => item.name),
+        required: true,
+        span: 2,
+        placeholder: "Select a hotel",
+        options: [...hotels.map((hotel) => hotel.name), NOT_SURE],
+        showWhen: { field: "purpose", values: [CONTACT_PURPOSE.hotel] },
+      },
+      {
+        kind: "select",
+        name: "neighborhood",
+        label: "Interested in",
+        required: true,
+        span: 2,
+        placeholder: "Select a neighborhood",
+        options: [...neighborhoods.map((item) => item.name), NOT_SURE],
+        showWhen: { field: "purpose", values: [CONTACT_PURPOSE.living] },
+      },
+      {
+        kind: "select",
+        name: "activity",
+        label: "Activity",
+        required: true,
+        placeholder: "Select an activity",
+        options: [
+          "Golf",
+          ...activityDetails.map((activity) => activity.title),
+          "Sports",
+          "Something else",
+        ],
+        showWhen: { field: "purpose", values: [CONTACT_PURPOSE.thingsToDo] },
+      },
+      {
+        kind: "date",
+        name: "date",
+        label: "Preferred date",
+        required: true,
+        showWhen: { field: "purpose", values: [CONTACT_PURPOSE.thingsToDo] },
       },
       {
         kind: "textarea",
         name: "message",
         label: "Message",
         required: true,
-        placeholder: "Tell us about your interest...",
+        placeholder: "Tell us how we can help...",
       },
     ],
   },

@@ -143,7 +143,11 @@ export function ProjectMasterplan({ name }: { name: string }) {
 
   return (
     <div className="relative">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-sand-200 sm:aspect-[708/432]">
+      <div
+        // No parallax: the pins sit on the photo by percentage and must stay on their places.
+        data-no-motion
+        className="relative aspect-[4/5] overflow-hidden rounded-md bg-sand-200 sm:aspect-[708/432]"
+      >
         <ResponsiveImage
           asset={plan}
           sizes="(min-width: 1512px) 1392px, 100vw"

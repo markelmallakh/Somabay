@@ -1,6 +1,8 @@
-import { ContactChannels } from "@/components/sections/contact/ContactChannels";
+import { ContactDirectory } from "@/components/sections/contact/ContactDirectory";
+import { ContactOffices } from "@/components/sections/contact/ContactOffices";
 import { ContactHero } from "@/components/sections/contact/ContactHero";
 import { routes } from "@/config/routes";
+import { contactDirectory } from "@/content/contact";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -14,7 +16,8 @@ export default function ContactPage() {
   return (
     <>
       <ContactHero />
-      <ContactChannels />
+      <ContactDirectory groups={contactDirectory} />
+      <ContactOffices />
     </>
   );
 }

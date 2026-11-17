@@ -9,13 +9,14 @@ import { PriceFrom } from "@/components/ui/PriceFrom";
 import { PRICE_PLACEHOLDER } from "@/lib/price";
 import { FilterPanel, type FilterState, matchesFilters } from "@/components/ui/FilterPanel";
 import { Icon, type IconName } from "@/components/ui/Icon";
+import { AmenityIcon } from "@/components/ui/AmenityIcon";
 
-const amenityIcons: Record<string, IconName> = {
-  "Private Beach": "umbrella",
-  "Wi-Fi": "wifi",
-  "All-Inclusive": "utensils",
-  Housekeeping: "sparkle",
-  "Smart TV": "tv",
+const viewLabel: Record<HotelRoom["view"], string> = {
+  sea: "Sea View",
+  pool: "Pool View",
+  garden: "Garden View",
+  golf: "Golf View",
+  marina: "Marina View",
 };
 
 const groups = [
@@ -34,6 +35,7 @@ const groups = [
       { value: "marina", label: "Marina view" },
       { value: "sea", label: "Sea view" },
       { value: "pool", label: "Pool view" },
+      { value: "garden", label: "Garden view" },
       { value: "golf", label: "Golf view" },
     ],
   },
@@ -76,12 +78,13 @@ export function RoomsFinder({ rooms, bookingHref }: { rooms: HotelRoom[]; bookin
                   </Chip>
                 </div>
                 <ul className="flex flex-wrap gap-x-6 gap-y-4">
-                  {room.amenities.map((amenity) => (
+                  {/* The room's view first, then what's in the room. */}
+                  {[viewLabel[room.view], ...room.amenities].map((amenity) => (
                     <li
                       key={amenity}
                       className="flex flex-col items-center gap-1.5 text-center text-body-xs text-slate"
                     >
-                      <Icon name={amenityIcons[amenity] ?? "check"} className="size-4.5 text-ink" />
+                      <AmenityIcon amenity={amenity} className="size-4.5 text-ink" />
                       {amenity}
                     </li>
                   ))}

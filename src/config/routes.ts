@@ -71,6 +71,14 @@ const darkHeroPaths: readonly string[] = [
   routes.careers,
 ];
 
+/** Dark-hero pages whose content starts right under the header: the header's shade stays short so
+ * it doesn't fall across that content (e.g. the contact form card). */
+const shortShadePaths: readonly string[] = [routes.contact];
+
+export function hasShortHeroShade(pathname: string): boolean {
+  return shortShadePaths.includes(pathname);
+}
+
 export function hasDarkHero(pathname: string): boolean {
   return darkHeroPaths.some((path) =>
     path.endsWith("/") && path !== "/" ? pathname.startsWith(path) : pathname === path,

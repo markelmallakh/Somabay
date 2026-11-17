@@ -44,7 +44,11 @@ export function PhotoSlider({ images, label, interval = 6 }: PhotoSliderProps) {
   const go = (index: number) => setActive((index + count) % count);
   const pad = (value: number) => String(value).padStart(2, "0");
   const thumbs = (onPhoto: boolean) => (
-    <ul className="scrollbar-none flex gap-2 overflow-x-auto" aria-label={`${label} photos`}>
+    <ul
+      data-no-motion
+      className="scrollbar-none flex gap-2.5 overflow-x-auto p-[3px]"
+      aria-label={`${label} photos`}
+    >
       {images.map((image, index) => {
         const on = index === active;
         return (
@@ -58,16 +62,24 @@ export function PhotoSlider({ images, label, interval = 6 }: PhotoSliderProps) {
             >
               <span
                 className={cn(
-                  "relative block aspect-[3/2] overflow-hidden rounded-[3px] transition-[box-shadow,opacity] duration-500",
+                  "relative block aspect-[3/2] transition-opacity duration-500",
                   onPhoto ? "w-[4.5rem]" : "w-20",
-                  on
-                    ? onPhoto
-                      ? "opacity-100 shadow-[0_0_0_1.5px_#fff]"
-                      : "opacity-100 shadow-[0_0_0_1.5px_var(--color-turquoise)]"
-                    : "opacity-60 group-hover:opacity-100",
+                  on ? "opacity-100" : "opacity-60 group-hover:opacity-100",
                 )}
               >
-                <ResponsiveImage asset={image} alt="" sizes="6rem" fill />
+                {/* The photo is clipped to the rounded frame (a clip-path, so no corner of it
+                    can bleed past the edge while it fades), and the current one gets a ring
+                    drawn just outside, never touching the photo. */}
+                <span className="absolute inset-0 [clip-path:inset(0_round_3px)]">
+                  <ResponsiveImage asset={image} alt="" sizes="6rem" fill />
+                </span>
+                <span
+                  aria-hidden
+                  className={cn(
+                    "pointer-events-none absolute -inset-[3px] rounded-[5px] border-[1.5px] transition-colors duration-500",
+                    on ? (onPhoto ? "border-white" : "border-turquoise") : "border-transparent",
+                  )}
+                />
               </span>
             </button>
           </li>
@@ -140,8 +152,10 @@ export function PhotoSlider({ images, label, interval = 6 }: PhotoSliderProps) {
                 <span className="text-white/70"> / {pad(count)}</span>
               </p>
             </div>
-            {/* Bottom right: the thumbnails, straight on the photo. */}
-            <div className="pointer-events-auto hidden max-w-[60%] md:block">{thumbs(true)}</div>
+            {/* Bottom right: the thumbnails on a soft frosted plate, so they read on any photo. */}
+            <div className="pointer-events-auto hidden max-w-[60%] rounded-md bg-black/20 p-1.5 backdrop-blur-md md:block">
+              {thumbs(true)}
+            </div>
           </div>
         </div>
 

@@ -31,17 +31,11 @@ export const events: EventItem[] = [
         text: "The Somabay Endurance Festival is a celebration of swimming, cycling, and running, bringing together athletes of different ages and abilities for an unforgettable multi-sport experience. First launched in 2014, the festival has grown into one of Egypt’s largest endurance events.",
       },
       {
-        type: "imagePair",
-        images: [
-          image(
-            "/images/library/events/adrenaline-podium-wins-stunning-red-sea-.webp",
-            "Athletes celebrating at the finish",
-          ),
-          image(
-            "/images/library/events/adrenaline-podium-wins-stunning-red-sea--2.webp",
-            "A runner on the course",
-          ),
-        ],
+        type: "image",
+        image: image(
+          "/images/library/events/adrenaline-podium-wins-stunning-red-sea-.webp",
+          "Athletes celebrating at the finish",
+        ),
       },
       { type: "heading", text: "A Challenge for Every Athlete" },
       {
@@ -58,6 +52,29 @@ export const events: EventItem[] = [
         type: "paragraph",
         text: "Beyond the competition, the festival is an opportunity to enjoy everything Somabay has to offer. From staying by the Red Sea to discovering its beaches, sports, wellness, and leisure experiences, participants can turn race weekend into a complete destination escape. Registration and race details are available through The TriFactory.",
       },
+    ],
+    gallery: [
+      image(
+        "/images/library/events/adrenaline-podium-wins-stunning-red-sea--2.webp",
+        "A runner on the course",
+      ),
+      image(
+        "/images/library/events/adrenaline-podium-wins-stunning-red-sea--3.webp",
+        "A triathlete running out of the sea",
+      ),
+      image(
+        "/images/library/events/adrenaline-podium-wins-stunning-red-sea-.webp",
+        "Athletes celebrating at the finish",
+      ),
+      image("/images/library/sports/img-7906.webp", "Swimmers training in the Olympic-size pool"),
+      image(
+        "/images/library/sports/img-7897.webp",
+        "The Somabay sports complex from above at sunset",
+      ),
+      image("/images/library/sports/img-7922.webp", "The competition pool seen from above"),
+      image("/images/library/sports/sportsss-14.webp", "The performance gym"),
+      image("/images/things-to-do/directory/bayfit/08.webp", "Boxing training at Bayfit"),
+      image("/images/things-to-do/directory/bayfit/09.webp", "Functional training at Bayfit"),
     ],
   },
   // DRAFT COPY: placeholder upcoming events to fill the calendar until the live list arrives.

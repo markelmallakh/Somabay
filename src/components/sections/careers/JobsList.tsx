@@ -1,16 +1,18 @@
 import Link from "next/link";
 import { routes } from "@/config/routes";
-import { applyHref, jobs } from "@/content/careers";
+import { jobs } from "@/content/careers";
 import { Container } from "@/components/layout/Container";
 import { Reveal, RevealGroup, RevealItem } from "@/components/animations/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { JobMeta } from "./JobMeta";
 
-/** Open positions as white rounded cards on a turquoise-5 section. */
+/**
+ * Open positions as ruled rows (the Spa treatments layout, without photos): the role on the left
+ * with its department and location under it, a turquoise-bordered Apply Now on the right.
+ */
 export function JobsList() {
   return (
-    <section aria-labelledby="jobs-title" className="bg-turquoise-5 py-section text-ink">
+    <section aria-labelledby="jobs-title" className="bg-white py-section text-ink">
       <Container>
         <Reveal className="flex flex-col gap-4">
           <Eyebrow>Open positions</Eyebrow>
@@ -18,32 +20,32 @@ export function JobsList() {
             Find Your Next Opportunity
           </h2>
         </Reveal>
-        <RevealGroup as="ul" className="mt-10 grid gap-4 md:mt-12 lg:grid-cols-2 lg:gap-6">
+        <RevealGroup as="ul" className="mt-10 border-t border-line md:mt-12">
           {jobs.map((job) => (
-            <RevealItem as="li" key={job.slug} className="flex">
-              <article className="group relative flex w-full flex-col gap-4 rounded-md bg-white p-6 transition-shadow duration-700 ease-out-expo hover:shadow-card md:p-8">
-                <JobMeta job={job} />
-                <h3 className="font-serif text-heading-5">
-                  <Link
-                    href={routes.career(job.slug)}
-                    className="transition-colors group-hover:text-lagoon after:absolute after:inset-0 after:rounded-md"
-                  >
-                    {job.title}
-                  </Link>
-                </h3>
-                <p className="text-slate">{job.summary}</p>
-                <div className="mt-auto pt-2">
-                  <Button
-                    href={applyHref(job)}
-                    external
-                    variant="outline"
-                    size="sm"
-                    className="relative z-10"
-                    aria-label={`Apply now for ${job.title}`}
-                  >
-                    Apply now
-                  </Button>
+            <RevealItem as="li" key={job.slug} className="border-b border-line">
+              <article className="group relative flex flex-col gap-5 py-7 md:flex-row md:items-center md:justify-between md:gap-10 md:py-8">
+                <div className="flex flex-col gap-2">
+                  <h3 className="font-serif text-heading-4">
+                    <Link
+                      href={routes.career(job.slug)}
+                      className="transition-colors group-hover:text-turquoise-160 after:absolute after:inset-0"
+                    >
+                      {job.title}
+                    </Link>
+                  </h3>
+                  <p className="text-body-md text-slate">
+                    {job.department}, {job.location}
+                  </p>
                 </div>
+                <Button
+                  href={`${routes.career(job.slug)}#apply`}
+                  variant="outline"
+                  icon="arrow-up-right"
+                  className="relative z-10 shrink-0 self-start border-turquoise text-turquoise md:self-center"
+                  aria-label={`Apply now for ${job.title}`}
+                >
+                  Apply now
+                </Button>
               </article>
             </RevealItem>
           ))}

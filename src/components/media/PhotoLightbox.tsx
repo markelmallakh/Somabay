@@ -97,7 +97,8 @@ export function PhotoLightbox({ images, label, open, onChange, onClose }: PhotoL
           <ul
             ref={strip}
             aria-label="All photos"
-            className="scrollbar-none flex min-w-0 flex-1 gap-2 overflow-x-auto p-1"
+            data-no-motion
+            className="scrollbar-none flex min-w-0 flex-1 gap-2.5 overflow-x-auto p-1.5"
           >
             {images.map((image, index) => {
               const current = index === open;
@@ -110,13 +111,22 @@ export function PhotoLightbox({ images, label, open, onChange, onClose }: PhotoL
                     aria-label={`Show photo ${index + 1} of ${images.length}`}
                     aria-current={current ? "true" : undefined}
                     className={cn(
-                      "relative block size-14 overflow-hidden rounded-md outline-2 outline-offset-2 transition-[opacity,outline-color] duration-300 md:size-16",
-                      current
-                        ? "opacity-100 outline-turquoise"
-                        : "opacity-50 outline-transparent hover:opacity-90",
+                      "relative block size-14 transition-opacity duration-300 md:size-16",
+                      current ? "opacity-100" : "opacity-50 hover:opacity-90",
                     )}
                   >
-                    <ResponsiveImage asset={image} sizes="64px" fill />
+                    {/* Clipped with a clip-path so the photo's corners never bleed past the
+                        frame; the current one's ring sits just outside it. */}
+                    <span className="absolute inset-0 [clip-path:inset(0_round_0.25rem)]">
+                      <ResponsiveImage asset={image} sizes="64px" fill />
+                    </span>
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "pointer-events-none absolute -inset-1 rounded-md border-2 transition-colors duration-300",
+                        current ? "border-turquoise" : "border-transparent",
+                      )}
+                    />
                   </button>
                 </li>
               );

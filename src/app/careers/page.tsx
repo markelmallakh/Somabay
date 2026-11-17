@@ -1,13 +1,9 @@
-import { Container } from "@/components/layout/Container";
-import { HeadingRow } from "@/components/layout/HeadingRow";
-import { Section } from "@/components/layout/Section";
-import { ImageReveal } from "@/components/animations/ImageReveal";
-import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { JobsList } from "@/components/sections/careers/JobsList";
+import { WhySomabay } from "@/components/sections/careers/WhySomabay";
 import { ContactCta } from "@/components/sections/shared/ContactCta";
 import { PageHero } from "@/components/sections/shared/PageHero";
 import { routes } from "@/config/routes";
-import { careersHero, careersIntro } from "@/content/careers";
+import { careersHero } from "@/content/careers";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -27,24 +23,7 @@ export default function CareersPage() {
         title={careersHero.title}
         media={careersHero.image}
       />
-      <Section tone="white" aria-labelledby="careers-intro">
-        <Container>
-          <HeadingRow
-            id="careers-intro"
-            title={careersIntro.title}
-            description={careersIntro.description}
-          />
-          <ImageReveal className="relative mt-10 aspect-[4/3] rounded-md sm:aspect-[16/9] md:mt-14 lg:aspect-[1312/516]">
-            <div className="absolute inset-0">
-              <ResponsiveImage
-                asset={careersIntro.image}
-                sizes="(min-width: 1440px) 1300px, 100vw"
-                fill
-              />
-            </div>
-          </ImageReveal>
-        </Container>
-      </Section>
+      <WhySomabay />
       <JobsList />
       <ContactCta />
     </>

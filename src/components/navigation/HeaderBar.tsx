@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { m } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { siteConfig } from "@/config/site";
-import { hasDarkHero, routes } from "@/config/routes";
+import { hasDarkHero, hasShortHeroShade, routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import type { HeaderData } from "@/types/navigation";
 import type { WeatherForecast } from "@/lib/weather";
@@ -138,7 +138,10 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
             reads as soft light falloff rather than a band with an edge. */}
         <div
           className={cn(
-            "absolute inset-x-0 top-0 h-[calc(var(--header-height)+9rem)] bg-[linear-gradient(to_bottom,rgb(0_0_0/0.62)_0%,rgb(0_0_0/0.5)_30%,rgb(0_0_0/0.3)_55%,rgb(0_0_0/0.12)_78%,rgb(0_0_0/0.03)_92%,transparent_100%)] transition-opacity duration-300 ease-out",
+            "absolute inset-x-0 top-0 bg-[linear-gradient(to_bottom,rgb(0_0_0/0.62)_0%,rgb(0_0_0/0.5)_30%,rgb(0_0_0/0.3)_55%,rgb(0_0_0/0.12)_78%,rgb(0_0_0/0.03)_92%,transparent_100%)] transition-opacity duration-300 ease-out",
+            hasShortHeroShade(pathname)
+              ? "h-[calc(var(--header-height)+1rem)]"
+              : "h-[calc(var(--header-height)+9rem)]",
             backdropOverHero ? "opacity-100" : "opacity-0",
           )}
         />

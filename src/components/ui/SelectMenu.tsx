@@ -17,6 +17,8 @@ type SelectMenuProps = {
   describedBy?: string;
   /** Classes for the trigger box (shared with the text fields). */
   className?: string;
+  /** Called with the chosen option (forms that change with the answer). */
+  onChange?: (value: string) => void;
 };
 
 /**
@@ -34,6 +36,7 @@ export function SelectMenu({
   invalid,
   describedBy,
   className,
+  onChange,
 }: SelectMenuProps) {
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
@@ -64,6 +67,7 @@ export function SelectMenu({
 
   const choose = (option: string) => {
     setValue(option);
+    onChange?.(option);
     setOpen(false);
     trigger.current?.focus();
   };

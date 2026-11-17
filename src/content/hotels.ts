@@ -1,4 +1,5 @@
 import { routes } from "@/config/routes";
+import { hotelDetails } from "./hotel-details";
 import { image, video } from "@/lib/media";
 import type { DirectoryItem, Hotel, HotelReview, HotelTheme } from "@/types/content";
 
@@ -81,7 +82,36 @@ const kempinskiFacilities: DirectoryItem[] = [
   },
 ];
 
-const roomAmenities = ["Private Beach", "Wi-Fi", "All-Inclusive", "Housekeeping", "Smart TV"];
+/**
+ * DRAFT COPY: amenity lists written for the layout until each hotel supplies its own. Rooms and
+ * suites list what is in the room itself; the hotel list covers the resort.
+ */
+export const hotelAmenities = [
+  "Private Beach",
+  "Swimming Pools",
+  "Spa & Wellness",
+  "Restaurants & Bars",
+  "Kids Club",
+  "Fitness Center",
+  "Free Wi-Fi",
+  "Free Parking",
+];
+const roomAmenities = [
+  "Air Conditioning",
+  "Free Wi-Fi",
+  "Smart TV",
+  "Minibar",
+  "Rain Shower",
+  "Daily Housekeeping",
+];
+const suiteAmenities = [
+  "Separate Living Area",
+  "Private Balcony",
+  "Bathtub",
+  "Air Conditioning",
+  "Free Wi-Fi",
+  "Smart TV",
+];
 
 const kempinskiRooms: Hotel["rooms"] = [
   {
@@ -108,7 +138,7 @@ const kempinskiRooms: Hotel["rooms"] = [
     type: "suite",
     view: "sea",
     guests: 4,
-    amenities: roomAmenities,
+    amenities: suiteAmenities,
     image: image("/images/library/lifestyle/067a2088.webp", "A suite lounge in soft light"),
   },
   {
@@ -116,7 +146,7 @@ const kempinskiRooms: Hotel["rooms"] = [
     type: "suite",
     view: "golf",
     guests: 2,
-    amenities: roomAmenities,
+    amenities: suiteAmenities,
     image: image(
       "/images/library/lifestyle/067a0444.webp",
       "A private balcony overlooking the coast",
@@ -137,6 +167,7 @@ const sharedFilm = video({
  * real data arrives (a hotel's own value always wins).
  */
 const placeholderSections = {
+  amenities: hotelAmenities,
   facilities: kempinskiFacilities,
   film: sharedFilm,
   rooms: kempinskiRooms,
@@ -147,7 +178,7 @@ const placeholderSections = {
  * mapping to confirm with each hotel; nightly rates and review scores are not shown until
  * live data is connected.
  */
-export const hotels: Hotel[] = [
+const baseHotels: Hotel[] = [
   {
     slug: "kempinski-hotel-somabay",
     cover: image(
@@ -187,7 +218,13 @@ export const hotels: Hotel[] = [
       image("/images/library/beaches/dsc03390.webp", "A table set in the sea"),
       image("/images/library/lifestyle/067a1105-final.webp", "Sunset over the Red Sea"),
     ],
-    film: sharedFilm,
+    // The hotel's own overview film (from its website's homepage hero), silent and looping.
+    film: video({
+      label: "A Red Sea panorama at Kempinski Hotel Somabay",
+      poster: image("/images/video/kempinski-overview-loop-poster.webp", ""),
+      sources: [{ src: "/videos/kempinski-overview-loop.webm", type: "video/webm" }],
+    }),
+    amenities: hotelAmenities,
     facilities: kempinskiFacilities,
     rooms: kempinskiRooms,
   },
@@ -311,10 +348,11 @@ export const hotels: Hotel[] = [
       image("/images/library/watersports/kiters.webp", "Kites over the bay"),
       image("/images/library/diving/img-0386.webp", "Divers exploring the reef"),
     ],
+    // The hotel's own aerial film from its website (logo cards trimmed off), silent and looping.
     film: video({
-      label: "Moments from The Breakers",
-      poster: image("/images/video/breakers-loop-poster.webp", ""),
-      sources: [{ src: "/videos/breakers-loop.webm", type: "video/webm" }],
+      label: "The Breakers from the air",
+      poster: image("/images/video/breakers-aerial-loop-poster.webp", ""),
+      sources: [{ src: "/videos/breakers-aerial-loop.webm", type: "video/webm" }],
     }),
   },
   {
@@ -345,6 +383,12 @@ export const hotels: Hotel[] = [
     ],
   },
 ];
+
+/** Each hotel with its own amenities, rooms and official photos laid over the base entry. */
+export const hotels: Hotel[] = baseHotels.map((hotel) => {
+  const details = hotelDetails[hotel.slug];
+  return details ? { ...hotel, ...details, website: hotel.website ?? details.website } : hotel;
+});
 
 export { hotelPrice, PRICE_PLACEHOLDER } from "@/lib/price";
 

@@ -13,6 +13,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
+import { ArticleGallery } from "@/components/sections/shared/ArticleGallery";
 import { ShareButtons } from "@/components/ui/ShareButtons";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
@@ -74,8 +75,11 @@ async function ArticleContent({ params }: { params: PageProps<"/bay-journal/[slu
             </>
           }
         />
-        <Container className="max-w-3xl py-section">
+        <Container className="max-w-3xl pt-10 lg:pt-12">
           {article.body ? <ArticleBody blocks={article.body} /> : null}
+        </Container>
+        <ArticleGallery images={article.gallery} label={article.title} />
+        <Container className="pb-section">
           <div className="mt-12 flex justify-end border-t border-line pt-8">
             <ShareButtons path={path} title={article.title} />
           </div>

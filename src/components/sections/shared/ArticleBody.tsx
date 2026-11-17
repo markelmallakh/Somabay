@@ -1,3 +1,4 @@
+import { SplitHeading } from "@/components/animations/SplitHeading";
 import type { ArticleBlock } from "@/types/content";
 import { ImageReveal } from "@/components/animations/ImageReveal";
 import { Reveal } from "@/components/animations/Reveal";
@@ -43,20 +44,30 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
 function renderBlock(block: ArticleBlock, index: number) {
   switch (block.type) {
     case "heading":
-      return (
-        <h2 key={index} data-split="">
-          {block.text}
-        </h2>
-      );
+      return <SplitHeading key={index}>{block.text}</SplitHeading>;
     case "paragraph":
       return <p key={index}>{block.text}</p>;
     case "image":
       return (
-        <ImageReveal key={index} className="relative aspect-[768/420] rounded-md">
-          <div className="absolute inset-0">
-            <ResponsiveImage asset={block.image} sizes="(min-width: 768px) 48rem, 100vw" fill />
-          </div>
-        </ImageReveal>
+        // Wide photos show whole at their own shape; taller ones are capped at 16:9 and keep
+        // their top in view.
+        <div
+          key={index}
+          style={{
+            aspectRatio: `${Math.max(block.image.width / block.image.height, 16 / 9)}`,
+          }}
+        >
+          <ImageReveal parallax={0} className="relative size-full rounded-md">
+            <div className="absolute inset-0">
+              <ResponsiveImage
+                asset={block.image}
+                sizes="(min-width: 768px) 48rem, 100vw"
+                fill
+                className="object-top"
+              />
+            </div>
+          </ImageReveal>
+        </div>
       );
     case "imagePair":
       return (

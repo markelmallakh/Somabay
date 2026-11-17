@@ -177,12 +177,8 @@ export function AboutJourney({
               }
             >
               <Container className="flex flex-col gap-12 lg:gap-16">
-                <p className="max-w-[66.875rem] text-statement text-white [text-shadow:0_1px_24px_rgb(0_0_0/0.25)]">
-                  {paragraph}
-                </p>
-                {last && outro ? (
-                  <div className="[text-shadow:0_1px_18px_rgb(0_0_0/0.3)]">{outro}</div>
-                ) : null}
+                <p className="max-w-[66.875rem] text-statement text-white">{paragraph}</p>
+                {last && outro ? <div>{outro}</div> : null}
               </Container>
             </div>
           );

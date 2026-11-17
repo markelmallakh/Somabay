@@ -31,7 +31,7 @@ export function DetailHeader({ back, title, meta, image, path }: DetailHeaderPro
         </Link>
         <Reveal className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <h1 id="page-title" className="text-heading-1">
+            <h1 id="page-title" className="text-heading-2">
               {title}
             </h1>
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-body-sm text-slate">

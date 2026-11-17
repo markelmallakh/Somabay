@@ -9,8 +9,8 @@ import { Video } from "@/components/media/Video";
 import { Icon } from "@/components/ui/Icon";
 
 /**
- * Figma About film card (492:17918): the top-down shore loop plays silently in a rounded frame;
- * the white "Play video" chip opens the full Somabay film with sound.
+ * Figma About film card (492:17918): the Somabay campaign film plays silently in a rounded frame;
+ * the small white "Watch video" chip at the bottom left opens it in full with sound.
  */
 export function AboutFilmSection() {
   const [open, setOpen] = useState(false);
@@ -19,21 +19,22 @@ export function AboutFilmSection() {
       <Container>
         <ImageReveal className="relative aspect-[1392/760] overflow-hidden rounded-md">
           <Video
-            asset={about.ambient}
+            // The real campaign film, silent here; Play video opens it with sound.
+            asset={{ ...about.film, hasAudio: false }}
             playback="in-view"
             sizes="(min-width: 1512px) 1392px, 100vw"
             showToggle
-            toggleClassName="bottom-6 left-6"
+            toggleClassName="bottom-6 right-6 left-auto"
             className="absolute inset-0 size-full"
           />
           <button
             type="button"
             onClick={() => setOpen(true)}
-            aria-label={`Play video: ${about.film.label}`}
-            className="group wave absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-3 rounded-md bg-white px-8 py-3 text-[1.25rem] leading-[1.3] text-turquoise uppercase shadow-float transition-[color,scale] duration-500 ease-out-expo hover:scale-105 hover:text-white"
+            aria-label={`Watch video: ${about.film.label}`}
+            className="group wave absolute bottom-6 left-6 flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-body-sm leading-none font-medium tracking-label text-turquoise uppercase shadow-float transition-[color,scale] duration-500 ease-out-expo hover:scale-105 hover:text-white"
           >
-            <Icon name="play" className="size-4" />
-            Play video
+            <Icon name="play" className="size-3.5" />
+            Watch video
           </button>
         </ImageReveal>
       </Container>

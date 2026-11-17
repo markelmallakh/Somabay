@@ -210,7 +210,9 @@ export const leaders: Leader[] = [
 export const masterplanIntro: SectionIntro = {
   eyebrow: "The destination",
   title: "Somabay Masterplan",
-  description: "The peninsula was not launched. It was assembled.",
+  // DRAFT COPY: rewritten to run three lines; confirm with the client.
+  description:
+    "Somabay was not launched all at once. It was assembled piece by piece, from hotels and homes to golf and a marina, into one peninsula on the Red Sea.",
 };
 
 export type MasterplanCategory = "hotels" | "marina" | "communities" | "dining";

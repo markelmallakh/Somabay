@@ -152,6 +152,16 @@ async function NeighborhoodContent({
           </section>
         ) : null}
 
+        <FaqBlock
+          tone="teal"
+          items={[
+            ...faqs.filter((faq) => faq.category === "buying"),
+            ...faqs.filter((faq) => faq.id === "airport"),
+          ]}
+        />
+        <NeighborhoodInterest name={item.name} />
+
+        {/* Other neighborhoods, after the interest form. */}
         {others.length ? (
           <section aria-labelledby="more-title" className="overflow-hidden bg-white py-section">
             <Container>
@@ -195,15 +205,6 @@ async function NeighborhoodContent({
             </Reveal>
           </section>
         ) : null}
-
-        <FaqBlock
-          tone="teal"
-          items={[
-            ...faqs.filter((faq) => faq.category === "buying"),
-            ...faqs.filter((faq) => faq.id === "airport"),
-          ]}
-        />
-        <NeighborhoodInterest name={item.name} />
       </div>
       <NeighborhoodSectionNav
         name={item.name}

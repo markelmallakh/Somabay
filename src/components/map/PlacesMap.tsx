@@ -23,6 +23,12 @@ type PlacesMapProps = {
   fitTight?: boolean;
   /** Extra room on the right when fitting, in px, for a panel laid over the map on large screens. */
   insetRight?: number;
+  /**
+   * A popup card per place (trusted HTML built by the caller, with any outside text escaped).
+   * Places with a popup open it when their pin is clicked, one at a time; while it's closed, their
+   * name labels the pin.
+   */
+  popups?: Record<string, string>;
 };
 
 /**
@@ -84,6 +90,7 @@ export function PlacesMap({
   className,
   fitTight = false,
   insetRight = 0,
+  popups,
 }: PlacesMapProps) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<LeafletMap | null>(null);
@@ -137,6 +144,7 @@ export function PlacesMap({
         });
 
       const all = origin ? [origin, ...places] : places;
+      // Popups can only open once the map has its view, so they open after the fit below.
       for (const place of all) {
         const isOrigin = origin?.id === place.id;
         const marker = L.marker([place.lat, place.lng], {
@@ -157,6 +165,31 @@ export function PlacesMap({
             },
           )
           .addTo(layer.current);
+        const popup = popups?.[place.id];
+        if (popup) {
+          marker.unbindTooltip();
+          marker.bindPopup(popup, {
+            className: "somabay-popup",
+            // One card at a time: opening another closes this one; the X or the map closes it.
+            autoClose: true,
+            closeOnClick: true,
+            closeButton: true,
+            maxWidth: 300,
+            minWidth: 260,
+            offset: [0, -10],
+            autoPan: true,
+            autoPanPadding: [40, 40],
+          });
+          // While its card is closed, the place's name sits over the pin; the open card says it.
+          marker.bindTooltip(escapeHtml(place.name), {
+            direction: "top",
+            offset: [0, -14],
+            className: "somabay-tooltip somabay-tooltip--label",
+            permanent: true,
+          });
+          marker.on("popupopen", () => marker.closeTooltip());
+          marker.on("popupclose", () => marker.openTooltip());
+        }
         if (!isOrigin) marker.on("click", () => onSelectRef.current?.(place.id));
         currentMarkers.set(place.id, marker);
       }
@@ -191,7 +224,7 @@ export function PlacesMap({
       map.current = null;
       currentMarkers.clear();
     };
-  }, [places, origin, view, basemap, fitTight, insetRight]);
+  }, [places, origin, view, basemap, fitTight, insetRight, popups]);
 
   useEffect(() => {
     let cancelled = false;

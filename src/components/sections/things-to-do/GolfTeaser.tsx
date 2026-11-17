@@ -164,13 +164,21 @@ export function GolfTeaser() {
           <div className="flex flex-col gap-8 lg:w-[32rem] lg:shrink-0 lg:self-end">
             <ul>
               {golfTeaser.links.map((link) => (
-                <li key={link.title} data-golf-topic className="relative">
-                  <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-white/25" />
+                <li
+                  key={link.title}
+                  data-golf-topic
+                  // While a row is hovered (or focused), its own line and the next row's line fade
+                  // out, so the white panel never meets a divider cutting across its edges.
+                  className="relative [&:focus-within+li>[data-lines]]:opacity-0 [&:focus-within>[data-lines]]:opacity-0 [&:hover+li>[data-lines]]:opacity-0 [&:hover>[data-lines]]:opacity-0"
+                >
                   <span
                     aria-hidden
-                    data-golf-line
-                    className="absolute inset-x-0 top-0 h-px origin-left bg-white"
-                  />
+                    data-lines
+                    className="absolute inset-x-0 top-0 h-px transition-opacity duration-500 ease-out-expo"
+                  >
+                    <span className="absolute inset-0 bg-white/25" />
+                    <span data-golf-line className="absolute inset-0 origin-left bg-white" />
+                  </span>
                   <Link
                     href={link.href}
                     className="group relative isolate -mx-4 flex items-start justify-between gap-6 overflow-hidden rounded-md px-4 py-4 transition-colors duration-700 ease-out-expo hover:text-ink focus-visible:text-ink"

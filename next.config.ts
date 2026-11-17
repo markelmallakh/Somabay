@@ -11,7 +11,12 @@ const nextConfig: NextConfig = {
   // Static export can't run with Cache Components (PPR); Pages keeps only the "use cache" directive.
   cacheComponents: !pages,
   partialPrefetching: !pages,
-  ...(pages ? { experimental: { useCache: true } } : {}),
+  // CV uploads go through the enquiry server action, so it takes bodies up to 6 MB (5 MB files
+  // plus the form's overhead) instead of the 1 MB default.
+  experimental: {
+    ...(pages ? { useCache: true } : {}),
+    serverActions: { bodySizeLimit: "6mb" },
+  },
   reactStrictMode: true,
   poweredByHeader: false,
   // Pages: only .tsx route files, which leaves out robots.ts, sitemap.ts and manifest.ts (the

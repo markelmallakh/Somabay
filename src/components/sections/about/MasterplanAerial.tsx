@@ -54,7 +54,11 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
 
   return (
     <>
-      <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-md sm:aspect-[6008/3368] sm:max-w-[calc((100svh-var(--header-height)-3rem)*6008/3368)]">
+      <div
+        // No parallax: the pins sit on the photo by percentage and must stay on their places.
+        data-no-motion
+        className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-md sm:aspect-[6008/3368]"
+      >
         <ResponsiveImage
           asset={aerialMasterplan.image}
           sizes="(min-width: 1512px) 1392px, 100vw"

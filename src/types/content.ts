@@ -17,7 +17,7 @@ export type HotelTheme =
 export type HotelRoom = {
   name: string;
   type: "room" | "suite";
-  view: "marina" | "sea" | "pool" | "golf";
+  view: "marina" | "sea" | "pool" | "golf" | "garden";
   guests: number;
   amenities: string[];
   image: ImageAsset;
@@ -37,6 +37,8 @@ export type Hotel = {
   cover?: ImageAsset;
   description: string;
   overview?: string;
+  /** The hotel's own amenities, shown with the overview (each room lists its own). */
+  amenities?: string[];
   website?: string;
   /** Lowest nightly rate, e.g. "$240". Shown as "Starting from"; "$120" until supplied. */
   priceFrom?: string;
@@ -115,6 +117,8 @@ export type EventItem = {
   featured?: boolean;
   golf?: boolean;
   body?: ArticleBlock[];
+  /** Optional photo gallery shown after the body. */
+  gallery?: ImageAsset[];
 };
 
 export type Article = {
@@ -126,6 +130,8 @@ export type Article = {
   date: string;
   image: ImageAsset;
   body?: ArticleBlock[];
+  /** Optional photo gallery shown after the body. */
+  gallery?: ImageAsset[];
 };
 
 export type Stat = {

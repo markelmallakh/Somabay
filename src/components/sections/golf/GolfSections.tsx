@@ -95,6 +95,18 @@ export function AcademySection() {
                   </div>
                 ))}
               </dl>
+              {/* The academy's own page on the Somabay Golf website, in a new tab. */}
+              <Button
+                href="https://somabaygolf.com/en/Golf-Academy"
+                external
+                variant="outline"
+                size="sm"
+                icon="arrow-up-right"
+                className="mt-8 border-turquoise text-turquoise"
+                aria-label="Know more about the Golf Academy on the Somabay Golf website"
+              >
+                Know more
+              </Button>
             </Reveal>
           </div>
         </div>

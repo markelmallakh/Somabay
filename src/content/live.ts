@@ -7,8 +7,8 @@ export const neighborhoodsHero = {
   // the client.
   title: ["Live at Somabay,", "on the shores of the Red Sea"] as const,
   image: image(
-    "/images/library/beaches/december-back.webp",
-    "Aerial view of the Somabay peninsula",
+    "/images/library/beaches/somabay-may321.webp",
+    "A family playing on the beach with Somabay's homes across the bay",
   ),
 };
 

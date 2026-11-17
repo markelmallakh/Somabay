@@ -37,7 +37,7 @@ const lead: Facility = {
   title: "Medical Centers",
   description: "Expert care and emergency support, 24/7.",
   image: medicalCenter,
-  href: `${facilitiesIntro.cta.href}#medical`,
+  href: `${facilitiesIntro.cta.href}#healthcare`,
 };
 const rows: [Facility, Facility][] = [
   [
@@ -66,7 +66,7 @@ const rows: [Facility, Facility][] = [
       title: "Pharmacies",
       description: "Everyday medicines and essentials, open daily.",
       image: pharmacy,
-      href: `${facilitiesIntro.cta.href}#pharmacy`,
+      href: `${facilitiesIntro.cta.href}#healthcare`,
     },
   ],
 ];

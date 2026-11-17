@@ -139,7 +139,7 @@ export function TextAreaField({
       <textarea
         id={id}
         name={id}
-        rows={4}
+        rows={3}
         required={required}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, error, hint)}
@@ -160,10 +160,12 @@ export function SelectField({
   className,
   required,
   options,
+  onChange,
 }: BaseProps & {
   name?: string;
   options: string[];
   required?: boolean;
+  onChange?: (value: string) => void;
   /** Kept for the form definitions; the label inside the box is the prompt. */
   placeholder?: string;
 }) {
@@ -186,6 +188,7 @@ export function SelectField({
         invalid={Boolean(error)}
         describedBy={describedBy(id, error, hint)}
         className={control}
+        onChange={onChange}
       />
     </FieldShell>
   );
