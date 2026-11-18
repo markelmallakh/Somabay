@@ -8,8 +8,8 @@ import { HotelsShowcase } from "./HotelsShowcase";
 
 const themeLabel = new Map(hotelThemes.map((theme) => [theme.value, theme.label]));
 
-/** The homepage switcher shows the hotels only; Stayr (home rentals) stays on the holidays page. */
-const showcased = hotels.filter((hotel) => hotel.slug !== "stayr");
+/** Every stay, the hotels and Stayr (home rentals). */
+const showcased = hotels;
 
 /** Figma "Section / Hotels": intro, then the hotel switcher that steps through on scroll. */
 export function HolidaysSection() {

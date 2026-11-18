@@ -502,6 +502,12 @@ img[data-px][data-in][data-loaded] {
   video {
     @apply block max-w-full;
   }
+
+  /* No browser clear (X) or decoration in search fields: the site draws its own. */
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+    appearance: none;
+  }
 }
 
 @layer components {
