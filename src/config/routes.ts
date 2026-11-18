@@ -75,12 +75,17 @@ const darkHeroPaths: readonly string[] = [
  * it doesn't fall across that content (e.g. the contact form card). */
 const shortShadePaths: readonly string[] = [routes.contact];
 
+/** The static (GitHub Pages) build uses trailing slashes ("/about/"): match without them. */
+const bare = (pathname: string) =>
+  pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+
 export function hasShortHeroShade(pathname: string): boolean {
-  return shortShadePaths.includes(pathname);
+  return shortShadePaths.includes(bare(pathname));
 }
 
 export function hasDarkHero(pathname: string): boolean {
-  return darkHeroPaths.some((path) =>
-    path.endsWith("/") && path !== "/" ? pathname.startsWith(path) : pathname === path,
+  const path = bare(pathname);
+  return darkHeroPaths.some((dark) =>
+    dark.endsWith("/") && dark !== "/" ? path.startsWith(dark) : path === dark,
   );
 }
