@@ -54,7 +54,7 @@ export function HolidaysSection() {
         outro={<PhoneEndCta className="mt-0">{allHotels}</PhoneEndCta>}
         intro={
           <Container>
-            {/* Title on the left; the line and a turquoise "View all hotels" link on the right. */}
+            {/* Title on the left; the line and a turquoise "View all stays" link on the right. */}
             <HeadingRow
               id="holidays-title"
               eyebrow={holidaysIntro.eyebrow}

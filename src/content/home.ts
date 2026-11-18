@@ -55,7 +55,7 @@ export const hero: {
     },
     {
       title: "Book Holiday",
-      description: "Find your perfect hotel.",
+      description: "Find your perfect stay.",
       href: routes.holidays,
       image: image("/images/home/start-holiday-balcony.webp", ""),
     },
@@ -115,11 +115,11 @@ export const about: {
 };
 
 export const holidaysIntro: SectionIntro & { cta: Cta; itemCtaLabel: string } = {
-  eyebrow: "Book Hotel",
+  eyebrow: "Book Stay",
   title: "Red Sea Holidays",
   description:
     "From exceptional hotels and homes to golf, wellness, dining, and water adventures, there’s always something new to experience at Somabay.",
-  cta: { label: "View all hotels", href: routes.holidays },
+  cta: { label: "View all stays", href: routes.holidays },
   itemCtaLabel: "Explore",
 };
 

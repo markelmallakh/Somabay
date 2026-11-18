@@ -16,7 +16,16 @@ import { gsap } from "@/lib/gsap";
  * On small screens (or with reduced motion) the row scrolls sideways by touch or drag, and the
  * photos drift with it. Each card opens its detail drawer.
  */
-export function HotelFacilities({ items, label }: { items: DirectoryItem[]; label: string }) {
+export function HotelFacilities({
+  items,
+  label,
+  title = "Hotel Facilities",
+}: {
+  items: DirectoryItem[];
+  label: string;
+  /** The section heading ("Stayr Services" for the rentals). */
+  title?: string;
+}) {
   const [open, setOpen] = useState<number | null>(null);
   const row = useRef<HTMLUListElement>(null);
   useDragScroll(row);
@@ -88,7 +97,7 @@ export function HotelFacilities({ items, label }: { items: DirectoryItem[]; labe
       <Container>
         <Reveal>
           <h2 id="facilities-title" className="text-heading-2">
-            Hotel Facilities
+            {title}
           </h2>
         </Reveal>
       </Container>

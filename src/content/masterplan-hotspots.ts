@@ -120,7 +120,9 @@ const diningPins: MasterplanHotspot[] = venues
     description: venue.description ?? "",
     images: venue.images,
     href: routes.dining,
-    actions: [venue.action, venue.infoLink].flatMap((link) => (link ? [link] : [])),
+    actions: venue.action ? [venue.action] : [],
+    menuUrl: venue.menuUrl,
+    infoLink: venue.infoLink,
     ...quaySpots[venue.id],
   }));
 

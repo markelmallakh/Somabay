@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { AmenityIcon } from "@/components/ui/AmenityIcon";
 import { routes } from "@/config/routes";
-import { getHotel, hotelPrice, hotels, placeholderReviews, themeLabel } from "@/content/hotels";
+import { getHotel, hotelPrice, hotels, placeholderReviews, stayLabels } from "@/content/hotels";
 import { PriceFrom } from "@/components/ui/PriceFrom";
 import { hotelPlaces } from "@/content/places";
 import { pageMetadata } from "@/lib/metadata";
@@ -59,7 +59,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
         <Container>
           <Breadcrumbs
             items={[
-              { label: "Book Hotel", href: routes.holidays },
+              { label: "Book Stay", href: routes.holidays },
               { label: hotel.name, href: routes.hotel(hotel.slug) },
             ]}
             className="mb-5 sm:mb-8"
@@ -67,9 +67,9 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
           {/* The hotel's promise, set above the gallery. */}
           <Reveal className="mb-6 sm:mb-8 lg:mb-10">
             <ul className="flex flex-wrap gap-2">
-              {hotel.themes.map((theme) => (
-                <li key={theme}>
-                  <Chip>{themeLabel(theme)}</Chip>
+              {stayLabels(hotel).map((label) => (
+                <li key={label}>
+                  <Chip>{label}</Chip>
                 </li>
               ))}
             </ul>
@@ -103,9 +103,9 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
                     ) : null}
                   </p>
                   <ul className="flex flex-wrap gap-2">
-                    {hotel.themes.map((theme) => (
-                      <li key={theme}>
-                        <Chip>{themeLabel(theme)}</Chip>
+                    {stayLabels(hotel).map((label) => (
+                      <li key={label}>
+                        <Chip>{label}</Chip>
                       </li>
                     ))}
                   </ul>
@@ -128,7 +128,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
                 targetId="booking-box"
                 name={hotel.name}
                 stars={hotel.stars}
-                badges={hotel.themes.map((theme) => themeLabel(theme))}
+                badges={stayLabels(hotel)}
                 price={hotelPrice(hotel)}
                 href={hotel.website}
               />
@@ -142,7 +142,9 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
               ) : null}
               {hotel.amenities?.length ? (
                 <>
-                  <h2 className="mt-8 text-heading-5 sm:mt-10">Hotel Amenities</h2>
+                  <h2 className="mt-8 text-heading-5 sm:mt-10">
+                    {hotel.kind === "rental" ? "Services & Amenities" : "Hotel Amenities"}
+                  </h2>
                   <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-5 border-t border-line pt-5 sm:mt-5 sm:grid-cols-4 sm:gap-x-6 sm:gap-y-6 sm:pt-6">
                     {hotel.amenities.map((amenity) => (
                       <li
@@ -162,7 +164,11 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
       </Section>
 
       {hotel.facilities ? (
-        <HotelFacilities items={hotel.facilities} label={`${hotel.name} facilities`} />
+        <HotelFacilities
+          items={hotel.facilities}
+          label={`${hotel.name} ${hotel.kind === "rental" ? "services" : "facilities"}`}
+          title={hotel.kind === "rental" ? `${hotel.name} Services` : undefined}
+        />
       ) : null}
 
       {hotel.film ? (
@@ -200,11 +206,15 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
           <Container>
             <Reveal>
               <h2 id="rooms-title" className="text-center text-heading-2 sm:text-left">
-                Accommodation
+                {hotel.kind === "rental" ? "Homes & Apartments" : "Accommodation"}
               </h2>
             </Reveal>
             <div className="mt-6 sm:mt-10">
-              <RoomsFinder rooms={hotel.rooms} bookingHref={hotel.website} />
+              <RoomsFinder
+                rooms={hotel.rooms}
+                bookingHref={hotel.website}
+                rental={hotel.kind === "rental"}
+              />
             </div>
           </Container>
         </Section>
@@ -212,18 +222,18 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
 
       <GuestReviews reviews={hotel.reviews ?? placeholderReviews} />
 
-      {/* The other hotels, as photo cards in a draggable row, with a link to them all. */}
+      {/* The other stays, as photo cards in a draggable row, with a link to them all. */}
       <section aria-labelledby="more-hotels-title" className="overflow-hidden bg-white py-section">
         <Container>
           <Reveal className="flex flex-col items-center gap-2 text-center lg:gap-3">
             <Eyebrow>Holidays</Eyebrow>
             <h2 id="more-hotels-title" className="text-heading-2">
-              Explore More Hotels
+              Explore More Stays
             </h2>
           </Reveal>
         </Container>
         <Reveal className="mt-6 sm:mt-10 lg:mt-12">
-          <DragRow label="More hotels in Somabay">
+          <DragRow label="More stays in Somabay">
             {hotels
               .filter((other) => other.slug !== hotel.slug)
               .map((other) => (
@@ -231,7 +241,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
                   <HotelCard
                     hotel={other}
                     href={routes.hotel(other.slug)}
-                    themeLabels={other.themes.map(themeLabel)}
+                    themeLabels={stayLabels(other)}
                   />
                 </li>
               ))}
@@ -239,7 +249,7 @@ async function HotelContent({ params }: { params: PageProps<"/holidays/[slug]">[
         </Reveal>
         <Container className="mt-8 flex justify-center sm:mt-10 lg:mt-12">
           <Button href={routes.holidays} variant="outline" icon="arrow-up-right">
-            Explore all hotels
+            Explore all stays
           </Button>
         </Container>
       </section>

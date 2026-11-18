@@ -21,27 +21,41 @@ const viewLabel: Record<HotelRoom["view"], string> = {
   marina: "Marina View",
 };
 
-const groups = [
+const typeLabel: Record<HotelRoom["type"], string> = {
+  room: "Room",
+  suite: "Suite",
+  apartment: "Apartment",
+  townhouse: "Townhouse",
+  cabana: "Cabana",
+};
+
+const viewOptions = [
+  { value: "marina", label: "Marina view" },
+  { value: "sea", label: "Sea view" },
+  { value: "pool", label: "Pool view" },
+  { value: "garden", label: "Garden view" },
+  { value: "golf", label: "Golf view" },
+];
+
+/** Filters offer only the types and views this hotel (or rental) actually has. */
+const filterGroups = (rooms: HotelRoom[]) => [
   {
     id: "type",
     label: "Type",
-    options: [
-      { value: "room", label: "Room" },
-      { value: "suite", label: "Suite" },
-    ],
+    options: (Object.keys(typeLabel) as HotelRoom["type"][])
+      .filter((type) => rooms.some((room) => room.type === type))
+      .map((type) => ({ value: type, label: typeLabel[type] })),
   },
   {
     id: "view",
     label: "View",
-    options: [
-      { value: "marina", label: "Marina view" },
-      { value: "sea", label: "Sea view" },
-      { value: "pool", label: "Pool view" },
-      { value: "garden", label: "Garden view" },
-      { value: "golf", label: "Golf view" },
-    ],
+    options: viewOptions.filter((option) => rooms.some((room) => room.view === option.value)),
   },
 ];
+
+/** Rentals: "1 Bedroom" / "Studio", and the floor area. */
+const bedroomsLabel = (bedrooms: number) =>
+  bedrooms === 0 ? "Studio" : `${bedrooms} ${bedrooms === 1 ? "Bedroom" : "Bedrooms"}`;
 
 /** Guest label and icon: one guest is Single, two are 2 Persons, three or more are Family. */
 const occupancy = (guests: number): { label: string; icon: IconName } =>
@@ -51,8 +65,18 @@ const occupancy = (guests: number): { label: string; icon: IconName } =>
       ? { label: "2 Persons", icon: "users" }
       : { label: "Family", icon: "family" };
 
-export function RoomsFinder({ rooms, bookingHref }: { rooms: HotelRoom[]; bookingHref?: string }) {
+export function RoomsFinder({
+  rooms,
+  bookingHref,
+  rental = false,
+}: {
+  rooms: HotelRoom[];
+  bookingHref?: string;
+  /** Home rentals: guest count as "Up to N guests", with bedrooms and floor area. */
+  rental?: boolean;
+}) {
   const [filters, setFilters] = useState<FilterState>({});
+  const groups = filterGroups(rooms);
   const visible = rooms.filter((room) =>
     matchesFilters({ type: [room.type], view: [room.view] }, filters),
   );
@@ -76,9 +100,25 @@ export function RoomsFinder({ rooms, bookingHref }: { rooms: HotelRoom[]; bookin
                   </h3>
                   <Chip accent="twilight">
                     <Icon name={occupancy(room.guests).icon} className="size-3.5" />
-                    {occupancy(room.guests).label}
+                    {rental ? `Up to ${room.guests} guests` : occupancy(room.guests).label}
                   </Chip>
                 </div>
+                {rental && (room.bedrooms !== undefined || room.size) ? (
+                  <p className="-mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-body-xs text-slate sm:-mt-2 sm:text-body-sm">
+                    {room.bedrooms !== undefined ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <Icon name="bed-min" strokeWidth={1.5} className="size-4 text-ink" />
+                        {bedroomsLabel(room.bedrooms)}
+                      </span>
+                    ) : null}
+                    {room.size ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <Icon name="area-min" strokeWidth={1.5} className="size-4 text-ink" />
+                        {room.size} m²
+                      </span>
+                    ) : null}
+                  </p>
+                ) : null}
                 {/* The room's view first, then what's in the room (phones: the first four, as
                     small icons in a row). */}
                 <ul className="grid grid-cols-4 gap-1 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-4">
@@ -129,7 +169,7 @@ export function RoomsFinder({ rooms, bookingHref }: { rooms: HotelRoom[]; bookin
         ))}
         {visible.length === 0 ? (
           <li className="w-full shrink-0 rounded-md bg-white p-6 text-center text-slate sm:p-10">
-            No rooms match these filters.
+            {rental ? "No homes match these filters." : "No rooms match these filters."}
           </li>
         ) : null}
       </ul>

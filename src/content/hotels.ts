@@ -240,6 +240,9 @@ const baseHotels: Hotel[] = [
     stars: 5,
     themes: ["golfers", "luxury"],
     website: "https://thecascadeshotel.com/",
+    // DRAFT COPY: overview written from the hotel’s own content, to be confirmed.
+    overview:
+      "Perched on the highest point of the Somabay peninsula, The Cascades Golf Resort, Spa & Thalasso looks out over the Red Sea and the Gary Player championship course. Moorish architecture, terraced pools and one of the region’s largest thalasso centres make it a natural base for golfers, wellness seekers and couples looking for a calm, elegant stay by the sea.",
     description:
       "Set on the peninsula’s highest point, The Cascades pairs the Gary Player championship course with one of the region’s largest thalasso centres.",
     images: [
@@ -273,6 +276,9 @@ const baseHotels: Hotel[] = [
     stars: 5,
     themes: ["families", "all-inclusive", "beachfront"],
     website: "https://www.robinson.com/de/de/cluburlaub/aegypten/soma-bay/detailseite/",
+    // DRAFT COPY: overview written from the hotel’s own content, to be confirmed.
+    overview:
+      "Set along 500 metres of private coastline, Robinson Club Somabay is a lively club resort built around sport, entertainment and togetherness. All-inclusive dining runs from morning to night, while a full programme of fitness, watersports, kids’ clubs and evening shows keeps every day different, making it an easy choice for families, friends and active travellers.",
     description:
       "A lively club resort on 500 metres of coastline, with sport, entertainment and all-inclusive dining from morning to night.",
     images: [
@@ -306,6 +312,9 @@ const baseHotels: Hotel[] = [
     stars: 5,
     themes: ["families", "beachfront"],
     website: "https://www.marriott.com/hotels/travel/hrgss-sheraton-soma-bay-resort/",
+    // DRAFT COPY: overview written from the hotel’s own content, to be confirmed.
+    overview:
+      "Inspired by the grandeur of Luxor’s Karnak Temple, Sheraton Somabay brings ancient Egyptian heritage to a relaxed five-star resort on an 800-metre sandy beach. Its 326 rooms and suites, generous pools, aqua park and wide choice of restaurants give families and couples plenty of space to unwind, play and enjoy the Red Sea at their own pace.",
     description:
       "Inspired by the grandeur of Luxor’s Karnak Temple, Sheraton Somabay blends ancient Egyptian heritage with a relaxed five-star experience. With 326 rooms and an 800-metre sandy beach, it offers the perfect setting to unwind, reconnect, and enjoy the Red Sea.",
     images: [
@@ -334,6 +343,9 @@ const baseHotels: Hotel[] = [
     stars: 4,
     themes: ["beachfront"],
     website: "https://www.thebreakers-somabay.com/",
+    // DRAFT COPY: overview written from the hotel’s own content, to be confirmed.
+    overview:
+      "The Breakers is Egypt’s first watersports lifestyle hotel, made for kiters, divers and anyone who loves the sea. A private jetty leads out to the house reef, the kite house sits right on the beach, and a rooftop sauna and open-air cinema round off the day, all in a laid-back, social setting designed for active guests.",
     description:
       "Egypt’s first watersports lifestyle hotel, made for kiters and divers — with a jetty out to the house reef, a rooftop sauna and an open-air cinema.",
     images: [
@@ -359,10 +371,65 @@ const baseHotels: Hotel[] = [
     ...placeholderSections,
     slug: "stayr",
     name: "Stayr",
-    tagline: "Bay Life Home Rental",
+    kind: "rental",
+    // From somabayholidays.com/stayr: "stayr Home Rentals", "Curated rentals with premium details".
+    tagline: "Home Rentals",
+    overview:
+      "Every stay starts at the Stayr Lounge, a bayfront lounge at Somabay Marina: an airport meet and greet for guests flying in, a personal welcome and a full orientation of your home. From there, premium concierge and housekeeping look after the details, and guests enjoy homeowner privileges, including the exclusive beach, the Somabay app and discounts around the bay.",
     themes: ["families"],
+    // Stayr's own services (from its website), in place of a hotel's facilities.
+    facilities: [
+      {
+        id: "stayr-lounge",
+        title: "Stayr Lounge",
+        description:
+          "A bayfront lounge at Somabay Marina where every stay begins: a personal welcome, your keys and a full orientation of your home.",
+        images: [
+          image(
+            "/images/hotels/stayr/gallery/stayr-lounge-reception.webp",
+            "The Stayr Lounge reception with timber shelving and lounge seating",
+          ),
+        ],
+      },
+      {
+        id: "meet-and-greet",
+        title: "Airport Meet & Greet",
+        description:
+          "Guests flying in are met at the airport and brought to the bay, so the stay starts the moment you land.",
+        images: [
+          image(
+            "/images/hotels/stayr/gallery/stayr-roof-terrace-sea-view.webp",
+            "Roof terrace with a parasol and wicker chairs overlooking the Red Sea",
+          ),
+        ],
+      },
+      {
+        id: "concierge-housekeeping",
+        title: "Concierge & Housekeeping",
+        description:
+          "Premium concierge and upscale housekeeping, with fine bedding and toiletries, and bespoke preferences arranged on request.",
+        images: [
+          image(
+            "/images/hotels/stayr/gallery/stayr-soma-breeze-bedroom.webp",
+            "Bedroom with a double bed, turquoise curtains and a sea-themed painting",
+          ),
+        ],
+      },
+      {
+        id: "homeowner-privileges",
+        title: "Homeowner Privileges",
+        description:
+          "Live the bay as a homeowner does: access to the exclusive beach, the Somabay app and discounts around Somabay.",
+        images: [
+          image(
+            "/images/hotels/stayr/gallery/stayr-private-pool-garden.webp",
+            "Private swimming pool surrounded by sun loungers and a green hedge",
+          ),
+        ],
+      },
+    ],
     description:
-      "Serviced villas, chalets and apartments across Somabay, with concierge service for stays that feel like home.",
+      "Curated home rentals with premium details: furnished apartments, townhouses and beachfront cabanas across Somabay, for a stay that feels exactly like a homeowner's.",
     images: [
       image("/images/hotels/stayr-1.webp", "Open-plan living room with sea views"),
       image("/images/hotels/stayr-2.webp", "A furnished villa living room"),
@@ -437,3 +504,9 @@ export const getHotel = (slug: string) => hotels.find((hotel) => hotel.slug === 
 
 export const themeLabel = (theme: HotelTheme) =>
   hotelThemes.find((option) => option.value === theme)?.label ?? theme;
+
+/** A stay's tags: "Rentals" first for home rentals, then its themes. */
+export const stayLabels = (hotel: Pick<Hotel, "kind" | "themes">) => [
+  ...(hotel.kind === "rental" ? ["Rentals"] : []),
+  ...hotel.themes.map(themeLabel),
+];

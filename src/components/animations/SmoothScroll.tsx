@@ -1,6 +1,7 @@
 "use client";
 
 import Lenis from "lenis";
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { gsap, registerGsap, ScrollTrigger } from "@/lib/gsap";
 
@@ -44,5 +45,50 @@ export function SmoothScroll() {
     };
   }, []);
 
+  useHashLanding();
   return null;
+}
+
+/**
+ * Arriving on a page with a hash (e.g. a drawer's "Book now" → /things-to-do/sports#booking):
+ * the browser jumps before the page has settled, and pinned sections, revealed images and
+ * late fonts then shift the layout, so the visitor lands in the wrong place (often the
+ * footer). Once the page settles, land on the target again, clearing the header with its
+ * scroll-margin; re-checked after each ScrollTrigger refresh for the first couple of seconds.
+ */
+function useHashLanding() {
+  const pathname = usePathname();
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    let done = false;
+    const land = () => {
+      if (done) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+      const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+      const top = target.getBoundingClientRect().top + window.scrollY - margin;
+      const lenis = getLenis();
+      if (lenis) lenis.scrollTo(top, { immediate: true, force: true });
+      else window.scrollTo({ top, behavior: "instant" });
+    };
+    const timers = [80, 400, 900, 1600].map((delay) => window.setTimeout(land, delay));
+    ScrollTrigger.addEventListener("refresh", land);
+    // Stop correcting once the visitor scrolls on their own (wheel, touch or keys).
+    const stop = () => {
+      done = true;
+    };
+    const quit = window.setTimeout(stop, 2200);
+    window.addEventListener("wheel", stop, { passive: true, once: true });
+    window.addEventListener("touchstart", stop, { passive: true, once: true });
+    window.addEventListener("keydown", stop, { once: true });
+    return () => {
+      timers.forEach((timer) => window.clearTimeout(timer));
+      window.clearTimeout(quit);
+      ScrollTrigger.removeEventListener("refresh", land);
+      window.removeEventListener("wheel", stop);
+      window.removeEventListener("touchstart", stop);
+      window.removeEventListener("keydown", stop);
+    };
+  }, [pathname]);
 }

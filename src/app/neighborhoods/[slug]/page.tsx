@@ -176,7 +176,7 @@ async function NeighborhoodContent({
                 title="Explore the Neighborhoods"
                 aside={
                   // Sits on the right edge of the page padding, level with the cards below.
-                  <div className="flex lg:justify-end">{moreCta}</div>
+                  <div className="flex lg:w-full lg:justify-end">{moreCta}</div>
                 }
               />
             </Container>

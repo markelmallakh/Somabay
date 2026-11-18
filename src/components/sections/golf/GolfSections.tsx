@@ -76,7 +76,7 @@ export function AcademySection() {
               <ResponsiveImage asset={academy.image} sizes="(min-width: 1024px) 46vw, 100vw" fill />
             </div>
           </ImageReveal>
-          <div className="lg:col-span-5 lg:col-start-8">
+          <div className="lg:col-span-6 lg:col-start-7 lg:pl-8 xl:pl-12">
             <Reveal>
               <Eyebrow>Learn &amp; Improve</Eyebrow>
               <h2 id="academy-title" className="mt-2 text-heading-2 lg:mt-3">
@@ -112,14 +112,19 @@ export function AcademySection() {
         </div>
 
         {/* Phones: a divider and more room between the academy and its pros. */}
-        <div className="mt-section max-sm:mt-12 max-sm:border-t max-sm:border-line max-sm:pt-12">
+        {/* Its own section, so the bar's "Pros" tab lands on this heading. */}
+        <section
+          aria-labelledby="pros-title"
+          className="mt-section max-sm:mt-12 max-sm:border-t max-sm:border-line max-sm:pt-12"
+        >
           <HeadingRow
+            id="pros-title"
             eyebrow="Our professionals"
             title="Golf Academy Pros"
             description={academy.prosIntro}
             as="h3"
           />
-        </div>
+        </section>
       </Container>
       {/* Full width so the carousel aligns itself to the site grid, as on the About page. */}
       <Reveal className="mt-6 sm:mt-10 lg:mt-12">

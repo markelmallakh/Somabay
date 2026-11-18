@@ -140,9 +140,19 @@ export function NeighborhoodOverview({
                     className="font-sans text-[clamp(1.25rem,0.95rem+1.3vw,2.125rem)] leading-[1.35] tracking-[-0.01em] text-ink"
                   />
                   {/* Takes the visitor down to the register-interest form at the foot of the page. */}
-                  <Reveal delay={0.1}>
+                  <Reveal delay={0.1} className="flex flex-wrap gap-3">
                     <Button href="#register-interest" variant="primary">
                       Request interest
+                    </Button>
+                    {/* DRAFT: the neighborhood brochures (PDF) have not been supplied yet, so the
+                        link is a placeholder until they arrive. */}
+                    <Button
+                      href="#"
+                      variant="outline"
+                      icon="download"
+                      className="border-turquoise text-turquoise"
+                    >
+                      Download brochure
                     </Button>
                   </Reveal>
                 </div>

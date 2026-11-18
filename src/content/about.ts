@@ -234,6 +234,10 @@ export type MasterplanHotspot = {
   location?: string;
   /** The same actions the place's card offers; the first is the main button. */
   actions?: { label: string; href: string; external?: boolean }[];
+  /** Restaurants: the online menu, shown as an outlined "View menu" button (new tab). */
+  menuUrl?: string;
+  /** Restaurants: directions, shown as an icon-and-text link as in the dining drawer. */
+  infoLink?: { label: string; href: string; external?: boolean };
   /** Scene label in the 3DVista tour, opened with `#media-name=`. */
   vrScene?: string;
   /** Position on the aerial, in % of its width and height. */
@@ -258,3 +262,80 @@ export const aerialMasterplan = {
     { id: "dining", label: "Dining" },
   ] as const,
 };
+
+export type Award = {
+  title: string;
+  /** Who gave it, and what won it. */
+  by: string;
+  winner: string;
+  year: string;
+  badge: ImageAsset;
+};
+
+/**
+ * Awards and recognition, most recent first. Facts sourced from the awarding bodies' and press
+ * announcements (GEO Foundation via Golf Business News, World Golf Awards via Flair, Kempinski,
+ * CNN Travel via Luxury Travel Magazine).
+ * DUMMY BADGES: the two badge images are stand-ins until the real award logos are supplied.
+ */
+export const awardsIntro = {
+  eyebrow: "Recognition",
+  title: "Awards & Recognition",
+};
+
+const badgeA = image("/images/awards/somabay-open-2026.webp", "");
+const badgeB = image("/images/awards/somabay-championship-2026.webp", "");
+
+export const awards: Award[] = [
+  {
+    // TO CONFIRM with Somabay: from Tripadvisor listings, not yet checked against the badges.
+    title: "Travellers’ Choice",
+    by: "Tripadvisor",
+    winner: "The Breakers and Robinson Club Soma Bay",
+    year: "2026",
+    badge: badgeB,
+  },
+  {
+    title: "GEO Certified®",
+    by: "GEO Foundation for Sustainable Golf",
+    winner: "Somabay Golf, the first GEO Certified course in Egypt",
+    year: "2025",
+    badge: badgeA,
+  },
+  {
+    title: "EarthCheck Gold",
+    by: "EarthCheck",
+    winner: "Kempinski Hotel Soma Bay, five years in a row",
+    year: "2025",
+    badge: badgeB,
+  },
+  {
+    title: "Egypt’s Best Golf Hotel",
+    by: "World Golf Awards",
+    winner: "The Cascades Golf Resort, Spa & Thalasso",
+    year: "2023",
+    badge: badgeA,
+  },
+  {
+    // TO CONFIRM with Somabay: from the World Travel Awards profile (summary only).
+    title: "Egypt’s Leading Resort",
+    by: "World Travel Awards",
+    winner: "Kempinski Hotel Soma Bay",
+    year: "2019",
+    badge: badgeB,
+  },
+  {
+    title: "Top 10 Golf Courses in Africa",
+    by: "CNN Travel",
+    winner: "The Cascades championship course by Gary Player",
+    year: "2013",
+    badge: badgeA,
+  },
+  {
+    title: "Egypt’s Leading Golf Resort",
+    by: "World Travel Awards",
+    winner: "Sheraton Soma Bay",
+    year: "2005",
+    badge: badgeB,
+  },
+];

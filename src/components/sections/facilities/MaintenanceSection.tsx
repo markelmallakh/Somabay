@@ -79,6 +79,17 @@ export function MaintenanceSection() {
                 <Icon name="clock-solid" className="size-4 text-turquoise" />
                 {card.hours}
               </span>
+              {/* As in the dining drawers: the directions icon and an uppercase label. */}
+              <a
+                href={card.directions.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-body-sm font-semibold tracking-label text-ink uppercase transition-colors hover:text-lagoon"
+              >
+                <Icon name="directions-solid" className="size-4.5 text-turquoise" />
+                {card.directions.label}
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
             </div>
           </Reveal>
         </div>

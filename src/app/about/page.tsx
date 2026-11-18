@@ -1,6 +1,7 @@
 import { AboutFilmSection } from "@/components/sections/about/AboutFilmSection";
 import { AboutHero } from "@/components/sections/about/AboutHero";
 import { LeadershipSection } from "@/components/sections/about/LeadershipSection";
+import { AwardsSection } from "@/components/sections/about/AwardsSection";
 import { MasterplanSection } from "@/components/sections/about/MasterplanSection";
 import { StorySection } from "@/components/sections/about/StorySection";
 import { TimelineSection } from "@/components/sections/about/TimelineSection";
@@ -24,8 +25,9 @@ export default function AboutPage() {
       <StorySection />
       <AboutFilmSection />
       <TimelineSection intro={timelineIntro} milestones={milestones} image={timelineImage} />
-      <LeadershipSection />
       <MasterplanSection />
+      <AwardsSection />
+      <LeadershipSection />
       <ContactCta />
     </>
   );

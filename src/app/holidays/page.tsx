@@ -34,7 +34,7 @@ export default function HolidaysPage() {
     <>
       <PageHero
         variant="split"
-        eyebrow="Book Hotel"
+        eyebrow="Book Stay"
         title="Red Sea Holidays"
         description="From beachfront luxury and golf escapes to diving adventures and laid-back bay living, discover a stay that matches the way you want to experience Somabay."
         media={heroFilm}
@@ -45,7 +45,7 @@ export default function HolidaysPage() {
             heading={
               <SectionHeading
                 id="stays-title"
-                eyebrow="The bay hotels"
+                eyebrow="Hotels & rentals"
                 title="Find your perfect stay"
               />
             }

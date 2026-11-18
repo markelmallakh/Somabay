@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { FooterWeather } from "./FooterWeather";
 import { LanguageMenu } from "./LanguageMenu";
+import { NavBadge } from "./NavBadge";
 
 type MenuOverlayProps = {
   open: boolean;
@@ -86,21 +87,28 @@ export function MenuOverlay({
   const at = `${origin.x}px ${origin.y}px`;
   // A group with its own sub-pages (Things To Do and its activities) becomes a column of its own,
   // right after the section it belongs to, which keeps its other pages.
-  const expanded: MenuItem[] = sections.flatMap((item) => {
-    const nested = item.groups?.filter((group) => group.children) ?? [];
-    if (!nested.length) return [item];
-    return [
-      { ...item, groups: item.groups?.filter((group) => !group.children) },
-      ...nested.map((group) => ({
-        label: group.label,
-        href: group.href,
-        image: item.image,
-        groups: group.children,
-        footerLink: { label: "View all", href: group.href },
-      })),
-    ];
-  });
-  // Book Hotel on its own; Experience Somabay stacked over Things To Do; the rest share the last.
+  // What's Up Soma sits in the first column, under the single pages (desktop).
+  const whatsUp = sections.find((item) => item.label === "What's Up Soma");
+  const expanded: MenuItem[] = sections
+    .filter((item) => item !== whatsUp)
+    .flatMap((item) => {
+      const nested = item.groups?.filter((group) => group.children) ?? [];
+      if (!nested.length) return [item];
+      return [
+        { ...item, groups: item.groups?.filter((group) => !group.children) },
+        ...nested.map((group) => ({
+          label: group.label,
+          href: group.href,
+          image: item.image,
+          groups: group.children,
+          footerLink: {
+            label: group.label === "Things To Do" ? "All things to do" : "View all",
+            href: group.href,
+          },
+        })),
+      ];
+    });
+  // Book Stay on its own; Experience Somabay stacked over Things To Do; the rest share the last.
   const columns: MenuItem[][] = [expanded.slice(0, 1), expanded.slice(1, 3), expanded.slice(3)];
   let order = 0;
 
@@ -133,10 +141,10 @@ export function MenuOverlay({
             <MobileMenu data={data} onNavigate={onClose} section={section} forecast={forecast} />
 
             {/* One hairline between the header and the menu. */}
-            <div className="hidden gap-x-10 gap-y-10 border-t border-white/15 pt-8 lg:grid lg:grid-cols-4 lg:pt-10">
-              {/* First column: the single pages, then the two calls to action. */}
-              <div className="flex flex-col gap-8">
-                <div className="flex flex-col gap-6">
+            <div className="hidden gap-x-10 gap-y-8 border-t border-white/15 pt-7 lg:grid lg:grid-cols-4 lg:pt-8">
+              {/* First column: the single pages, What's Up Soma, then the calls to action. */}
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-3">
                   {singles.map((item) => (
                     <m.div
                       key={item.label}
@@ -148,6 +156,26 @@ export function MenuOverlay({
                     </m.div>
                   ))}
                 </div>
+
+                {whatsUp ? (
+                  <m.section
+                    {...rise(order++)}
+                    onPointerEnter={() => setShown(whatsUp)}
+                    onFocus={() => setShown(whatsUp)}
+                    className="border-t border-white/15 pt-5"
+                  >
+                    <h2 className="font-serif text-body-lg leading-[1.2]">{whatsUp.label}</h2>
+                    <ul className="mt-2.5 flex flex-col gap-1.5">
+                      {whatsUp.groups?.map((group) => (
+                        <li key={group.href}>
+                          <MenuLink href={group.href} onNavigate={onClose}>
+                            {group.label}
+                          </MenuLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </m.section>
+                ) : null}
 
                 <m.div {...rise(order++)} className="grid gap-3">
                   <Button
@@ -168,6 +196,16 @@ export function MenuOverlay({
                   >
                     {data.actions.virtualTour.label}
                   </Button>
+                  {/* FAQs and Careers, small, side by side under the buttons. */}
+                  <ul className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+                    {data.utilityLinks.map((link) => (
+                      <li key={link.href}>
+                        <MenuLink href={link.href} onNavigate={onClose} small>
+                          {link.label}
+                        </MenuLink>
+                      </li>
+                    ))}
+                  </ul>
                 </m.div>
               </div>
 
@@ -179,22 +217,25 @@ export function MenuOverlay({
                   // A hairline down the middle of the gap before each column.
                   <div
                     key={index}
-                    className="relative flex flex-col gap-10 lg:before:absolute lg:before:inset-y-0 lg:before:-left-5 lg:before:w-px lg:before:bg-white/15"
+                    className="relative flex flex-col gap-7 lg:before:absolute lg:before:inset-y-0 lg:before:-left-5 lg:before:w-px lg:before:bg-white/15"
                   >
-                    {column.map((item) => (
+                    {column.map((item, position) => (
                       <m.section
                         key={item.label}
                         {...rise(order++)}
+                        // A hairline across the column between sections stacked in it.
+                        className={position > 0 ? "border-t border-white/15 pt-6" : undefined}
                         onPointerEnter={() => setShown(item)}
                         onFocus={() => setShown(item)}
                       >
                         {/* A heading over its pages, not a link of its own. */}
-                        <h2 className="font-serif text-heading-6 leading-[1.2]">{item.label}</h2>
-                        <ul className="mt-5 flex flex-col gap-3">
+                        <h2 className="font-serif text-body-lg leading-[1.2]">{item.label}</h2>
+                        <ul className="mt-2.5 flex flex-col gap-1.5">
                           {item.groups?.map((group) => (
                             <li key={group.href}>
                               <MenuLink href={group.href} onNavigate={onClose}>
                                 {group.label}
+                                {group.badge ? <NavBadge>{group.badge}</NavBadge> : null}
                               </MenuLink>
                               {group.children ? (
                                 <ul className="mt-3 ml-1 flex flex-col gap-2 border-l border-white/15 pl-4">
@@ -209,16 +250,6 @@ export function MenuOverlay({
                               ) : null}
                             </li>
                           ))}
-                          {/* FAQs and Careers close the last section (What's Up Soma). */}
-                          {item === sections.at(-1)
-                            ? data.utilityLinks.map((link) => (
-                                <li key={link.href}>
-                                  <MenuLink href={link.href} onNavigate={onClose}>
-                                    {link.label}
-                                  </MenuLink>
-                                </li>
-                              ))
-                            : null}
                           {item.footerLink ? (
                             <li className="mt-2">
                               <Link
@@ -244,7 +275,7 @@ export function MenuOverlay({
             {/* A landscape band along the foot: the photo of the section under the pointer, wiping up
                 over the last one. */}
             <m.div
-              className="relative mt-10 hidden min-h-40 flex-1 overflow-hidden rounded-md bg-white/5 lg:block"
+              className="relative mt-8 hidden min-h-32 flex-1 overflow-hidden rounded-md bg-white/5 lg:block"
               initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
               animate={{
                 clipPath: "inset(0% 0% 0% 0%)",
@@ -292,7 +323,7 @@ function SectionTitle({ item, onNavigate }: { item: MenuItem; onNavigate: () => 
       onClick={onNavigate}
       className="group flex items-center justify-between gap-4"
     >
-      <span className="font-serif text-heading-6 leading-[1.2] transition-colors duration-500 group-hover:text-sun">
+      <span className="font-serif text-body-lg leading-[1.2] transition-colors duration-500 group-hover:text-sun">
         {item.label}
       </span>
       <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/30 transition-[background-color,border-color,color] duration-500 group-hover:border-sun group-hover:bg-sun group-hover:text-ink">
@@ -319,7 +350,7 @@ function MenuLink({
       onClick={onNavigate}
       className={cn(
         "link-underline inline-block tracking-[0.04em] uppercase transition-colors duration-500 hover:text-white",
-        small ? "text-body-sm text-white/65" : "text-[1.0625rem] leading-[1.35] text-white/85",
+        small ? "text-body-xs text-white/65" : "text-[0.8125rem] leading-[1.3] text-white/85",
       )}
     >
       {children}
@@ -350,7 +381,6 @@ function MobileMenu({
   const [openLabel, setOpenLabel] = useState<string | null>(section);
   // Which way the panels slide: into a section (1) or back to the main list (-1).
   const [direction, setDirection] = useState(1);
-  const lastSection = data.menu.filter((item) => item.groups).at(-1);
   const opened = data.menu.find((item) => item.label === openLabel && item.groups);
 
   const enter = (label: string) => {
@@ -397,66 +427,65 @@ function MobileMenu({
               {opened.label}
             </p>
             <ul>
-              {[...opened.groups, ...(opened === lastSection ? data.utilityLinks : [])].map(
-                (group: NavGroup, index) => (
-                  <m.li
-                    key={group.href + group.label}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: easeOutExpo, delay: 0.12 + index * 0.04 }}
-                    className="border-b border-white/15"
-                  >
-                    <div className="flex items-center justify-between gap-4">
+              {opened.groups.map((group: NavGroup, index) => (
+                <m.li
+                  key={group.href + group.label}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: easeOutExpo, delay: 0.12 + index * 0.04 }}
+                  className="border-b border-white/15"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <Link
+                      href={group.href}
+                      onClick={onNavigate}
+                      aria-current={isCurrent(group.href) ? "page" : undefined}
+                      className={cn(
+                        "flex min-h-13 items-center gap-2 text-body-md tracking-[0.04em] text-white/90 uppercase transition-colors active:text-sun",
+                        isCurrent(group.href) && "text-sun",
+                      )}
+                    >
+                      {isCurrent(group.href) ? (
+                        <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-sun" />
+                      ) : null}
+                      {group.label}
+                      {group.badge ? <NavBadge className="ml-0">{group.badge}</NavBadge> : null}
+                    </Link>
+                    {/* A group with its own pages (Things To Do) links to its overview. */}
+                    {group.children ? (
                       <Link
                         href={group.href}
                         onClick={onNavigate}
-                        aria-current={isCurrent(group.href) ? "page" : undefined}
-                        className={cn(
-                          "flex min-h-13 items-center gap-2 text-body-md tracking-[0.04em] text-white/90 uppercase transition-colors active:text-sun",
-                          isCurrent(group.href) && "text-sun",
-                        )}
+                        aria-label={`View all ${group.label}`}
+                        className="inline-flex min-h-11 shrink-0 items-center gap-1.5 text-body-xs font-semibold tracking-[0.08em] text-white/85 uppercase transition-colors active:text-sun"
                       >
-                        {isCurrent(group.href) ? (
-                          <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-sun" />
-                        ) : null}
-                        {group.label}
+                        View all
+                        <Icon name="arrow-right" className="size-3.5" />
                       </Link>
-                      {/* A group with its own pages (Things To Do) links to its overview. */}
-                      {group.children ? (
-                        <Link
-                          href={group.href}
-                          onClick={onNavigate}
-                          aria-label={`View all ${group.label}`}
-                          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 text-body-xs font-semibold tracking-[0.08em] text-white/85 uppercase transition-colors active:text-sun"
-                        >
-                          View all
-                          <Icon name="arrow-right" className="size-3.5" />
-                        </Link>
-                      ) : null}
-                    </div>
-                    {group.children ? (
-                      // Nested pages (the activities) as a compact two-column list.
-                      <ul className="mb-3 grid grid-cols-2 gap-x-4 border-l border-white/15 pl-4">
-                        {group.children.map((child) => (
-                          <li key={child.href}>
-                            <Link
-                              href={child.href}
-                              onClick={onNavigate}
-                              aria-current={isCurrent(child.href) ? "page" : undefined}
-                              className={cn(
-                                "flex min-h-10 items-center text-body-xs tracking-[0.04em] text-white/65 uppercase transition-colors active:text-sun",
-                                isCurrent(child.href) && "text-sun",
-                              )}
-                            >
-                              {child.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
                     ) : null}
-                  </m.li>
-                ),
-              )}
+                  </div>
+                  {group.children ? (
+                    // Nested pages (the activities) as a compact two-column list.
+                    <ul className="mb-3 grid grid-cols-2 gap-x-4 border-l border-white/15 pl-4">
+                      {group.children.map((child) => (
+                        <li key={child.href}>
+                          <Link
+                            href={child.href}
+                            onClick={onNavigate}
+                            aria-current={isCurrent(child.href) ? "page" : undefined}
+                            className={cn(
+                              "flex min-h-10 items-center text-body-xs tracking-[0.04em] text-white/65 uppercase transition-colors active:text-sun",
+                              isCurrent(child.href) && "text-sun",
+                            )}
+                          >
+                            {child.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </m.li>
+              ))}
             </ul>
             {opened.footerLink ? (
               <Link
@@ -511,7 +540,7 @@ function MobileMenu({
             </nav>
 
             <m.div {...rise(data.menu.length)} className="mt-auto grid gap-4 pt-8">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-2.5">
                 <Button
                   href={data.actions.contact.href}
                   variant="light"
@@ -530,19 +559,39 @@ function MobileMenu({
                 >
                   {data.actions.virtualTour.label}
                 </Button>
+                {/* FAQs and Careers, small, side by side under the buttons. */}
+                <ul className="mt-1 flex justify-center gap-x-8">
+                  {data.utilityLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        onClick={onNavigate}
+                        className="text-body-sm tracking-[0.04em] text-white/75 uppercase active:text-sun"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              {/* The weather and the language, as in the header on desktop. */}
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                {forecast ? <FooterWeather forecast={forecast} tone="dark" /> : null}
-                <LanguageMenu variant="pill" placement="above" tone="dark" />
+              {/* One full-width row: the weather, the language and the hotline in equal cells,
+                  with hairlines above and below and between them (no buttons' borders). */}
+              <div className="grid grid-cols-3 divide-x divide-white/15 border-y border-white/15">
+                {forecast ? (
+                  <FooterWeather forecast={forecast} tone="dark" short bare />
+                ) : (
+                  <span aria-hidden />
+                )}
+                <LanguageMenu variant="pill" placement="above" tone="dark" bare />
+                <a
+                  href={siteConfig.contact.hotlineHref}
+                  className="flex min-h-11 items-center justify-center gap-2 text-body-xs font-semibold text-white tabular-nums transition-opacity hover:opacity-75"
+                >
+                  <Icon name="phone-solid" className="size-3.5 text-sun" />
+                  <span className="sr-only">Hotline </span>
+                  {siteConfig.contact.hotline}
+                </a>
               </div>
-              <a
-                href={siteConfig.contact.hotlineHref}
-                className="flex min-h-11 items-center justify-center gap-2 text-body-sm tracking-[0.08em] text-white/80 uppercase"
-              >
-                <Icon name="phone" className="size-4 text-sun" />
-                Hotline {siteConfig.contact.hotline}
-              </a>
             </m.div>
           </m.div>
         )}

@@ -50,12 +50,15 @@ type LanguageMenuProps = {
   tone?: "light" | "dark";
   /** Open below the trigger (header) or above it (footer). */
   placement?: "below" | "above";
+  /** Pill only: no border, filling its cell (the phone menu's divided row). */
+  bare?: boolean;
 };
 
 export function LanguageMenu({
   variant = "header",
   placement = "below",
   tone = "light",
+  bare = false,
 }: LanguageMenuProps) {
   const above = placement === "above";
   const languages = siteConfig.languages;
@@ -105,7 +108,7 @@ export function LanguageMenu({
   };
 
   return (
-    <div ref={root} className="relative">
+    <div ref={root} className={cn("relative", bare && "w-full")}>
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
@@ -114,12 +117,17 @@ export function LanguageMenu({
         aria-controls={menuId}
         className={
           variant === "pill"
-            ? cn(
-                "inline-flex min-h-10 items-center gap-2 rounded-md border px-3 py-1.5 text-body-xs transition-colors",
-                tone === "dark"
-                  ? "border-white/25 text-white hover:border-white/60"
-                  : "border-line text-ink hover:border-turquoise/60",
-              )
+            ? bare
+              ? cn(
+                  "flex min-h-11 w-full items-center justify-center gap-2 text-body-xs transition-opacity hover:opacity-75",
+                  tone === "dark" ? "text-white" : "text-ink",
+                )
+              : cn(
+                  "inline-flex min-h-10 items-center gap-2 rounded-md border px-3 py-1.5 text-body-xs transition-colors",
+                  tone === "dark"
+                    ? "border-white/25 text-white hover:border-white/60"
+                    : "border-line text-ink hover:border-turquoise/60",
+                )
             : variant === "compact"
               ? "flex min-h-11 items-center gap-0.5 px-1.5 uppercase transition-opacity hover:opacity-70"
               : "flex items-center gap-1 uppercase transition-opacity hover:opacity-70"

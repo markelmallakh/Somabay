@@ -128,7 +128,7 @@ export function DetailDrawer({ items, index, onClose, onNavigate }: DetailDrawer
                       variant="primary"
                       icon="chevron-right"
                       // A link to a section of this page closes the drawer as the page glides there.
-                      onClick={action.href.startsWith("#") ? onClose : undefined}
+                      onClick={action.href.includes("#") ? onClose : undefined}
                     >
                       {action.label}
                     </Button>

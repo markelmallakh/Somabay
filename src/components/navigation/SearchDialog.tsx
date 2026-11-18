@@ -3,7 +3,7 @@
 import { m } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type KeyboardEvent, useId, useMemo, useState } from "react";
+import { type KeyboardEvent, useId, useMemo, useState, useSyncExternalStore } from "react";
 import type { SearchCard, SearchCards, SearchEntry } from "@/types/navigation";
 import { routes } from "@/config/routes";
 import { easeOutExpo } from "@/components/animations/easing";
@@ -17,6 +17,15 @@ type SearchDialogProps = {
   index: SearchEntry[];
   cards: SearchCards;
 };
+
+/** Phones: search opens as a bottom sheet instead of a panel under the header. */
+const PHONE_QUERY = "(max-width: 639px)";
+const subscribePhone = (onChange: () => void) => {
+  const query = window.matchMedia(PHONE_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+const isPhone = () => window.matchMedia(PHONE_QUERY).matches;
 
 /** One result, whatever it is, with where it lives on the site. */
 type Result = {
@@ -90,6 +99,7 @@ const fromCard = (card: SearchCard, place: string): Result => ({
 export function SearchDialog({ open, onClose, index, cards }: SearchDialogProps) {
   const router = useRouter();
   const inputId = useId();
+  const sheet = useSyncExternalStore(subscribePhone, isPhone, () => false);
   const [query, setQuery] = useState("");
   // The popup only mounts on first open, so the session's recent searches can be read up front.
   const [recent, setRecent] = useState<string[]>(readRecent);
@@ -179,13 +189,20 @@ export function SearchDialog({ open, onClose, index, cards }: SearchDialogProps)
           onClick={close}
           className="absolute inset-0 size-full cursor-default bg-abyss/45 backdrop-blur-[3px]"
         />
+        {/* Larger screens: a panel dropping under the header. Phones: a bottom sheet rising from
+            the foot of the screen, with a grab handle. */}
         <m.section
-          initial={{ opacity: 0, y: -18, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: easeOutExpo }}
+          key={sheet ? "sheet" : "panel"}
+          initial={sheet ? { y: "100%" } : { opacity: 0, y: -18, scale: 0.97 }}
+          animate={sheet ? { y: 0 } : { opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: sheet ? 0.55 : 0.6, ease: easeOutExpo }}
           style={{ transformOrigin: "50% 0%" }}
-          className="absolute top-[calc(var(--header-height)+0.75rem)] left-1/2 flex max-h-[min(42rem,calc(100svh-var(--header-height)-1.5rem))] w-[min(36rem,calc(100vw-2rem))] -translate-x-1/2 flex-col overflow-hidden rounded-md bg-white shadow-[0_24px_70px_rgb(18_58_70/0.22)]"
+          className="absolute top-[calc(var(--header-height)+0.75rem)] left-1/2 flex max-h-[min(42rem,calc(100svh-var(--header-height)-1.5rem))] w-[min(36rem,calc(100vw-2rem))] -translate-x-1/2 flex-col overflow-hidden rounded-md bg-white shadow-[0_24px_70px_rgb(18_58_70/0.22)] max-sm:top-auto max-sm:bottom-0 max-sm:left-0 max-sm:h-[85svh] max-sm:max-h-[85svh] max-sm:w-full max-sm:translate-x-0 max-sm:rounded-b-none max-sm:pb-[env(safe-area-inset-bottom)]"
         >
+          <span
+            aria-hidden
+            className="mx-auto mt-2 mb-0.5 h-1 w-10 shrink-0 rounded-full bg-line sm:hidden"
+          />
           {/* The field. */}
           <div className="flex shrink-0 items-center gap-3 border-b border-line py-2.5 pr-2.5 pl-4">
             <Icon name="search" className="size-5 shrink-0 text-turquoise" />

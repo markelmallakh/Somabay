@@ -10,9 +10,10 @@ import { easeOutExpo } from "@/components/animations/easing";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Icon } from "@/components/ui/Icon";
 import { MaskRoll } from "./MaskRoll";
+import { NavBadge } from "./NavBadge";
 
 /** Menu entries shown as header tabs, each opening its mega menu. */
-export const HEADER_TAB_LABELS = ["Book Hotel", "Experience Somabay", "Live At Somabay"];
+export const HEADER_TAB_LABELS = ["Book Stay", "Experience Somabay", "Live At Somabay"];
 
 /** Pause before a hover opens a panel (a pointer passing over the bar shouldn't open one). */
 const OPEN_DELAY = 90;
@@ -34,7 +35,7 @@ type HeaderTabsProps = {
 };
 
 /**
- * Header tabs centred in a row under the logo bar (Book Hotel, Experience Somabay, Live At Somabay). Hovering or
+ * Header tabs centred in a row under the logo bar (Book Stay, Experience Somabay, Live At Somabay). Hovering or
  * clicking a tab drops a white mega menu under the header with that section's feature photo and
  * its subcategories, so visitors reach them without opening the full menu. Closes on leave,
  * Escape, an outside click or navigation.
@@ -44,10 +45,41 @@ export function HeaderTabs({ items, onOpenChange, onDark }: HeaderTabsProps) {
   const [active, setActive] = useState<number | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const root = useRef<HTMLDivElement>(null);
+  const tabs = useRef<HTMLElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
+  const pointer = useRef<{ x: number; y: number } | null>(null);
 
+  /**
+   * Whether the mouse is over the tabs or the panel's box. Checked by position, not by which
+   * element is under it: while the panel unrolls (or swaps sections) its lower part is clipped,
+   * so a resting pointer can briefly sit over the dimmed page even though the panel is landing
+   * right under it, and must not close it.
+   */
+  const pointerOnMenu = () => {
+    const point = pointer.current;
+    if (!point) return false;
+    return [tabs.current, panel.current].some((element) => {
+      const box = element?.getBoundingClientRect();
+      return (
+        !!box &&
+        point.x >= box.left &&
+        point.x <= box.right &&
+        point.y >= box.top - 1 &&
+        point.y <= box.bottom
+      );
+    });
+  };
+
+  const pendingClose = useRef(false);
   const schedule = (next: number | null, delay: number) => {
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => setActive(next), delay);
+    pendingClose.current = next === null;
+    timer.current = setTimeout(() => {
+      pendingClose.current = false;
+      // A close only lands if the pointer really has left the tabs and the panel.
+      if (next === null && pointerOnMenu()) return;
+      setActive(next);
+    }, delay);
   };
   const close = () => {
     clearTimeout(timer.current);
@@ -56,6 +88,15 @@ export function HeaderTabs({ items, onOpenChange, onDark }: HeaderTabsProps) {
 
   useEffect(() => onOpenChange(active !== null), [active, onOpenChange]);
   useEffect(() => () => clearTimeout(timer.current), []);
+  // Track the mouse while a panel is open (for the close check above).
+  useEffect(() => {
+    if (active === null) return;
+    const track = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") pointer.current = { x: event.clientX, y: event.clientY };
+    };
+    window.addEventListener("pointermove", track, { passive: true });
+    return () => window.removeEventListener("pointermove", track);
+  }, [active]);
   // Leaving the page (any link inside, or browser navigation) closes the panel.
   const [shownPath, setShownPath] = useState(pathname);
   if (shownPath !== pathname) {
@@ -85,14 +126,19 @@ export function HeaderTabs({ items, onOpenChange, onDark }: HeaderTabsProps) {
       ref={root}
       className="h-full"
       onPointerLeave={(event) => {
-        if (event.pointerType === "mouse") schedule(null, CLOSE_DELAY);
+        if (event.pointerType !== "mouse") return;
+        pointer.current = { x: event.clientX, y: event.clientY };
+        schedule(null, CLOSE_DELAY);
       }}
-      onPointerEnter={() => clearTimeout(timer.current)}
+      onPointerEnter={() => {
+        clearTimeout(timer.current);
+        pendingClose.current = false;
+      }}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) close();
       }}
     >
-      <nav aria-label="Main sections" className="hidden h-full justify-center lg:flex">
+      <nav ref={tabs} aria-label="Main sections" className="hidden h-full justify-center lg:flex">
         <ul className="flex items-stretch gap-9">
           {items.map((tab, index) => {
             const open = active === index;
@@ -105,8 +151,9 @@ export function HeaderTabs({ items, onOpenChange, onDark }: HeaderTabsProps) {
                   aria-controls="mega-menu"
                   onClick={() => (open ? close() : setActive(index))}
                   onPointerEnter={(event) => {
-                    if (event.pointerType === "mouse")
-                      schedule(index, active === null ? OPEN_DELAY : 0);
+                    if (event.pointerType !== "mouse") return;
+                    pointer.current = { x: event.clientX, y: event.clientY };
+                    schedule(index, active === null ? OPEN_DELAY : 0);
                   }}
                   className={cn(
                     "group relative flex items-center gap-1.5 text-body-xs font-semibold tracking-[0.12em] uppercase transition-colors duration-500",
@@ -149,7 +196,16 @@ export function HeaderTabs({ items, onOpenChange, onDark }: HeaderTabsProps) {
             onClick={close}
             // The dimmed page counts as "outside": resting the pointer there closes the panel.
             onPointerEnter={(event) => {
-              if (event.pointerType === "mouse") schedule(null, CLOSE_DELAY);
+              if (event.pointerType !== "mouse") return;
+              pointer.current = { x: event.clientX, y: event.clientY };
+              schedule(null, CLOSE_DELAY);
+            }}
+            // Moving on over the dimmed page (e.g. after a close was skipped while the panel
+            // was still unrolling) closes it, unless a close is already on its way.
+            onPointerMove={(event) => {
+              if (event.pointerType !== "mouse" || pendingClose.current) return;
+              pointer.current = { x: event.clientX, y: event.clientY };
+              if (!pointerOnMenu()) schedule(null, CLOSE_DELAY);
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -164,8 +220,16 @@ export function HeaderTabs({ items, onOpenChange, onDark }: HeaderTabsProps) {
         {item ? (
           <m.div
             key="panel"
+            ref={panel}
             id="mega-menu"
-            onPointerEnter={() => clearTimeout(timer.current)}
+            onPointerEnter={() => {
+              clearTimeout(timer.current);
+              pendingClose.current = false;
+            }}
+            onPointerMove={() => {
+              clearTimeout(timer.current);
+              pendingClose.current = false;
+            }}
             initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
             animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
             exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
@@ -220,9 +284,14 @@ function MegaGroups({ item, onNavigate }: { item: MenuItem; onNavigate: () => vo
               <Link
                 href={group.href}
                 onClick={onNavigate}
-                className={cn(link, "font-serif text-heading-6 leading-[1.25]")}
+                className={cn(
+                  link,
+                  "font-serif text-heading-6 leading-[1.25]",
+                  group.badge && "inline-flex items-center",
+                )}
               >
                 <MaskRoll>{group.label}</MaskRoll>
+                {group.badge ? <NavBadge>{group.badge}</NavBadge> : null}
               </Link>
             </m.li>
           ))}

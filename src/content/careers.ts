@@ -58,8 +58,8 @@ const benefits = [
   "Flexible & supportive team culture",
 ];
 
-/** Applications go to the main inbox until a careers address or ATS link is provided. */
-export const applicationEmail = "info@somabay.com";
+/** Applications are emailed to HR. DRAFT: the HR address is to be confirmed by Somabay. */
+export const applicationEmail = "hr@somabay.com";
 
 export const jobs: Job[] = [
   {
@@ -167,4 +167,4 @@ export const jobs: Job[] = [
 export const getJob = (slug: string) => jobs.find((job) => job.slug === slug);
 
 export const applyHref = (job: Job) =>
-  `mailto:${applicationEmail}?subject=${encodeURIComponent(`Application: ${job.title}`)}`;
+  `mailto:${applicationEmail}?subject=${encodeURIComponent(`Application: ${job.title}`)}&body=${encodeURIComponent("Please find my CV attached.\n\n")}`;

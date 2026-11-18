@@ -6,12 +6,10 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/animations/Reveal";
 import { JobMeta } from "@/components/sections/careers/JobMeta";
-import { EnquiryForm } from "@/components/forms/EnquiryForm";
-import { formDefinitions } from "@/lib/forms";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { routes } from "@/config/routes";
-import { getJob, jobs } from "@/content/careers";
+import { applicationEmail, applyHref, getJob, jobs } from "@/content/careers";
 import { pageMetadata } from "@/lib/metadata";
 
 export function generateStaticParams() {
@@ -62,14 +60,18 @@ async function CareerContent({ params }: { params: PageProps<"/careers/[slug]">[
           Back to careers
         </Link>
 
-        {/* The cap: the role, its badges and Apply Now, which glides down to the form. */}
+        {/* The cap: the role, its badges and Apply Now (an email to HR). */}
         <Reveal className="mt-3 flex flex-col gap-5 pb-2 sm:mt-6 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-3">
             <JobMeta job={job} tone="plain" />
             <h1 className="max-w-3xl text-heading-3">{job.title}</h1>
             <p className="max-w-2xl text-body-sm text-slate">{job.summary}</p>
           </div>
-          <Button href="#apply" variant="primary" className="shrink-0 self-start md:self-end">
+          <Button
+            href={applyHref(job)}
+            variant="primary"
+            className="shrink-0 self-start md:self-end"
+          >
             Apply now
           </Button>
         </Reveal>
@@ -81,33 +83,25 @@ async function CareerContent({ params }: { params: PageProps<"/careers/[slug]">[
         </div>
       </Container>
 
-      {/* The application, with the CV upload. */}
-      <section
-        id="apply"
-        aria-labelledby="apply-title"
-        className="mt-8 scroll-mt-(--header-height) sm:mt-12 lg:mt-14"
-      >
-        {/* One centred card: the heading inside it, then the form with a full-width submit. */}
-        <Container className="flex justify-center">
-          <Reveal className="w-full max-w-[40rem] rounded-md bg-white px-4 py-6 sm:p-8">
-            <div className="flex flex-col items-center gap-2 text-center">
-              <h2 id="apply-title" className="text-heading-4">
-                Apply Now
-              </h2>
-              <p className="max-w-md text-body-sm text-slate">
-                Share your details and attach your CV. Our team will review your application and get
-                back to you.
-              </p>
-            </div>
-            <EnquiryForm
-              definition={formDefinitions.jobApplication}
-              context={job.title}
-              compact
-              className="mt-6"
-            />
-          </Reveal>
-        </Container>
-      </section>
+      {/* The close: apply by email to HR, with the CV attached. */}
+      <Container>
+        <div id="apply" className="scroll-mt-(--header-height)" />
+        {/* In the bullets' column, so the button lines up with the lists above. */}
+        <Reveal className="mt-8 grid sm:mt-10 lg:grid-cols-12 lg:gap-6">
+          <div className="flex flex-col items-start gap-4 lg:col-span-7 lg:col-start-6">
+            <Button href={applyHref(job)} variant="primary" icon="arrow-up-right">
+              Apply now
+            </Button>
+            <p className="text-body-sm text-slate">
+              Send your CV to{" "}
+              <a href={applyHref(job)} className="link-underline text-ink">
+                {applicationEmail}
+              </a>{" "}
+              with the role in the subject line.
+            </p>
+          </div>
+        </Reveal>
+      </Container>
     </article>
   );
 }

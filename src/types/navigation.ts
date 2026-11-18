@@ -4,6 +4,8 @@ export type NavLink = {
   label: string;
   href: string;
   external?: boolean;
+  /** A small tag shown beside the label in the menus (e.g. "Rentals"). */
+  badge?: string;
 };
 
 export type NavGroup = NavLink & {

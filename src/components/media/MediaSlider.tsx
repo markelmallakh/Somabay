@@ -53,8 +53,9 @@ export function MediaSlider({
     return () => trigger.kill();
   }, [scrollAdvance, count]);
   const button = cn(
-    "wave absolute top-1/2 z-10 grid -translate-y-1/2 place-items-center rounded-md bg-white/90 text-ink shadow-soft transition-colors duration-500 hover:text-white",
-    controls === "sm" ? "size-8" : "size-12",
+    // White-bordered arrows over the photo, filling white on hover.
+    "absolute top-1/2 z-10 grid -translate-y-1/2 place-items-center rounded-md border border-white/85 bg-black/10 text-white backdrop-blur-[2px] transition-colors duration-500 hover:bg-white hover:text-ink focus-visible:bg-white focus-visible:text-ink",
+    controls === "sm" ? "size-8" : "size-10",
   );
 
   return (

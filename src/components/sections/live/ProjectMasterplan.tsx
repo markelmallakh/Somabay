@@ -14,7 +14,7 @@ import { Icon } from "@/components/ui/Icon";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { PhoneSheet } from "./PhoneSheet";
 
-type Category = "residences" | "amenities" | "leisure";
+type Category = "residential" | "commercial" | "amenities";
 type Filter = "all" | Category;
 
 type Hotspot = {
@@ -29,9 +29,9 @@ type Hotspot = {
 };
 
 const categoryLabel: Record<Category, string> = {
-  residences: "Residences",
+  residential: "Residential",
+  commercial: "Commercial",
   amenities: "Amenities",
-  leisure: "Leisure",
 };
 
 // The Wadi Jebal masterplan supplied by the client. DUMMY CONTENT: the facility names,
@@ -42,7 +42,7 @@ const plan = image("/images/neighborhoods/wadi-jebal-masterplan.webp", "Wadi Jeb
 const hotspots: Hotspot[] = [
   {
     id: "cliff-villas",
-    category: "residences",
+    category: "residential",
     title: "Cliffside Villas",
     description:
       "Detached villas along the upper ridge, each with a private terrace facing the sea.",
@@ -55,7 +55,7 @@ const hotspots: Hotspot[] = [
   },
   {
     id: "garden-villas",
-    category: "residences",
+    category: "residential",
     title: "Garden Villas",
     description: "Single-storey homes set around shaded gardens and quiet walkways.",
     x: 41,
@@ -67,7 +67,7 @@ const hotspots: Hotspot[] = [
   },
   {
     id: "townhouses",
-    category: "residences",
+    category: "residential",
     title: "Townhouses",
     description: "Terraced homes in short rows, with views down the slope to the sea.",
     x: 81,
@@ -75,7 +75,7 @@ const hotspots: Hotspot[] = [
   },
   {
     id: "beachfront-villas",
-    category: "residences",
+    category: "residential",
     title: "Beachfront Villas",
     description: "A single row of villas closest to the shore, steps from the beach.",
     x: 38,
@@ -103,16 +103,16 @@ const hotspots: Hotspot[] = [
     ),
   },
   {
-    id: "golf",
-    category: "leisure",
-    title: "Golf Course Edge",
-    description: "Homes that look out over the greens of the neighboring golf course.",
+    id: "village-shops",
+    category: "commercial",
+    title: "Village Shops",
+    description: "A short row of everyday shops and a café at the neighborhood entrance.",
     x: 10,
     y: 52,
   },
   {
     id: "wadi-park",
-    category: "leisure",
+    category: "amenities",
     title: "Wadi Park",
     description: "A green valley running down to the sea, kept open as a park.",
     x: 81,
@@ -120,7 +120,7 @@ const hotspots: Hotspot[] = [
   },
   {
     id: "trail",
-    category: "leisure",
+    category: "amenities",
     title: "Coastal Walk",
     description: "A landscaped path that follows the shoreline along the whole neighborhood.",
     x: 25,
@@ -130,9 +130,9 @@ const hotspots: Hotspot[] = [
 
 const filters: { id: Filter; label: string }[] = [
   { id: "all", label: "All" },
-  { id: "residences", label: "Residences" },
+  { id: "residential", label: "Residential" },
+  { id: "commercial", label: "Commercial" },
   { id: "amenities", label: "Amenities" },
-  { id: "leisure", label: "Leisure" },
 ];
 
 /**

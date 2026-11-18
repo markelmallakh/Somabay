@@ -46,7 +46,7 @@ export function PhotoSlider({ images, label, interval = 6 }: PhotoSliderProps) {
   const thumbs = (onPhoto: boolean) => (
     <ul
       data-no-motion
-      className="scrollbar-none flex gap-2.5 overflow-x-auto p-[3px]"
+      className={cn("scrollbar-none flex overflow-x-auto p-[3px]", onPhoto ? "gap-1.5" : "gap-2.5")}
       aria-label={`${label} photos`}
     >
       {images.map((image, index) => {
@@ -63,7 +63,7 @@ export function PhotoSlider({ images, label, interval = 6 }: PhotoSliderProps) {
               <span
                 className={cn(
                   "relative block aspect-[3/2] transition-opacity duration-500",
-                  onPhoto ? "w-[4.5rem]" : "w-20",
+                  onPhoto ? "w-12" : "w-20",
                   on ? "opacity-100" : "opacity-60 group-hover:opacity-100",
                 )}
               >
@@ -71,7 +71,7 @@ export function PhotoSlider({ images, label, interval = 6 }: PhotoSliderProps) {
                     can bleed past the edge while it fades), and the current one gets a ring
                     drawn just outside, never touching the photo. */}
                 <span className="absolute inset-0 [clip-path:inset(0_round_3px)]">
-                  <ResponsiveImage asset={image} alt="" sizes="6rem" fill />
+                  <ResponsiveImage asset={image} alt="" sizes={onPhoto ? "4rem" : "6rem"} fill />
                 </span>
                 <span
                   aria-hidden
@@ -153,7 +153,7 @@ export function PhotoSlider({ images, label, interval = 6 }: PhotoSliderProps) {
               </p>
             </div>
             {/* Bottom right: the thumbnails on a soft frosted plate, so they read on any photo. */}
-            <div className="pointer-events-auto hidden max-w-[60%] rounded-md bg-black/20 p-1.5 backdrop-blur-md md:block">
+            <div className="pointer-events-auto hidden max-w-[50%] rounded-md bg-black/20 p-1 backdrop-blur-md md:block">
               {thumbs(true)}
             </div>
           </div>

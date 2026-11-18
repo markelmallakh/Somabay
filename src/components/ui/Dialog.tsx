@@ -91,6 +91,14 @@ export function Dialog({
     };
   }, [open]);
 
+  // When the page is hidden or left mid-animation (Next keeps a visited page alive but hidden, so
+  // the exit animation never finishes), close the native dialog outright; otherwise an empty,
+  // invisible dialog stays open and blocks clicks when the visitor comes back.
+  useEffect(() => {
+    const dialog = ref.current;
+    return () => dialog?.close();
+  }, []);
+
   return (
     <dialog
       ref={ref}

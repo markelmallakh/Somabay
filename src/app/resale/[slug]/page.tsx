@@ -196,7 +196,7 @@ async function UnitContent({ params }: { params: PageProps<"/resale/[slug]">["pa
           <HeadingRow
             id="related-title"
             title="You May Also Like"
-            aside={<div className="flex lg:justify-end">{relatedCta}</div>}
+            aside={<div className="flex lg:w-full lg:justify-end">{relatedCta}</div>}
           />
           {/* Phones: a swipe row, the card centred with its neighbours peeking. */}
           <RevealGroup

@@ -17,6 +17,7 @@ import { getLenis } from "@/components/animations/SmoothScroll";
 import { HEADER_TAB_LABELS, HeaderTabs } from "./HeaderTabs";
 import { LanguageMenu } from "./LanguageMenu";
 import { useHeaderScroll } from "./useHeaderScroll";
+import { NavBadge } from "./NavBadge";
 
 const MenuOverlay = dynamic(() => import("./MenuOverlay").then((module) => module.MenuOverlay));
 const SearchDialog = dynamic(() => import("./SearchDialog").then((module) => module.SearchDialog));
@@ -456,6 +457,7 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
                         )}
                       >
                         {group.label}
+                        {group.badge ? <NavBadge>{group.badge}</NavBadge> : null}
                       </Link>
                       {group.children ? (
                         <ul className="mb-3 grid grid-cols-2 gap-x-4 border-l border-line pl-4">

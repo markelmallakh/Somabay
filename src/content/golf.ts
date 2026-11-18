@@ -122,12 +122,14 @@ export const golfLeisure = {
   items: [
     {
       title: "Driving Range",
+      href: "https://somabaygolf.com/en/Driving-Range",
       description:
         "A double-ended range over 300 yards long, floodlit since 2021. Summer 7:00am – 12:00am, winter 7:00am – 10:00pm.",
       image: golfSite("range", "The floodlit driving range"),
     },
     {
       title: "Putting Green",
+      href: "https://somabaygolf.com/en/Putting-Green",
       // Draft.
       description:
         "A large practice green with true-rolling Paspalum surfaces, ready for a warm-up before your round.",
@@ -135,24 +137,28 @@ export const golfLeisure = {
     },
     {
       title: "Scoring Arena",
+      href: "https://somabaygolf.com/en/Scoring-Arena",
       description:
         "A 5,000 sqm short-game area designed by James Edwards of EDI Golf, with chipping, pitching and bunker play.",
       image: golfSite("newshortgame", "The short-game scoring arena"),
     },
     {
       title: "360 Hub",
+      href: "https://somabaygolf.com/en/360-Hub",
       description:
         "Four indoor simulator bays for practice, data-led lessons and virtual rounds on famous courses. Open 12:00pm – 8:00pm.",
       image: golfSite("360hub", "Simulator bays in the 360 Hub"),
     },
     {
       title: "Footgolf",
+      href: "https://somabaygolf.com/en/Footgolf",
       description:
         "Soccer skills meet the precision of golf: a game the whole family can play together. Open 7:00am – 12:00am.",
       image: golfSite("footgolf2", "Footgolf on the course"),
     },
     {
       title: "Boat Golfing",
+      href: "https://somabaygolf.com/en/Boat-Golfing",
       // Draft.
       description:
         "Tee off from the deck towards floating greens on the Red Sea, a round unlike any other.",
@@ -164,6 +170,7 @@ export const golfLeisure = {
     },
     {
       title: "Pro Shop",
+      href: "https://somabaygolf.com/en/Pro-Shop",
       description:
         "Clubs, apparel and accessories, with the Seven Fortune pop-up café for a drink after your round. Open 7:00am – 12:00am.",
       image: image("/images/library/golf/13-d.webp", "The clubhouse above the course"),
@@ -313,7 +320,8 @@ export const golfSectionNav = [
   { label: "Courses", titleId: "courses-title" },
   { label: "Golf Leisure", titleId: "golf-leisure-title" },
   { label: "Academy", titleId: "academy-title" },
+  { label: "Pros", titleId: "pros-title" },
   { label: "Location", titleId: "academy-location-title" },
   { label: "Events", titleId: "events-title" },
-  { label: "Booking", titleId: "booking-title" },
+  { label: "Booking Details", titleId: "booking-title" },
 ];

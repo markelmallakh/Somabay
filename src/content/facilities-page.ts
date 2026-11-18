@@ -175,6 +175,11 @@ export const maintenance = {
     // DRAFT: the maintenance team's mobile number isn't published yet; the 16390 hotline stands
     // in until it's supplied.
     phone: { label: "16390", href: "tel:16390" },
+    // DRAFT: a Maps search until the maintenance office's exact location is supplied.
+    directions: {
+      label: "Get directions",
+      href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Somabay Maintenance Somabay Red Sea")}`,
+    },
   },
   images: [
     image(

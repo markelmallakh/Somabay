@@ -16,9 +16,14 @@ export type HotelTheme =
 
 export type HotelRoom = {
   name: string;
-  type: "room" | "suite";
+  /** Hotel rooms are rooms or suites; home rentals are apartments, townhouses or cabanas. */
+  type: "room" | "suite" | "apartment" | "townhouse" | "cabana";
   view: "marina" | "sea" | "pool" | "golf" | "garden";
+  /** Maximum guests. */
   guests: number;
+  /** Rentals: bedrooms (0 for a studio) and floor area in square metres. */
+  bedrooms?: number;
+  size?: number;
   amenities: string[];
   image: ImageAsset;
   /** Lowest nightly rate, e.g. "$140"; the shared placeholder is shown until supplied. */
@@ -29,6 +34,8 @@ export type Hotel = {
   slug: string;
   name: string;
   tagline: string;
+  /** `rental` for home rentals (Stayr); hotels otherwise. */
+  kind?: "hotel" | "rental";
   /** Official star rating. Omitted for non-hotel stays such as home rentals. */
   stars?: number;
   /** Three images composed around the hotel name in the holidays showcase. */

@@ -27,16 +27,21 @@ export function Breadcrumbs({ items, tone = "dark", className }: BreadcrumbsProp
   return (
     <nav aria-label="Breadcrumb" className={className}>
       <JsonLd data={structured} />
+      {/* Phones: a very small trail laid out inline, so it follows the text alignment of the
+          heading block it sits in (left under a left-aligned title, centred over a centred one). */}
       <ol
         className={cn(
-          "flex flex-wrap items-center justify-center gap-2 text-body-sm sm:justify-start",
+          "text-[0.6875rem] leading-snug sm:flex sm:flex-wrap sm:items-center sm:gap-2 sm:text-body-sm",
           tone === "light" ? "text-white/75" : "text-slate",
         )}
       >
         {trail.map((item, index) => {
           const current = index === trail.length - 1;
           return (
-            <li key={item.href} className="flex items-center gap-2">
+            <li
+              key={item.href}
+              className="inline-flex items-center gap-1 align-middle not-last:mr-1 sm:flex sm:gap-2 sm:not-last:mr-0"
+            >
               {current ? (
                 <span aria-current="page" className={tone === "light" ? "text-white" : "text-ink"}>
                   {item.label}
@@ -46,7 +51,7 @@ export function Breadcrumbs({ items, tone = "dark", className }: BreadcrumbsProp
                   <Link href={item.href} className="link-underline">
                     {item.label}
                   </Link>
-                  <Icon name="chevron-right" className="size-3 opacity-60" />
+                  <Icon name="chevron-right" className="size-2.5 opacity-60 sm:size-3" />
                 </>
               )}
             </li>

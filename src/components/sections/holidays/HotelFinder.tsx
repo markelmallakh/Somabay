@@ -39,6 +39,15 @@ export function HotelFinder({
   const label = (theme: string) =>
     themeOptions.find((option) => option.value === theme)?.label ?? theme;
   const groups = [
+    // Hotels or home rentals (Stayr).
+    {
+      id: "type",
+      label: "Type",
+      options: [
+        { value: "hotel", label: "Hotel" },
+        { value: "rental", label: "Rentals" },
+      ],
+    },
     {
       id: "stars",
       label: "Stars",
@@ -53,7 +62,11 @@ export function HotelFinder({
     () =>
       hotels.filter((hotel) =>
         matchesFilters(
-          { stars: hotel.stars ? [String(hotel.stars)] : [], theme: hotel.themes },
+          {
+            type: [hotel.kind ?? "hotel"],
+            stars: hotel.stars ? [String(hotel.stars)] : [],
+            theme: hotel.themes,
+          },
           filters,
         ),
       ),
@@ -63,12 +76,18 @@ export function HotelFinder({
   const drawerItems: DirectoryItem[] = visible.map((hotel) => ({
     id: hotel.slug,
     title: hotel.name,
-    badges: { stars: hotel.stars, tags: hotel.themes.map(label) },
+    badges: {
+      stars: hotel.stars,
+      tags: [...(hotel.kind === "rental" ? ["Rentals"] : []), ...hotel.themes.map(label)],
+    },
     kicker: hotel.tagline,
     price: hotelPrice(hotel),
     description: hotel.description,
     images: hotel.gallery.slice(0, 5),
-    action: { label: "Explore hotel", href: hrefs[hotel.slug] },
+    action: {
+      label: hotel.kind === "rental" ? "Explore rentals" : "Explore hotel",
+      href: hrefs[hotel.slug],
+    },
     secondaryAction: hotel.website
       ? { label: "Book now", href: hotel.website, external: true }
       : undefined,
@@ -80,7 +99,7 @@ export function HotelFinder({
       <div className="flex flex-col gap-5 sm:gap-8 md:flex-row md:items-end md:justify-between">
         {heading}
         <SegmentedControl
-          label="View hotels as"
+          label="View stays as"
           // Phones: centred and only as wide as its two options.
           className="self-center md:self-auto"
           value={mode}
@@ -117,7 +136,10 @@ export function HotelFinder({
                       <HotelRow
                         hotel={hotel}
                         href={hrefs[hotel.slug]}
-                        themeLabels={hotel.themes.map(label)}
+                        themeLabels={[
+                          ...(hotel.kind === "rental" ? ["Rentals"] : []),
+                          ...hotel.themes.map(label),
+                        ]}
                       />
                     </li>
                   ))}
@@ -126,7 +148,7 @@ export function HotelFinder({
                 <PlacesMap
                   places={visiblePlaces}
                   view={view}
-                  label="Map of Somabay hotels"
+                  label="Map of Somabay stays"
                   onSelect={(id) => setDrawer(drawerItems.findIndex((item) => item.id === id))}
                   className="aspect-[4/5] rounded-md md:aspect-[16/11]"
                 />

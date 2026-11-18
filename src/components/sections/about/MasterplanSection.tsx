@@ -19,7 +19,9 @@ export function MasterplanSection() {
           description={masterplanIntro.description}
           className="mb-6 sm:mb-10"
         />
-        <MasterplanAerial hotspots={masterplanHotspots} />
+        <div className="sm:[container-type:inline-size]">
+          <MasterplanAerial hotspots={masterplanHotspots} />
+        </div>
       </Container>
     </section>
   );

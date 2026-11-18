@@ -11,19 +11,22 @@ import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { TextLink } from "@/components/ui/TextLink";
+import { SmartLink } from "@/components/ui/SmartLink";
 import { StarChip } from "@/components/sections/holidays/StarChip";
 import { Dialog } from "@/components/ui/Dialog";
+import { DrawerSteppers } from "@/components/ui/DrawerSteppers";
 import { Icon } from "@/components/ui/Icon";
 import { PriceFrom } from "@/components/ui/PriceFrom";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 
 type Filter = "all" | MasterplanCategory;
 
+/** The badge over a place's name in the drawer, so it reads at a glance. */
 const categoryLabel: Record<MasterplanCategory, string> = {
   hotels: "Hotel",
   marina: "Marina",
-  communities: "Community",
-  dining: "Dining",
+  communities: "Neighborhood",
+  dining: "Restaurant",
 };
 
 /** Opens the 3DVista tour, optionally at a named scene. */
@@ -59,13 +62,18 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
     <>
       {/* No parallax: the pins sit on the photo by percentage and must stay on their places.
           Phones: drag, pinch and double-tap to explore the aerial (see PanZoom). */}
-      <div className="relative mx-auto w-full">
+      {/* From sm up the aerial runs the full content width and, with its filter, fits the screen
+          under the header: on shorter screens some open sea (top) and desert (bottom) is cropped,
+          but never past the pins (at least 62% of the photo's height stays in view). */}
+      <div className="relative w-full">
         <PanZoom
           aspect={6008 / 3368}
           label="masterplan"
-          className="aspect-[4/5] w-full rounded-md sm:aspect-[6008/3368]"
+          className="aspect-[4/5] w-full rounded-md sm:aspect-auto sm:h-[min(calc(100cqw*3368/6008),max(calc(100svh-var(--header-height)-2rem),calc(100cqw*3368/6008*0.62)))]"
         >
-          <div className="absolute inset-0">
+          {/* The photo and its pins keep the photo's proportions (pins sit by percentage); the
+              frame crops 55% of any overflow from the top, 45% from the bottom. */}
+          <div className="absolute inset-0 sm:inset-auto sm:top-[calc((100%-100cqw*3368/6008)*0.55)] sm:left-0 sm:aspect-[6008/3368] sm:w-full">
             <ResponsiveImage
               asset={aerialMasterplan.image}
               sizes="(min-width: 1512px) 1392px, (min-width: 640px) 100vw, 230vw"
@@ -158,6 +166,14 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
         onClose={() => setOpenId(null)}
         label={open?.name ?? "Place details"}
         variant="drawer"
+        outside={
+          <DrawerSteppers
+            position={openIndex}
+            count={shown.length}
+            onNavigate={(index) => setOpenId(shown[index].id)}
+            noun="place"
+          />
+        }
       >
         {open ? (
           <article key={open.id} className="flex min-h-full flex-col">
@@ -192,7 +208,14 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
 
             <div className="flex flex-1 flex-col gap-5 px-gutter py-6 md:p-10">
               {/* The name (with a hotel's star rating beside it), then its tags under it. */}
-              <div data-drawer-item style={stagger(0)} className="flex flex-col gap-1.5">
+              <div
+                data-drawer-item
+                style={stagger(0)}
+                className="flex flex-col items-start gap-1.5"
+              >
+                <span className="mb-2 inline-flex items-center rounded-md bg-turquoise-20 px-2.5 py-[0.3125rem] text-[0.6875rem] leading-none font-semibold tracking-[0.12em] text-turquoise-160 uppercase">
+                  {categoryLabel[open.category]}
+                </span>
                 <h2 className="font-serif text-heading-3 leading-[1.2]">
                   {open.name}
                   {open.badges?.stars ? (
@@ -204,13 +227,15 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
                 </h2>
                 {open.kicker ? <p className="text-body-md text-slate">{open.kicker}</p> : null}
               </div>
-              <ul data-drawer-item style={stagger(1)} className="flex flex-wrap gap-2">
-                {(open.badges?.tags ?? [categoryLabel[open.category]]).map((tag) => (
-                  <li key={tag}>
-                    <Chip>{tag}</Chip>
-                  </li>
-                ))}
-              </ul>
+              {open.badges?.tags?.length ? (
+                <ul data-drawer-item style={stagger(1)} className="flex flex-wrap gap-2">
+                  {open.badges.tags.map((tag) => (
+                    <li key={tag}>
+                      <Chip>{tag}</Chip>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
               {open.description ? (
                 <p data-drawer-item style={stagger(2)} className="text-body-lg text-slate">
                   {open.description}
@@ -254,26 +279,36 @@ export function MasterplanAerial({ hotspots }: { hotspots: MasterplanHotspot[] }
                       </TextLink>
                     ),
                 )}
-                {open.vrScene ? (
+                {open.menuUrl ? (
+                  // The restaurant's menu, opened in a new tab.
                   <Button
+                    href={open.menuUrl}
+                    external
                     variant="outline"
-                    className="border-ink/20"
-                    icon="cube"
-                    iconPosition="start"
-                    onClick={() =>
-                      setTour({ url: tourUrl(open.vrScene), title: `${open.name} in 360°` })
-                    }
+                    icon="arrow-up-right"
+                    className="border-turquoise text-turquoise-160"
                   >
-                    View 360 VR
+                    View menu
                   </Button>
+                ) : null}
+                {open.infoLink ? (
+                  <SmartLink
+                    href={open.infoLink.href}
+                    external={open.infoLink.external}
+                    className="flex items-center gap-2 text-body-sm font-semibold tracking-label text-ink uppercase hover:text-lagoon"
+                  >
+                    <Icon name="directions-solid" className="size-4.5 text-turquoise" />
+                    {open.infoLink.label}
+                  </SmartLink>
                 ) : null}
               </div>
 
+              {/* Phones: previous / next in the sheet (larger screens use the steppers outside). */}
               {shown.length > 1 ? (
                 <div
                   data-drawer-item
                   style={stagger(4)}
-                  className="mt-auto flex items-center justify-between border-t border-line pt-6"
+                  className="mt-auto flex items-center justify-between border-t border-line pt-6 md:hidden"
                 >
                   <span className="text-body-sm text-slate" aria-live="polite">
                     {openIndex + 1} / {shown.length}

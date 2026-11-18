@@ -30,10 +30,18 @@ const columnTitle =
 const linkClass =
   "link-underline w-fit text-body-sm text-ink/80 transition-colors duration-500 hover:text-turquoise";
 
-/* Somabay folds Real Estate into its column; Book Hotel reads Stay. */
+/* Somabay folds Real Estate into its column (Careers stays last); Book Stay reads Stay. */
 const [somabay, experience, hotels, realEstate, whatsUp] = footerColumns;
+const isCareers = (link: { label: string }) => link.label === "Careers";
 const columns = [
-  { ...somabay, links: [...somabay.links, ...realEstate.links] },
+  {
+    ...somabay,
+    links: [
+      ...somabay.links.filter((link) => !isCareers(link)),
+      ...realEstate.links,
+      ...somabay.links.filter(isCareers),
+    ],
+  },
   experience,
   { ...hotels, title: "Stay" },
   { ...whatsUp, links: [...whatsUp.links, ...supportLinks] },

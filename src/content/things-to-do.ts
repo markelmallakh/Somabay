@@ -112,6 +112,8 @@ export const sports: DirectoryItem[] = [
     kicker: "Fast rallies with Red Sea views",
     title: "Padel Tennis",
     chip: "Padel Tennis",
+    // Opens the booking form on the Sports page.
+    action: { label: "Book now", href: `${routes.activity("sports")}#booking` },
     images: [
       image("/images/library/tennis/muo-2568.webp", "Players on a hard court"),
       ...venuePhotos("padel", 6, "Padel tennis at Somabay"),
@@ -128,6 +130,8 @@ export const sports: DirectoryItem[] = [
     kicker: "Quick, intense games on indoor courts",
     title: "Squash",
     chip: "Squash",
+    // Opens the booking form on the Sports page.
+    action: { label: "Book now", href: `${routes.activity("sports")}#booking` },
     images: [
       image("/images/library/sports/sportsss-16.webp", "The indoor sports hall"),
       ...venuePhotos("squash", 1, "The squash courts"),
@@ -144,6 +148,8 @@ export const sports: DirectoryItem[] = [
     kicker: "Steady winds over flat, shallow water",
     title: "7BFT Kite House",
     chip: "Kite Surfing",
+    // Opens the booking form on the Sports page.
+    action: { label: "Book now", href: `${routes.activity("sports")}#booking` },
     images: [
       image("/images/library/watersports/kiters.webp", "Kites over the bay"),
       ...venuePhotos("kite-house", 6, "Kitesurfing at the 7BFT Kite House"),
@@ -160,6 +166,8 @@ export const sports: DirectoryItem[] = [
     kicker: "Desert and beach rides at sunset",
     title: "Jasmine Horse Stable",
     chip: "Horse Riding",
+    // Opens the booking form on the Sports page.
+    action: { label: "Book now", href: `${routes.activity("sports")}#booking` },
     images: [
       image("/images/library/lifestyle/067a1105-final.webp", "Desert sunset over the coast"),
       ...venuePhotos("jasmine-stable", 9, "Riding with Jasmine Horse Stable"),
@@ -176,6 +184,8 @@ export const sports: DirectoryItem[] = [
     kicker: "Courts and coaching for every level",
     title: "Tennis",
     chip: "Tennis",
+    // Opens the booking form on the Sports page.
+    action: { label: "Book now", href: `${routes.activity("sports")}#booking` },
     images: [
       image("/images/library/tennis/muo-1476.webp", "A player serving at the tennis academy"),
       ...venuePhotos("tennis", 3, "The tennis courts"),
@@ -192,6 +202,8 @@ export const sports: DirectoryItem[] = [
     kicker: "Functional training with a sea view",
     title: "Bayfit",
     chip: "Crossfit",
+    // Opens the booking form on the Sports page.
+    action: { label: "Book now", href: `${routes.activity("sports")}#booking` },
     images: [
       image("/images/library/sports/sportsss-14.webp", "A fitness studio with sea views"),
       ...venuePhotos("bayfit", 9, "Training at Bayfit"),

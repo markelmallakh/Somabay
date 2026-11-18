@@ -1,3 +1,4 @@
+import { facilitiesSections } from "@/content/facilities-page";
 import { events } from "@/content/events";
 import { neighborhoodsIntro } from "@/content/home";
 import { hotels, themeLabel } from "@/content/hotels";
@@ -20,6 +21,8 @@ import { siteConfig } from "./site";
 const hotelLinks: NavLink[] = hotels.map((hotel) => ({
   label: hotel.name,
   href: routes.hotel(hotel.slug),
+  // Home rentals (Stayr) carry a small "Rentals" tag in the menus.
+  ...(hotel.kind === "rental" ? { badge: "Rentals" } : {}),
 }));
 
 const activityLinks: NavLink[] = [
@@ -37,24 +40,30 @@ export const mainMenu: MenuItem[] = [
   {
     label: "Home",
     href: routes.home,
-    image: image("/images/menu/menu-home-4k.webp", ""),
+    image: image("/images/library/beaches/mg-8327.webp", ""),
   },
   {
     label: "About",
     href: routes.about,
-    image: image("/images/menu/menu-about.webp", ""),
+    image: image("/images/about/peninsula-aerial.webp", ""),
+  },
+  // A page of its own beside About (it used to sit under What's Up Soma).
+  {
+    label: "Sustainability",
+    href: routes.sustainability,
+    image: image("/images/library/beaches/the-breakers-jetty-01.webp", ""),
   },
   {
-    label: "Book Hotel",
+    label: "Book Stay",
     href: routes.holidays,
-    image: image("/images/menu/menu-hotel.webp", ""),
+    image: image("/images/hotels/kempinski-hotel-somabay/gallery/gallery-pool-landscape.webp", ""),
     groups: hotelLinks,
-    footerLink: { label: "All Hotels", href: routes.holidays },
+    footerLink: { label: "All Stays", href: routes.holidays },
   },
   {
     label: "Experience Somabay",
     href: routes.thingsToDo,
-    image: image("/images/things-to-do/golf.webp", ""),
+    image: image("/images/resale/gallery-kiter-hd.webp", ""),
     groups: [
       { label: "Things To Do", href: routes.thingsToDo, children: activityLinks },
       { label: "The Marina", href: routes.marina },
@@ -64,7 +73,7 @@ export const mainMenu: MenuItem[] = [
   {
     label: "Live At Somabay",
     href: routes.neighborhoods,
-    image: image("/images/menu/menu-live.webp", ""),
+    image: image("/images/hotels/stayr/gallery/stayr-villa-private-pool-terrace.webp", ""),
     groups: [
       {
         label: "Somabay Neighborhoods",
@@ -82,17 +91,22 @@ export const mainMenu: MenuItem[] = [
   {
     label: "What's Up Soma",
     href: routes.events,
-    image: image("/images/menu/menu-whats-up.webp", ""),
+    image: image("/images/library/beaches/dsc-0648.webp", ""),
     groups: [
       { label: "Events Calendar", href: routes.events },
       { label: "Somabay Journal", href: routes.journal },
-      { label: "Sustainability", href: routes.sustainability },
     ],
   },
   {
     label: "Facilities & Services",
     href: routes.facilities,
-    image: image("/images/menu/menu-facilities.webp", ""),
+    image: image("/images/facilities/medical-center.webp", ""),
+    // Quick links to the page's sections (the same as its section bar), then the whole page.
+    groups: facilitiesSections.map((section) => ({
+      label: section.label,
+      href: `${routes.facilities}#${section.id}`,
+    })),
+    footerLink: { label: "All facilities and services", href: routes.facilities },
   },
 ];
 
@@ -112,7 +126,9 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: "Home", href: routes.home },
       { label: "About Somabay", href: routes.about },
+      { label: "Sustainability", href: routes.sustainability },
       { label: "Facilities and Services", href: routes.facilities },
+      // Always last in the column.
       { label: "Careers", href: routes.careers },
     ],
   },
@@ -125,7 +141,7 @@ export const footerColumns: FooterColumn[] = [
       { label: "360 VR", href: siteConfig.virtualTour, external: true },
     ],
   },
-  { title: "Book Hotel", links: hotelLinks },
+  { title: "Book Stay", links: hotelLinks },
   {
     title: "Real Estate",
     links: [
@@ -138,7 +154,6 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: "Events Calendar", href: routes.events },
       { label: "Bay Journal", href: routes.journal },
-      { label: "Sustainability Updates", href: routes.sustainability },
     ],
   },
 ];

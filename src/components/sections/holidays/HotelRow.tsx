@@ -15,7 +15,7 @@ type HotelRowProps = {
 };
 
 /**
- * One hotel as a full-width row in the All Hotels list: a large photo on the left, and on the
+ * One stay as a full-width row in the All Stays list: a large photo on the left, and on the
  * right its tagline, name with star rating, themes, description, and the price with both actions on a
  * ruled foot. Each hotel gets the whole width, so it reads as a feature rather than a tile. The
  * row links to the hotel page; the buttons sit above that link.
