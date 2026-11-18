@@ -272,7 +272,8 @@ export function MenuOverlay({
                 ))}
               </nav>
             </div>
-            {/* A landscape band along the foot: the photo of the section under the pointer, wiping up
+            {/* A landscape band along the foot: the photo of the section under the pointer (keyed by the
+                photo, so sections sharing one, e.g. Experience Somabay and Things To Do, keep it), wiping up
                 over the last one. */}
             <m.div
               className="relative mt-8 hidden min-h-32 flex-1 overflow-hidden rounded-md bg-white/5 lg:block"
@@ -284,7 +285,7 @@ export function MenuOverlay({
             >
               <AnimatePresence initial={false}>
                 <m.div
-                  key={shown.label}
+                  key={shown.image.src}
                   className="absolute inset-0"
                   initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
                   animate={{ clipPath: "inset(0% 0% 0% 0%)" }}

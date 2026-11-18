@@ -294,7 +294,23 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
             </button>
           </div>
 
-          <Link href={routes.home} className="relative z-10 shrink-0" aria-label="Somabay — home">
+          {/* Always home: it closes the menu (or search) first, and on the homepage itself it
+              glides back to the top. */}
+          <Link
+            href={routes.home}
+            className="relative z-10 shrink-0"
+            aria-label="Somabay — home"
+            onClick={() => {
+              if (menuOpen) setMenuOpen(false);
+              setSearchOpen(false);
+              setPhoneTab(null);
+              if (pathname === routes.home) {
+                const lenis = getLenis();
+                if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+                else window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+          >
             <Logo
               tone={onDark ? "light" : "brand"}
               title="Somabay"

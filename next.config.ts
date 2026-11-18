@@ -18,14 +18,22 @@ const nextConfig: NextConfig = {
     serverActions: { bodySizeLimit: "6mb" },
   },
   reactStrictMode: true,
+  env: { NEXT_PUBLIC_PAGES_BASE_PATH: pages ? pagesBasePath : "" },
   poweredByHeader: false,
   // Pages: only .tsx route files, which leaves out robots.ts, sitemap.ts and manifest.ts (the
   // export can't prerender them with Cache Components, and they mean nothing under a subpath).
   ...(pages
     ? { output: "export", basePath: pagesBasePath, trailingSlash: true, pageExtensions: ["tsx"] }
     : {}),
+  // Pages: no optimizer, so a custom loader picks from widths written at build time
+  // (scripts/pages-postbuild.mjs) instead of sending every photo at full size.
   images: pages
-    ? { unoptimized: true }
+    ? {
+        loader: "custom",
+        loaderFile: "./src/lib/pages-image-loader.ts",
+        deviceSizes: [640, 1080, 1600, 2400],
+        imageSizes: [128, 256, 384],
+      }
     : {
         formats: ["image/avif", "image/webp"],
         qualities: [60, 75, 85],

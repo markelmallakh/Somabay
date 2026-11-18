@@ -51,19 +51,19 @@ export const mainMenu: MenuItem[] = [
   {
     label: "Sustainability",
     href: routes.sustainability,
-    image: image("/images/library/beaches/the-breakers-jetty-01.webp", ""),
+    image: image("/images/menu/menu-sustainability-dugong.webp", "", { position: "50% 72%" }),
   },
   {
     label: "Book Stay",
     href: routes.holidays,
-    image: image("/images/hotels/kempinski-hotel-somabay/gallery/gallery-pool-landscape.webp", ""),
+    image: image("/images/menu/menu-hotel.webp", "", { position: "50% 38%" }),
     groups: hotelLinks,
     footerLink: { label: "All Stays", href: routes.holidays },
   },
   {
     label: "Experience Somabay",
     href: routes.thingsToDo,
-    image: image("/images/resale/gallery-kiter-hd.webp", ""),
+    image: image("/images/experience/marina.webp", ""),
     groups: [
       { label: "Things To Do", href: routes.thingsToDo, children: activityLinks },
       { label: "The Marina", href: routes.marina },
