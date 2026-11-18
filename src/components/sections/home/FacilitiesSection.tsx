@@ -1,103 +1,70 @@
 import { facilitiesIntro } from "@/content/home";
-import { HeadingRow, PhoneEndCta } from "@/components/layout/HeadingRow";
-import { FacilitiesCollage, type Facility } from "./FacilitiesCollage";
 import { image } from "@/lib/media";
 import { Container } from "@/components/layout/Container";
+import { Reveal } from "@/components/animations/Reveal";
+import { ImageReveal } from "@/components/animations/ImageReveal";
+import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 
-// Photos of the real places, from somabay.com's Facilities & Services page; the Medical Center
-// tile (full width) uses the supplied photo of the medical team. The pharmacy
-// tile uses the supplied Natural Pharmacy shopfront.
-const medicalCenter = image(
-  "/images/facilities/medical-team.webp",
-  "Smiling doctors and nurses in a bright clinic lobby with sea views",
-  // Keep the faces in frame in the wide tile.
-  { position: "50% 28%" },
-);
-const classroom = image(
-  "/images/facilities/kompass-classroom.webp",
-  "A lesson in a Kompass Primary School classroom",
-);
-const limousine = image(
-  "/images/facilities/somabay-limousine.webp",
-  "Somabay Limousine cars parked under the palms",
-);
-const homeServices = image(
-  "/images/facilities/coral-home-services.webp",
-  "The Coral interior design and home services studio",
-);
-const pharmacy = image(
-  "/images/facilities/natural-pharmacy.webp",
-  "The Natural Pharmacy shopfront by the marina, framed by bougainvillea and palms",
-  { position: "50% 0%" },
+// The supplied Winter Campaign photo (067A0335).
+const photo = image(
+  "/images/facilities/facilities-winter-067a0335.webp",
+  "A guest in a bathrobe with a morning coffee on a bright, sea-view hotel bed",
+  { position: "50% 60%" },
 );
 
-/** Figma "Section / Facilities & Services — Collage" (416:17854). */
-const lead: Facility = {
-  title: "Medical Centers",
-  description: "Expert care and emergency support, 24/7.",
-  image: medicalCenter,
-  href: `${facilitiesIntro.cta.href}#healthcare`,
-};
-const rows: [Facility, Facility][] = [
-  [
-    {
-      title: "Mobility & Transfers",
-      description: "Shuttles, G-Ride and airport transfers across the bay.",
-      image: limousine,
-      href: `${facilitiesIntro.cta.href}#mobility`,
-    },
-    {
-      title: "Education & Schools",
-      description:
-        "International curricula and early years learning within a close-knit coastal community.",
-      image: classroom,
-      href: `${facilitiesIntro.cta.href}#education`,
-    },
-  ],
-  [
-    {
-      title: "Maintenance",
-      description: "Complete home support, from repairs to housekeeping.",
-      image: homeServices,
-      href: `${facilitiesIntro.cta.href}#maintenance`,
-    },
-    {
-      title: "Pharmacies",
-      description: "Everyday medicines and essentials, open daily.",
-      image: pharmacy,
-      href: `${facilitiesIntro.cta.href}#healthcare`,
-    },
-  ],
-];
+// DRAFT statement: to be confirmed by the client.
+const statement =
+  "Everything daily life asks for, from schools and clinics to home care and getting around, is only a few minutes from your door.";
 
+/**
+ * Facilities & Services as one calm sand panel (after the Podium Automation feature section on
+ * unsection.com): on the left a small turquoise label and a large statement, then, under a
+ * hairline, the short brief with Explore all beside it; the photo sits on
+ * the right.
+ */
 export function FacilitiesSection() {
-  const cta = (
-    <Button href={facilitiesIntro.cta.href} variant="primary" icon="arrow-up-right">
-      {facilitiesIntro.cta.label}
-    </Button>
-  );
   return (
-    <section
-      aria-labelledby="facilities-title"
-      data-theme-surface="light"
-      className="bg-turquoise-5 py-section text-ink"
-    >
-      <Container className="flex flex-col gap-8 md:gap-[3.75rem]">
-        <HeadingRow
-          id="facilities-title"
-          eyebrow={facilitiesIntro.eyebrow}
-          title={facilitiesIntro.title}
-          description={facilitiesIntro.description}
-          aside={<div>{cta}</div>}
-        />
+    <section aria-labelledby="facilities-title" className="bg-white py-section text-ink">
+      <Container>
+        <div className="grid gap-8 rounded-md bg-sand-100 p-6 sm:p-8 lg:grid-cols-12 lg:gap-0 lg:p-10">
+          <Reveal className="flex flex-col gap-10 lg:col-span-7 lg:justify-between lg:pr-10">
+            <div className="flex flex-col gap-4 lg:gap-5">
+              <h2
+                id="facilities-title"
+                className="font-sans text-body-xs font-semibold text-turquoise"
+              >
+                {facilitiesIntro.title}
+              </h2>
+              <p className="font-serif text-heading-3 text-balance">{statement}</p>
+            </div>
 
-        <FacilitiesCollage
-          lead={lead}
-          left={[rows[0][0], rows[1][0]]}
-          right={[rows[0][1], rows[1][1]]}
-        />
-        <PhoneEndCta className="mt-0">{cta}</PhoneEndCta>
+            <div className="flex flex-col gap-5 border-t border-line pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-10">
+              <p className="max-w-[22rem] text-body-sm text-slate">{facilitiesIntro.description}</p>
+              <Button
+                href={facilitiesIntro.cta.href}
+                variant="primary"
+                icon="arrow-up-right"
+                className="shrink-0"
+              >
+                {facilitiesIntro.cta.label}
+              </Button>
+            </div>
+          </Reveal>
+
+          <div className="lg:col-span-5 lg:pl-10">
+            <ImageReveal className="relative aspect-[4/5] overflow-hidden rounded-md sm:aspect-[4/3] lg:aspect-auto lg:h-[min(28rem,54svh)]">
+              <div className="absolute inset-0">
+                <ResponsiveImage
+                  asset={photo}
+                  sizes="(min-width: 1024px) 34vw, 100vw"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </ImageReveal>
+          </div>
+        </div>
       </Container>
     </section>
   );

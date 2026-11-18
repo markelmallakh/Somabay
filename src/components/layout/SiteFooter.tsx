@@ -63,7 +63,7 @@ function StoreBadge({
   label: string;
 }) {
   const base =
-    "h-8 w-full items-center gap-2 rounded-md bg-ink px-1.5 py-1 whitespace-nowrap text-white";
+    "h-8 w-full items-center gap-2 rounded-md bg-ink/[0.06] px-1.5 py-1 whitespace-nowrap text-ink";
   const content = (
     <>
       <Icon name={icon} className="size-[1.1875rem]" />
@@ -78,7 +78,7 @@ function StoreBadge({
       <span className={`hidden lg:flex ${base}`}>{content}</span>
       <SmartLink
         href={href}
-        className={`flex lg:hidden ${base} transition-colors duration-500 hover:bg-turquoise`}
+        className={`flex lg:hidden ${base} transition-colors duration-500 hover:bg-turquoise hover:text-white`}
       >
         {content}
       </SmartLink>
@@ -183,7 +183,7 @@ export async function SiteFooter() {
                 href={siteConfig.contact.hotlineHref}
                 className="flex items-center gap-2 font-serif text-heading-5 transition-colors duration-500 hover:text-turquoise"
               >
-                <Icon name="phone" className="size-5 text-turquoise" />
+                <Icon name="phone-solid" className="size-5 text-turquoise" />
                 {siteConfig.contact.hotline}
               </a>
               <a

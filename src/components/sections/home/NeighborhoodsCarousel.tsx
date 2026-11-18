@@ -163,7 +163,7 @@ export function NeighborhoodsCarousel({
         id={PANEL_ID}
         role="tabpanel"
         aria-labelledby={`${PANEL_ID}-tab-${status}`}
-        className="scrollbar-none cursor-grab snap-x snap-proximity scroll-ps-site overflow-x-auto data-[dragging=true]:cursor-grabbing data-[dragging=true]:snap-none max-sm:snap-mandatory max-sm:scroll-px-[10vw]"
+        className="-my-6 scrollbar-none cursor-grab snap-x snap-proximity scroll-ps-site overflow-x-auto data-[dragging=true]:cursor-grabbing data-[dragging=true]:snap-none max-sm:snap-mandatory max-sm:scroll-px-[10vw]"
       >
         <AnimatePresence mode="wait" initial={false}>
           <m.ul
@@ -173,7 +173,7 @@ export function NeighborhoodsCarousel({
             exit={{ opacity: 0, x: -24 }}
             transition={{ duration: 0.6, ease: easeOutExpo }}
             // Phones: the card centred with its neighbours peeking at both edges.
-            className="flex w-max gap-4 ps-site pe-gutter max-sm:px-[10vw]"
+            className="flex w-max gap-4 py-6 ps-site pe-gutter max-sm:px-[10vw] sm:gap-5"
           >
             {looped.map((item, index) => (
               <li
@@ -192,7 +192,7 @@ export function NeighborhoodsCarousel({
                   title={item.name}
                   summary={item.summary}
                   action={ctaLabel}
-                  className="aspect-[4/5] sm:aspect-[400/520]"
+                  className="aspect-[4/5] shadow-[0_18px_36px_-22px_rgb(18_58_70/0.45)] sm:aspect-[400/520]"
                 />
               </li>
             ))}

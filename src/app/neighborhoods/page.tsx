@@ -1,5 +1,4 @@
 import { Container } from "@/components/layout/Container";
-import { ResaleSection } from "@/components/sections/home/ResaleSection";
 import { NeighborhoodGrid } from "@/components/sections/live/NeighborhoodGrid";
 import { ContactCta } from "@/components/sections/shared/ContactCta";
 import { PageHero } from "@/components/sections/shared/PageHero";
@@ -43,7 +42,6 @@ export default function NeighborhoodsPage() {
         </Container>
       </section>
 
-      <ResaleSection />
       <ContactCta />
     </>
   );

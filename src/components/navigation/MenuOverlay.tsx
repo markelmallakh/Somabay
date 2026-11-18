@@ -25,26 +25,19 @@ type MenuOverlayProps = {
   forecast?: WeatherForecast | null;
   onClose: () => void;
   data: HeaderData;
-  /** Viewport point the circle grows from (the centre of the menu button). */
-  origin: { x: number; y: number };
+  /** Viewport point of the menu button (kept for callers; the menu now simply fades in). */
+  origin?: { x: number; y: number };
 };
 
-/** Even in-out curve for the circle, so it neither lingers small nor snaps at the end. */
-const easeCircle = [0.65, 0, 0.35, 1] as const;
-
-/** Radius that covers the whole viewport from the origin point. */
-const coverRadius = ({ x, y }: { x: number; y: number }) =>
-  Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y)) + 24;
-
-/** Each block settles upward a beat after the one before, once the circle has opened. */
+/** Each block fades in with a short rise, a beat after the one before. */
 const rise = (order: number) => ({
-  initial: { opacity: 0, y: 28 },
+  initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 1, ease: easeOutExpo, delay: 0.35 + order * 0.06 },
+  transition: { duration: 0.6, ease: easeOutExpo, delay: 0.12 + order * 0.03 },
 });
 
 /**
- * Full-screen menu that opens as a circle growing from the menu button. Every section is laid out
+ * Full-screen menu that simply fades in over the page. Every section is laid out
  * at once, like a sitemap: on desktop a photo on the left, then ruled columns with each section's
  * title and all of its pages under it, so nothing hides behind a hover. The photo follows the
  * section under the pointer. Not a native `<dialog>`, so the header can sit above it: Esc closes,
@@ -54,7 +47,6 @@ export function MenuOverlay({
   open,
   onClose,
   data,
-  origin,
   section = null,
   forecast = null,
 }: MenuOverlayProps) {
@@ -84,7 +76,6 @@ export function MenuOverlay({
     };
   }, [open, onClose]);
 
-  const at = `${origin.x}px ${origin.y}px`;
   // A group with its own sub-pages (Things To Do and its activities) becomes a column of its own,
   // right after the section it belongs to, which keeps its other pages.
   // What's Up Soma sits in the first column, under the single pages (desktop).
@@ -122,15 +113,9 @@ export function MenuOverlay({
           aria-modal="true"
           aria-label="Site menu"
           className="fixed inset-0 z-30 bg-turquoise-160 text-white"
-          initial={{ clipPath: `circle(0px at ${at})` }}
-          animate={{
-            clipPath: `circle(${coverRadius(origin)}px at ${at})`,
-            transition: { duration: 0.85, ease: easeCircle },
-          }}
-          exit={{
-            clipPath: `circle(0px at ${at})`,
-            transition: { duration: 0.6, ease: easeCircle },
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.35, ease: "easeOut" } }}
+          exit={{ opacity: 0, transition: { duration: 0.25, ease: "easeIn" } }}
         >
           <div
             ref={panelRef}
@@ -184,6 +169,8 @@ export function MenuOverlay({
                     icon="chevron-right"
                     iconPosition="start"
                     onClick={onClose}
+                    // Floods turquoise (not black) on hover, in keeping with the menu's colour.
+                    className="[--wave:var(--color-turquoise)] hover:border-turquoise"
                   >
                     {data.actions.contact.label}
                   </Button>
@@ -255,7 +242,7 @@ export function MenuOverlay({
                               <Link
                                 href={item.footerLink.href}
                                 onClick={onClose}
-                                className="group eyebrow inline-flex items-center gap-2 text-sun transition-colors hover:text-white"
+                                className="group eyebrow inline-flex items-center gap-2 text-white transition-opacity hover:opacity-70"
                               >
                                 {item.footerLink.label}
                                 <Icon
@@ -277,11 +264,8 @@ export function MenuOverlay({
                 over the last one. */}
             <m.div
               className="relative mt-8 hidden min-h-32 flex-1 overflow-hidden rounded-md bg-white/5 lg:block"
-              initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
-              animate={{
-                clipPath: "inset(0% 0% 0% 0%)",
-                transition: { duration: 1.2, ease: easeOutExpo, delay: 0.3 },
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.6, ease: "easeOut", delay: 0.2 } }}
             >
               <AnimatePresence initial={false}>
                 <m.div
@@ -424,7 +408,7 @@ function MobileMenu({
               <Icon name="arrow-right" className="size-4 rotate-180" />
               Main menu
             </button>
-            <p className="border-t border-white/15 pt-5 pb-3 font-serif text-heading-4 text-sun">
+            <p className="border-t border-white/15 pt-5 pb-3 font-serif text-heading-4 text-white">
               {opened.label}
             </p>
             <ul>
@@ -492,7 +476,7 @@ function MobileMenu({
               <Link
                 href={opened.footerLink.href}
                 onClick={onNavigate}
-                className="eyebrow mt-4 inline-flex min-h-11 items-center gap-2 self-start text-sun"
+                className="eyebrow mt-4 inline-flex min-h-11 items-center gap-2 self-start text-white"
               >
                 {opened.footerLink.label}
                 <Icon name="arrow-right" className="size-4" />
@@ -546,7 +530,7 @@ function MobileMenu({
                   href={data.actions.contact.href}
                   variant="light"
                   onClick={onNavigate}
-                  className="w-full"
+                  className="w-full [--wave:var(--color-turquoise)] hover:border-turquoise"
                 >
                   {data.actions.contact.label}
                 </Button>

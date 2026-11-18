@@ -223,50 +223,49 @@ export function ResaleSection() {
             </div>
           </div>
 
-          {/* Compact white widget: a peek at three available units; a row floods turquoise on hover. */}
-          <div className="hidden w-[26rem] shrink-0 flex-col overflow-hidden rounded-md bg-white text-ink shadow-[0_24px_60px_-20px_rgb(0_0_0/0.45)] lg:flex">
-            <div className="px-5 pt-4 pb-2">
-              <span className="eyebrow text-body-2xs text-slate">Recently added</span>
+          {/* Frosted-glass widget over the photo: a peek at three available units in white, with no
+              rules between them; a row brightens on hover and its arrow chip fills turquoise. */}
+          <div className="hidden w-[26rem] shrink-0 flex-col overflow-hidden rounded-md bg-white/10 py-2 text-white shadow-[0_24px_60px_-24px_rgb(0_0_0/0.5)] backdrop-blur-xl backdrop-saturate-150 lg:flex">
+            <div className="px-5 pt-3 pb-1.5">
+              <span className="eyebrow text-body-2xs text-white">Recently added</span>
             </div>
             <ul className="flex flex-col">
               {featured.map((unit) => (
                 <li key={unit.slug} data-unit>
                   <SmartLink
                     href={routes.unit(unit.slug)}
-                    className="group relative isolate flex items-center gap-3 overflow-hidden px-5 py-3 transition-colors duration-700 ease-out-expo hover:text-white focus-visible:text-white"
+                    className="group flex items-center gap-3.5 px-5 py-3.5 transition-colors duration-500 ease-out-expo hover:bg-white/10 focus-visible:bg-white/10"
                   >
-                    <span
-                      aria-hidden
-                      className="absolute inset-0 -z-10 origin-bottom scale-y-0 bg-turquoise transition-transform duration-700 ease-out-expo group-hover:scale-y-100 group-focus-visible:scale-y-100"
-                    />
                     <span className="relative block size-16 shrink-0 overflow-hidden rounded-md">
                       <ResponsiveImage
                         asset={unit.images[0]}
                         sizes="64px"
                         fill
-                        className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.05]"
+                        className="transition-transform duration-[1600ms] ease-out-expo group-hover:scale-[1.08]"
                       />
                     </span>
-                    <span className="flex min-w-0 flex-1 flex-col gap-1">
-                      <span className="truncate font-serif text-body-lg">{unit.title}</span>
-                      <span className="flex items-center gap-2.5 text-body-xs text-slate transition-colors duration-700 ease-out-expo group-hover:text-white/90 group-focus-visible:text-white/90">
-                        <span className="flex items-center gap-1">
-                          <Icon name="pin-min" strokeWidth={1.5} className="size-5" />
-                          {unit.neighborhood}
+                    <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                      <span className="truncate font-serif text-body-lg leading-tight">
+                        {unit.title}
+                      </span>
+                      <span className="flex items-center gap-2.5 text-body-xs text-white/75">
+                        <span className="flex min-w-0 items-center gap-1">
+                          <Icon name="pin-min" strokeWidth={1.5} className="size-4.5 shrink-0" />
+                          <span className="truncate">{unit.neighborhood}</span>
                         </span>
-                        <span aria-hidden className="size-1 rounded-full bg-current opacity-50" />
-                        <span className="flex items-center gap-1">
-                          <Icon name="bed-min" strokeWidth={1.5} className="size-5" />
+                        <span aria-hidden className="h-3 w-px shrink-0 bg-white/30" />
+                        <span className="flex shrink-0 items-center gap-1">
+                          <Icon name="bed-min" strokeWidth={1.5} className="size-4.5" />
                           {unit.bedrooms}
                         </span>
-                        <span aria-hidden className="size-1 rounded-full bg-current opacity-50" />
-                        <span className="flex items-center gap-1">
-                          <Icon name="bath-min" strokeWidth={1.5} className="size-5" />
+                        <span aria-hidden className="h-3 w-px shrink-0 bg-white/30" />
+                        <span className="flex shrink-0 items-center gap-1">
+                          <Icon name="bath-min" strokeWidth={1.5} className="size-4.5" />
                           {unit.bathrooms}
                         </span>
                       </span>
                     </span>
-                    <ArrowChip tone="light" />
+                    <ArrowChip className="border-transparent" />
                   </SmartLink>
                 </li>
               ))}

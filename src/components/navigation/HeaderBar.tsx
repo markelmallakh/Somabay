@@ -85,17 +85,35 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
   useEffect(() => {
     const footer = document.querySelector("[data-site-footer]");
     if (!footer) return;
-    const observer = new IntersectionObserver(([entry]) => setAtFooter(entry.isIntersecting), {
-      rootMargin: "0px 0px -20% 0px",
-    });
-    observer.observe(footer);
-    return () => observer.disconnect();
+    // Only once the footer fills most of the screen (its top within the top quarter), not as soon
+    // as its first edge scrolls in. Measured on scroll rather than with an IntersectionObserver,
+    // whose margin is ignored when the site runs inside a frame (the review previews).
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      setAtFooter(footer.getBoundingClientRect().top < window.innerHeight * 0.25);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [pathname]);
 
   const backdropOverHero = hasDarkHero(pathname) && !solid && !megaOpen;
   const overHero = backdropOverHero && !menuOpen;
-  // Light (white) header over a dark hero, and over the open menu's deep turquoise screen.
-  const onDark = overHero || menuOpen;
+  // Past the top the bar sits on a dark frosted gradient, so it keeps the white look it has over
+  // the hero. A mega menu or phone panel still turns it into one white sheet with its panel.
+  const darkBar = solid && !menuOpen && !megaOpen;
+  // Light (white) header over a dark hero, on the dark scrolled bar, and over the open menu's deep
+  // turquoise screen.
+  const onDark = overHero || darkBar || menuOpen;
 
   // The phone tab panel closes on navigation and Escape, and holds the page still while open.
   const [panelPath, setPanelPath] = useState(pathname);
@@ -180,18 +198,23 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
             backdropOverHero ? "opacity-100" : "opacity-0",
           )}
         />
-        {/* Frosted white: translucent, with the page softly blurred through it. With a mega menu
-            open it turns solid, so the bar and the white panel read as one sheet and the tabs keep
-            their full contrast. */}
+        {/* Past the top: a dark frosted gradient, deepest at the top, that runs on below the bar
+            and fades out (blur too) with no edge, so the white header reads over any section. */}
         <div
           className={cn(
-            "absolute inset-0 backdrop-blur-lg transition-[opacity,background-color,box-shadow] duration-500 ease-in-out",
-            // Past the top: near-solid white with a crisp hairline, so the bar reads cleanly over
-            // dark and photo sections alike. At the top of light pages it is transparent.
-            megaOpen || compact
-              ? "bg-white/[0.97] shadow-[0_1px_0_rgb(18_58_70/0.06),0_4px_10px_-6px_rgb(18_58_70/0.09)]"
+            "absolute inset-x-0 top-0 h-[calc(100%+4rem)] bg-[linear-gradient(to_bottom,rgb(0_0_0/0.35)_0%,rgb(0_0_0/0.26)_35%,rgb(0_0_0/0.13)_65%,rgb(0_0_0/0.04)_85%,transparent_100%)] [mask-image:linear-gradient(to_bottom,black_0%,black_45%,transparent_100%)] backdrop-blur-md transition-opacity duration-500 ease-in-out",
+            darkBar ? "opacity-100" : "opacity-0",
+          )}
+        />
+        {/* Frosted white: with a mega menu or phone panel open the bar turns solid white, so the
+            bar and the white panel read as one sheet and the tabs keep their full contrast. */}
+        <div
+          className={cn(
+            "absolute inset-0 transition-[opacity,background-color,box-shadow] duration-500 ease-in-out",
+            megaOpen
+              ? "bg-white/[0.97] shadow-[0_1px_0_rgb(18_58_70/0.06),0_4px_10px_-6px_rgb(18_58_70/0.09)] backdrop-blur-lg"
               : // At the top of light pages: fully transparent, on the page's own colour.
-                "bg-transparent shadow-none backdrop-blur-none",
+                "bg-transparent shadow-none",
             backdropOverHero ? "opacity-0" : "opacity-100",
           )}
         />
@@ -221,13 +244,15 @@ export function HeaderBar({ temperature, forecast, data }: HeaderBarProps) {
               className={cn(
                 // At least 44px tall so it is an easy thumb target on phones.
                 "group relative z-10 -my-2 flex min-h-11 shrink-0 items-center gap-2.5 py-2 transition-colors duration-500 sm:gap-3",
-                // The menu button carries the brand accent: turquoise on the white bar, sun
-                // yellow while the bar is transparent over a hero. White once the menu is open.
+                // White over a hero, on the dark scrolled bar and with the menu open; black on the
+                // white sheet of an open dropdown; turquoise at the top of light pages.
                 menuOpen
                   ? "hover:text-sun focus-visible:text-sun"
-                  : overHero
-                    ? "text-sun"
-                    : "text-turquoise",
+                  : darkBar || overHero
+                    ? "text-white"
+                    : megaOpen
+                      ? "text-ink"
+                      : "text-turquoise",
               )}
             >
               {/* Figma "menu-03": staggered lines that swap sides on hover, folding into an X that

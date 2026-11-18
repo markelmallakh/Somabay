@@ -13,7 +13,7 @@ type HeroScenesProps = {
 
 /**
  * Full-bleed background media for the hero with a Day / Night switch. The inactive scene's
- * video is not downloaded until it is selected. On scroll the media drifts and settles back,
+ * video is not downloaded until it is selected. On scroll the media slowly zooms in,
  * handing the eye to the next section.
  */
 export function HeroScenes({ scenes }: HeroScenesProps) {
@@ -23,8 +23,10 @@ export function HeroScenes({ scenes }: HeroScenesProps) {
   const ref = useGsap<HTMLDivElement>(({ scope, reducedMotion }) => {
     if (reducedMotion) return;
     gsap.to(scope.querySelector("[data-hero-media]"), {
-      yPercent: 18,
-      scale: 1.08,
+      // A slow zoom anchored at the top edge: sliding the media down (as it once did) uncovered
+      // the hero's black backdrop under the header.
+      scale: 1.12,
+      transformOrigin: "50% 0%",
       ease: "none",
       scrollTrigger: {
         trigger: scope.parentElement,

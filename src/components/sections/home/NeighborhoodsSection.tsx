@@ -11,22 +11,15 @@ export function NeighborhoodsSection() {
     neighborhoods.map((item) => [item.slug, routes.neighborhood(item.slug)]),
   );
   const cta = (
-    <Button
-      href={neighborhoodsIntro.cta.href}
-      variant="solid-light"
-      icon="arrow-right"
-      className="[--color-ink:#2c2c2c]"
-    >
+    <Button href={neighborhoodsIntro.cta.href} variant="solid" icon="arrow-right">
       {neighborhoodsIntro.cta.label}
     </Button>
   );
   return (
     <section
       aria-labelledby="neighborhoods-title"
-      data-theme-surface="dark"
-      // Deep turquoise ground: the photo cards glow against it. The text and line tokens are
-      // re-pointed to white for everything inside, so the carousel needs no dark variant.
-      className="relative overflow-hidden bg-turquoise-160 py-section text-white [--color-ink:#fff] [--color-line:rgb(255_255_255/0.22)] [--color-slate:rgb(255_255_255/0.72)]"
+      // A clean white ground, so the photo cards carry the colour.
+      className="relative overflow-hidden bg-white py-section text-ink"
     >
       <NeighborhoodsCarousel
         neighborhoods={neighborhoods}
@@ -36,7 +29,6 @@ export function NeighborhoodsSection() {
         heading={
           <HeadingRow
             id="neighborhoods-title"
-            tone="light"
             eyebrow={neighborhoodsIntro.eyebrow}
             title={neighborhoodsIntro.title}
             description={neighborhoodsIntro.description}

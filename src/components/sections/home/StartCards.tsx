@@ -24,18 +24,18 @@ export function StartCards({ label, options }: StartCardsProps) {
           <p
             id="start-label"
             // Phones show the cards alone (the label stays for screen readers).
-            className="sr-only mb-2.5 text-label font-semibold tracking-label text-white/80 uppercase sm:not-sr-only"
+            className="sr-only text-label font-semibold tracking-label text-white/80 uppercase sm:not-sr-only"
           >
             {label}
           </p>
         </RevealItem>
         {/* Phones: three short landscape cards side by side, title only; desktop: the hover cards. */}
-        <ul className="grid grid-cols-3 gap-1.5 lg:flex">
+        <ul className="grid grid-cols-3 gap-2 sm:mt-3.5 sm:gap-2.5 lg:flex">
           {options.map((option) => (
             <RevealItem as="li" key={option.href}>
               <Link
                 href={option.href}
-                className="group relative block aspect-[16/10] overflow-hidden rounded-md bg-black/30 text-white shadow-[0_12px_40px_rgb(0_0_0/0.25)] transition-[translate,width] duration-700 ease-out-expo hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:aspect-[3/4] lg:aspect-auto lg:h-[10.6667rem] lg:w-32 lg:hover:w-56 lg:focus-visible:w-56 xl:h-48 xl:w-36 xl:hover:w-60 xl:focus-visible:w-60"
+                className="group relative block aspect-[16/10] overflow-hidden rounded-md bg-black/30 text-white shadow-[0_12px_40px_rgb(0_0_0/0.25)] transition-[width] duration-700 ease-out-expo focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:aspect-[3/4] lg:aspect-auto lg:h-[10.6667rem] lg:w-32 lg:hover:w-56 lg:focus-visible:w-56 xl:h-48 xl:w-36 xl:hover:w-60 xl:focus-visible:w-60"
               >
                 <ResponsiveImage
                   asset={option.image}
